@@ -167,10 +167,10 @@ const TOURNAMENT_CONFIG = {
           start: "19:00",
           end: "22:00",
           title: "Noi Sunset Social",
-          logo: "placeholder.svg",
+          logo: "002.svg",
           reclubUrl: "",
           category: "social",
-          status: "planned"
+          status: "occupied"
         },
         {
           id: "d1-c2-sunset-social",
@@ -178,10 +178,10 @@ const TOURNAMENT_CONFIG = {
           start: "19:00",
           end: "22:00",
           title: "Noi Sunset Social",
-          logo: "placeholder.svg",
+          logo: "002.svg",
           reclubUrl: "",
           category: "social",
-          status: "planned"
+          status: "occupied"
         },
         {
           id: "d1-c3-sunset-social",
