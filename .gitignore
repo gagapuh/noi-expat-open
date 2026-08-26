@@ -1,0 +1,13 @@
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
+*.Zone.Identifier
+
+# Python
+__pycache__/
+*.pyc
+
+# Local scratch/logs
+.vscode/
+.idea/
