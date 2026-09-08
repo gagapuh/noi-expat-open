@@ -226,7 +226,7 @@ const TOURNAMENT_CONFIG = {
           id: "d2-c1-picklehead",
           courtId: "c1",
           start: "11:00",
-          end: "16:00",
+          end: "17:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
@@ -239,7 +239,7 @@ const TOURNAMENT_CONFIG = {
           id: "d2-c2-picklehead",
           courtId: "c2",
           start: "11:00",
-          end: "15:00",
+          end: "16:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
@@ -252,7 +252,7 @@ const TOURNAMENT_CONFIG = {
           id: "d2-c3-picklehead",
           courtId: "c3",
           start: "11:00",
-          end: "14:00",
+          end: "15:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
@@ -265,7 +265,7 @@ const TOURNAMENT_CONFIG = {
           id: "d2-c4-picklehead",
           courtId: "c4",
           start: "11:00",
-          end: "14:00",
+          end: "15:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
@@ -275,10 +275,10 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 16:00 - 19:00 DUPR 3.5-4.0 (Courts 1, 2)
+        // 16:00 - 19:00 DUPR 3.5-4.0 (Courts 3, 4)
         {
-          id: "d2-c1-dupr",
-          courtId: "c1",
+          id: "d2-c3-dupr",
+          courtId: "c3",
           start: "16:00",
           end: "19:00",
           title: "DUPR Prime Division (3.5–4.0)",
@@ -289,8 +289,8 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
         {
-          id: "d2-c2-dupr",
-          courtId: "c2",
+          id: "d2-c4-dupr",
+          courtId: "c4",
           start: "16:00",
           end: "19:00",
           title: "DUPR Prime Division (3.5–4.0)",
@@ -368,7 +368,7 @@ const TOURNAMENT_BRACKETS = {
     shortTitle: "Picklehead Individual Doubles",
     host: "Ho",
     day: "Day 2 — Sunday, Oct 4",
-    time: "11:00 – 16:00",
+    time: "11:00 – 17:00",
     courts: "Courts 1, 2, 3, 4",
     format: "Americano Groups → Merit-Seeded Duo Playoffs (BO3 / BO5)",
     playersCount: 32,
@@ -376,7 +376,7 @@ const TOURNAMENT_BRACKETS = {
     advanceCount: 2,
     totalTeams: 8,
     isDrawCompleted: false,
-    description: "32 players start as an open roster. Once drawn into 8 Americano groups (Groups A to H), each player plays 3 matches rotating partners ('each with each'). Top 2 from each group advance and pair up using merit ranking (1st with 8th, 2nd with 7th...) into 8 balanced playoff teams competing in Best-of-3 Quarterfinals, Semifinals, and a Best-of-5 Grand Final!",
+    description: "32 players start as an open roster. Once drawn into 8 Americano groups (Groups A to H), each player plays 6 matches rotating partners ('each with each' × 2 rounds). Top 2 from each group advance and pair up using merit ranking (1st with 8th, 2nd with 7th...) into 8 balanced playoff teams competing in Best-of-3 Quarterfinals, Semifinals, and a Best-of-5 Grand Final!",
     pairingFormula: "Merit-Based Seed: Winner Rank #k + Runner-up Rank #(9 - k) (1st with 8th, 2nd with 7th...)",
     players: [
       {
@@ -566,7 +566,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -574,7 +574,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -582,7 +582,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -649,7 +673,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -657,7 +681,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -665,7 +689,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -732,7 +780,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -740,7 +788,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -748,7 +796,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -815,7 +887,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -823,7 +895,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -831,7 +903,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -898,7 +994,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -906,7 +1002,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -914,7 +1010,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -981,7 +1101,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -989,7 +1109,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -997,7 +1117,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -1064,7 +1208,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -1072,7 +1216,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -1080,7 +1224,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -1147,7 +1315,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 1",
                         "pair1": "Slot 1 & Slot 2",
                         "pair2": "Slot 3 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -1155,7 +1323,7 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 2",
                         "pair1": "Slot 1 & Slot 3",
                         "pair2": "Slot 2 & Slot 4",
-                        "score": "\u2014",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   },
@@ -1163,7 +1331,31 @@ const TOURNAMENT_BRACKETS = {
                         "round": "Round 3",
                         "pair1": "Slot 1 & Slot 4",
                         "pair2": "Slot 2 & Slot 3",
-                        "score": "\u2014",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 5",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
+                        "score": "—",
+                        "winner": null,
+                        "played": false
+                  },
+                  {
+                        "round": "Round 6",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
+                        "score": "—",
                         "winner": null,
                         "played": false
                   }
@@ -1224,7 +1416,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-1",
           name: "Quarterfinal 1",
           court: "Court 1",
-          time: "13:00 – 14:00",
+          time: "14:00 – 15:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 1", duo: "Winner #1 + Runner-up #8", seed: "W1 + R8" },
           team2: { name: "Team 8", duo: "Winner #8 + Runner-up #1", seed: "W8 + R1" },
@@ -1237,7 +1429,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-2",
           name: "Quarterfinal 2",
           court: "Court 2",
-          time: "13:00 – 14:00",
+          time: "14:00 – 15:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 4", duo: "Winner #4 + Runner-up #5", seed: "W4 + R5" },
           team2: { name: "Team 5", duo: "Winner #5 + Runner-up #4", seed: "W5 + R4" },
@@ -1250,7 +1442,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-3",
           name: "Quarterfinal 3",
           court: "Court 3",
-          time: "13:00 – 14:00",
+          time: "14:00 – 15:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 2", duo: "Winner #2 + Runner-up #7", seed: "W2 + R7" },
           team2: { name: "Team 7", duo: "Winner #7 + Runner-up #2", seed: "W7 + R2" },
@@ -1263,7 +1455,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-4",
           name: "Quarterfinal 4",
           court: "Court 4",
-          time: "13:00 – 14:00",
+          time: "14:00 – 15:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 3", duo: "Winner #3 + Runner-up #6", seed: "W3 + R6" },
           team2: { name: "Team 6", duo: "Winner #6 + Runner-up #3", seed: "W6 + R3" },
@@ -1278,7 +1470,7 @@ const TOURNAMENT_BRACKETS = {
           id: "SF-1",
           name: "Championship Semifinal 1",
           court: "Court 1",
-          time: "14:00 – 15:00",
+          time: "15:00 – 16:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Winner QF1", duo: "TBD", seed: "Winner QF1" },
           team2: { name: "Winner QF2", duo: "TBD", seed: "Winner QF2" },
@@ -1291,7 +1483,7 @@ const TOURNAMENT_BRACKETS = {
           id: "SF-2",
           name: "Championship Semifinal 2",
           court: "Court 2",
-          time: "14:00 – 15:00",
+          time: "15:00 – 16:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Winner QF3", duo: "TBD", seed: "Winner QF3" },
           team2: { name: "Winner QF4", duo: "TBD", seed: "Winner QF4" },
@@ -1307,7 +1499,7 @@ const TOURNAMENT_BRACKETS = {
         badge: "Championship Trophy & Gold Medal",
         badgeColor: "bg-amber-100 text-amber-950 border-amber-300",
         court: "Court 1 (Main Stage)",
-        time: "15:00 – 16:00",
+        time: "16:00 – 17:00",
         format: "Best of 5 (BO5) · First to 3 sets to 11",
         team1: { name: "Winner SF1", duo: "TBD", seed: "Winner SF1" },
         team2: { name: "Winner SF2", duo: "TBD", seed: "Winner SF2" },

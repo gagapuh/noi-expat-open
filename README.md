@@ -51,13 +51,14 @@ Example entry:
 
 ## 🏆 Tournament Architecture: Picklehead Individual Doubles (32 Players)
 
-**Day 2 (Sunday, Oct 4) • 11:00 – 16:00 • Courts 1, 2, 3, 4 (Host: Ho)**
+**Day 2 (Sunday, Oct 4) • 11:00 – 17:00 • Courts 1, 2, 3, 4 (Host: Ho)**
 
 ### 1. Format Overview
 - **32 Individual Players** start in 8 groups of 4 players (**Group A** to **Group H**).
-- **Stage 1 (11:00 – 13:00) — Americano Groups**:
-  - In each 4-player group, every player plays 3 matches rotating partners ("each with each").
-  - Matches are played to 11 points. Individual points are accumulated.
+- **Stage 1 (11:00 – 14:00) — Double Americano Groups (6 Matches per Player)**:
+  - In each 4-player group, every player plays 6 matches rotating partners ("each with each" in 2 full rounds).
+  - Every participant is guaranteed at least 6 matches!
+  - Matches are played to 11 points. Individual points and score differentials are accumulated across all 6 matches.
   - Top 2 players from each group advance to the playoffs (16 players total).
 - **Merit-Based Seed Pairing (Option 3: 1st with 8th)**:
   - All 8 group winners are ranked #1 to #8 by accumulated points and point differential (W1 to W8).
@@ -72,11 +73,17 @@ Example entry:
     - Team 7: Winner #7 + Runner-up #2
     - Team 8: Winner #8 + Runner-up #1
   - This guarantees perfect parity: every playoff duo has one top group leader and one solid finalist!
-- **Playoffs (13:00 – 16:00) — Pure Knockout (BO3 / BO5)**:
-  - **Quarterfinals (13:00 – 14:00)**: 8 teams · 4 matches across Courts 1–4 · **Best of 3 (BO3)** to 11 (win by 2).
-  - **Semifinals (14:00 – 15:00)**: 4 teams · 2 matches on Courts 1 & 2 · **Best of 3 (BO3)** to 11.
-  - **Grand Championship Final (15:00 – 16:00)**: Court 1 · **Best of 5 (BO5)** to 11 · First to 3 sets wins the trophy!
+- **Playoffs (14:00 – 17:00) — Pure Knockout (BO3 / BO5)**:
+  - **Quarterfinals (14:00 – 15:00)**: 8 teams · 4 matches across Courts 1–4 · **Best of 3 (BO3)** to 11 (win by 2). Courts 3 & 4 finish after QF.
+  - **Semifinals (15:00 – 16:00)**: 4 teams · 2 matches on Courts 1 & 2 · **Best of 3 (BO3)** to 11. Court 2 finishes after SF.
+  - **Grand Championship Final (16:00 – 17:00)**: Court 1 · **Best of 5 (BO5)** to 11 · First to 3 sets wins the trophy!
   - *No Bronze match and no consolation bracket* — pure high-stakes championship drama!
+
+### 2. Day 2 Court Allocation & Staggered Schedule
+- **Court 1**: 11:00 – 17:00 (Picklehead: Groups A & E, QF1, SF1, Grand Final) → 19:00 – 22:00 (Kitchen Party)
+- **Court 2**: 11:00 – 16:00 (Picklehead: Groups B & F, QF2, SF2) → 19:00 – 22:00 (Kitchen Party)
+- **Court 3**: 11:00 – 15:00 (Picklehead: Groups C & G, QF3) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (Kitchen Party)
+- **Court 4**: 11:00 – 15:00 (Picklehead: Groups D & H, QF4) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (Kitchen Party)
 
 ---
 

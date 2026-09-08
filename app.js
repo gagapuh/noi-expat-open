@@ -424,7 +424,10 @@ function resetBracketToSlots(bracket) {
     group.matches = [
       { round: "Round 1", pair1: "Slot 1 & Slot 2", pair2: "Slot 3 & Slot 4", score: "—", winner: null, played: false },
       { round: "Round 2", pair1: "Slot 1 & Slot 3", pair2: "Slot 2 & Slot 4", score: "—", winner: null, played: false },
-      { round: "Round 3", pair1: "Slot 1 & Slot 4", pair2: "Slot 2 & Slot 3", score: "—", winner: null, played: false }
+      { round: "Round 3", pair1: "Slot 1 & Slot 4", pair2: "Slot 2 & Slot 3", score: "—", winner: null, played: false },
+      { round: "Round 4", pair1: "Slot 1 & Slot 2", pair2: "Slot 3 & Slot 4", score: "—", winner: null, played: false },
+      { round: "Round 5", pair1: "Slot 1 & Slot 3", pair2: "Slot 2 & Slot 4", score: "—", winner: null, played: false },
+      { round: "Round 6", pair1: "Slot 1 & Slot 4", pair2: "Slot 2 & Slot 3", score: "—", winner: null, played: false }
     ];
     group.standings = [
       { rank: 1, name: "Slot 1", played: 0, wins: 0, losses: 0, diff: 0, points: 0, qualified: false, advanceTo: "TBD" },
@@ -448,7 +451,10 @@ function applyRosterToBracket(roster, bracket) {
       group.matches = [
         { round: "Round 1", pair1: `${p1} & ${p2}`, pair2: `${p3} & ${p4}`, score: "—", winner: null, played: false },
         { round: "Round 2", pair1: `${p1} & ${p3}`, pair2: `${p2} & ${p4}`, score: "—", winner: null, played: false },
-        { round: "Round 3", pair1: `${p1} & ${p4}`, pair2: `${p2} & ${p3}`, score: "—", winner: null, played: false }
+        { round: "Round 3", pair1: `${p1} & ${p4}`, pair2: `${p2} & ${p3}`, score: "—", winner: null, played: false },
+        { round: "Round 4", pair1: `${p1} & ${p2}`, pair2: `${p3} & ${p4}`, score: "—", winner: null, played: false },
+        { round: "Round 5", pair1: `${p1} & ${p3}`, pair2: `${p2} & ${p4}`, score: "—", winner: null, played: false },
+        { round: "Round 6", pair1: `${p1} & ${p4}`, pair2: `${p2} & ${p3}`, score: "—", winner: null, played: false }
       ];
       group.standings.forEach((s, idx) => {
         s.name = group.players[idx] || s.name;
@@ -763,7 +769,7 @@ function renderBracketModal() {
               </h4>
             </div>
             <div class="flex items-center gap-2 text-xs font-mono font-bold text-stone-500">
-              <span>13:00 – 14:00</span>
+              <span>14:00 – 15:00</span>
               <span class="px-2 py-0.5 rounded bg-stone-100 border border-stone-200 text-stone-700">Courts 1–4</span>
             </div>
           </div>
@@ -815,7 +821,7 @@ function renderBracketModal() {
               </h4>
             </div>
             <div class="flex items-center gap-2 text-xs font-mono font-bold text-stone-500">
-              <span>14:00 – 15:00</span>
+              <span>15:00 – 16:00</span>
               <span class="px-2 py-0.5 rounded bg-stone-100 border border-stone-200 text-stone-700">Courts 1 & 2</span>
             </div>
           </div>
@@ -915,10 +921,10 @@ function renderBracketModal() {
             <div class="w-7 h-7 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">01</div>
             <div>
               <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 1: 32 Players in 8 Groups of 4 (Groups A to H)</h4>
-              <p class="text-xs text-stone-500">Every player plays 3 Americano matches rotating partners to 11 points</p>
+              <p class="text-xs text-stone-500">Every player plays 6 Americano matches rotating partners to 11 points (2 rounds)</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">11:00 – 13:00</span>
+          <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">11:00 – 14:00</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
@@ -954,7 +960,7 @@ function renderBracketModal() {
               <p class="text-xs text-stone-500">Formula: Winner #k is paired with Runner-Up #(9 - k)</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">13:00 Seeding</span>
+          <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">14:00 Seeding</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1047,7 +1053,7 @@ function renderBracketModal() {
               <p class="text-xs text-stone-500">Quarterfinals (BO3) → Semifinals (BO3) → Grand Championship Final (BO5)</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">13:00 – 16:00</span>
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">14:00 – 17:00</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
