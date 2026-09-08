@@ -240,7 +240,7 @@ function renderTimelineMatrix() {
                 onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
                 class="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-lg text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all duration-150 cursor-pointer whitespace-nowrap">
                 <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-blue-600"></i>
-                <span>Tournament Table (BO3/BO5)</span>
+                <span>Tournament Table</span>
               </button>
             ` : `<div></div>`}
             <a 
@@ -307,7 +307,7 @@ function setupEventListeners() {
 /// ─── Tournament Draw / Bracket Modal Functions ───
 window.openBracketModal = function(bracketId) {
   state.activeBracketId = bracketId;
-  state.bracketActiveTab = 'groups';
+  state.bracketActiveTab = 'players';
   state.bracketGroupFilter = 'all';
   initBracketRoster();
   renderBracketModal();
@@ -568,18 +568,6 @@ function renderBracketModal() {
     <!-- Header -->
     <div class="px-5 sm:px-7 py-4 border-b border-stone-200/80 bg-stone-50/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
       <div class="min-w-0">
-        <div class="flex flex-wrap items-center gap-2 mb-1.5">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-stone-950 text-white text-xs font-bold uppercase tracking-wider shadow-2xs">
-            <i data-lucide="user-check" class="w-3.5 h-3.5 text-amber-400"></i>
-            Host: ${bracket.host}
-          </span>
-          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-100 text-blue-900 border border-blue-200 text-xs font-bold">
-            ${bracket.format}
-          </span>
-          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold">
-            32 Players · 8 Groups · BO3 / BO5
-          </span>
-        </div>
         <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
           ${bracket.title}
         </h2>
@@ -602,13 +590,22 @@ function renderBracketModal() {
     <div class="px-5 sm:px-7 py-2.5 bg-white border-b border-stone-200/70 flex items-center justify-between gap-3 shrink-0 overflow-x-auto">
       <div class="inline-flex items-center p-1 rounded-xl bg-stone-100 border border-stone-200/60 shrink-0">
         <button 
+          onclick="setBracketTab('players')" 
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'players' 
+              ? 'bg-white text-stone-900 shadow-sm' 
+              : 'text-stone-500 hover:text-stone-800'
+          }">
+          Players (32)
+        </button>
+        <button 
           onclick="setBracketTab('groups')" 
           class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'groups' 
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Stage 1: Groups (A–H)
+          Stage 1: Groups
         </button>
         <button 
           onclick="setBracketTab('playoffs')" 
@@ -617,7 +614,7 @@ function renderBracketModal() {
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Playoffs Bracket (BO3 / BO5) 🥇
+          Playoffs Bracket
         </button>
         <button 
           onclick="setBracketTab('pathway')" 
@@ -626,16 +623,7 @@ function renderBracketModal() {
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          32-Player Pathway (Корзина прохода)
-        </button>
-        <button 
-          onclick="setBracketTab('players')" 
-          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'players' 
-              ? 'bg-white text-stone-900 shadow-sm' 
-              : 'text-stone-500 hover:text-stone-800'
-          }">
-          Players (32) & Random Draw 🎲
+          32-Player Pathway
         </button>
       </div>
 
@@ -676,54 +664,6 @@ function renderBracketModal() {
       : groupsList.filter(g => g.id === state.bracketGroupFilter);
 
     html += `
-      <!-- Banner -->
-      <div class="${state.isDrawCompleted ? 'bg-blue-50/80 border-blue-200/90 text-blue-950' : 'bg-amber-50/90 border-amber-200 text-amber-950'} border rounded-2xl p-4 sm:p-5 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xs">
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-xl ${state.isDrawCompleted ? 'bg-blue-600' : 'bg-amber-500'} text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
-            <i data-lucide="${state.isDrawCompleted ? 'layers' : 'shuffle'}" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="font-bold text-sm">
-              Stage 1: Americano Groups (Groups A to H) · ${state.isDrawCompleted ? '11:00 – 13:00 (Draw Completed)' : 'Awaiting Random Draw 🎲'}
-            </div>
-            <p class="${state.isDrawCompleted ? 'text-blue-800' : 'text-amber-800'} text-xs mt-0.5 max-w-2xl leading-relaxed">
-              ${state.isDrawCompleted 
-                ? '32 players drawn into 8 groups. Each player plays 3 matches rotating partners ("each with each") to 11 points. Top 2 players from each group advance to the playoffs.'
-                : '32 players are currently in an open roster list without groups. Run the random draw to shuffle and assign participants to Groups A–H!'}
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          ${state.isDrawCompleted ? `
-            <button 
-              onclick="setBracketTab('players')" 
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-blue-100 border border-blue-300 text-blue-900 font-bold text-xs shadow-2xs transition-all cursor-pointer">
-              <i data-lucide="users" class="w-3.5 h-3.5 text-blue-600"></i>
-              <span>View Roster</span>
-            </button>
-            <button 
-              onclick="randomizeGroupsDraw()" 
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-2xs transition-all cursor-pointer">
-              <i data-lucide="shuffle" class="w-3.5 h-3.5 text-white"></i>
-              <span>Re-Draw 🎲</span>
-            </button>
-          ` : `
-            <button 
-              onclick="randomizeGroupsDraw()" 
-              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
-              <i data-lucide="shuffle" class="w-4 h-4 text-white"></i>
-              <span>Run Random Draw 🎲</span>
-            </button>
-            <button 
-              onclick="setBracketTab('players')" 
-              class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs shadow-2xs transition-all cursor-pointer">
-              <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-700"></i>
-              <span>Edit Players</span>
-            </button>
-          `}
-        </div>
-      </div>
-
       <!-- Groups Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
     `;
@@ -818,30 +758,6 @@ function renderBracketModal() {
     const podium = po.podium || [];
 
     html += `
-      <!-- Info Header -->
-      <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-amber-500 ring-4 ring-amber-400/20"></span>
-            <h3 class="font-display font-extrabold text-base sm:text-lg text-stone-900">
-              Championship Knockout Bracket · Best of 3 & Best of 5
-            </h3>
-          </div>
-          <p class="text-xs text-stone-600 mt-1 max-w-2xl leading-relaxed">
-            Quarterfinals and Semifinals are played as <strong>Best of 3 (BO3)</strong> sets to 11. 
-            The <strong>Grand Championship Final</strong> on Court 1 is a <strong>Best of 5 (BO5)</strong> championship decider!
-          </p>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <span class="px-3 py-1 rounded-lg bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs">
-            🥇 Final: BO5
-          </span>
-          <span class="px-3 py-1 rounded-lg bg-blue-100 text-blue-900 border border-blue-200 font-bold text-xs">
-            QF & SF: BO3
-          </span>
-        </div>
-      </div>
-
       <!-- Playoff Rounds Flow -->
       <div class="space-y-6">
         <!-- 1. Quarterfinals (4 Matches · Courts 1-4 · BO3) -->
@@ -999,27 +915,6 @@ function renderBracketModal() {
   // ══════════════════════════════════════════════════════════════════════════
   else if (activeTab === 'pathway') {
     html += `
-      <!-- Header Banner -->
-      <div class="bg-stone-900 text-white rounded-2xl p-5 sm:p-6 shadow-md">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-950 text-[11px] font-extrabold uppercase tracking-wide mb-2">
-              <i data-lucide="git-merge" class="w-3 h-3"></i> 32-Player Tournament Funnel
-            </div>
-            <h3 class="text-lg sm:text-xl font-display font-extrabold tracking-tight">
-              Visual Pathway: How 32 Players Advance to 1 Champion Pair
-            </h3>
-            <p class="text-xs sm:text-sm text-stone-300 mt-1 max-w-2xl leading-relaxed">
-              Step-by-step progression of all 32 players: from Stage 1 Americano Groups into the merit-based seeding pots, forming 8 balanced teams, and advancing through the single-elimination knockout ladder!
-            </p>
-          </div>
-          <div class="p-3.5 rounded-xl bg-stone-800/80 border border-stone-700 text-center shrink-0">
-            <div class="text-xl font-black text-amber-400 font-mono">32 → 16 → 8 → 2 → 1</div>
-            <div class="text-[10px] text-stone-400 uppercase font-semibold mt-0.5">Progression Funnel</div>
-          </div>
-        </div>
-      </div>
-
       <!-- Stepper 1: Stage 1 Groups (32 Players in 8 Groups) -->
       <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
         <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
