@@ -11,3 +11,10 @@ __pycache__/
 # Local scratch/logs
 .vscode/
 .idea/
+
+# Bot Virtualenv & Secrets
+bot/venv/
+venv/
+bot/.env
+.env
+bot/active_tournaments.json

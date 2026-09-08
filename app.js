@@ -44,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCourtFilterTabs();
   renderTimelineMatrix();
   setupEventListeners();
+  if (typeof initSupabaseLive === 'function') {
+    initSupabaseLive();
+  }
 });
 
 function renderHeaderAndMeta() {
@@ -118,7 +121,7 @@ function renderTimelineMatrix() {
 
   // ── Header Row ──
   let headerHtml = `
-    <div class="timeline-grid-wrapper bg-surface-1 sticky top-0 z-30 border-b border-stone-200/70">
+    <div class="timeline-grid-wrapper timeline-heading bg-surface-1 sticky top-0 z-30 border-b border-stone-200/70">
       <div class="court-header-cell bg-surface-1 border-r border-stone-200/60">
         <span class="text-[11px] font-semibold text-stone-400 uppercase tracking-widest">Time</span>
       </div>
@@ -138,10 +141,10 @@ function renderTimelineMatrix() {
   headerHtml += `</div>`;
 
   // ── Body ──
-  let bodyHtml = `<div class="timeline-grid-wrapper relative bg-white" style="height: ${totalHeightPx}px;">`;
+  let bodyHtml = `<div class="timeline-grid-wrapper timeline-body relative bg-white" style="height: ${totalHeightPx}px;">`;
 
   // Time Column
-  bodyHtml += `<div class="border-r border-stone-200/50 bg-surface-1/50 select-none">`;
+  bodyHtml += `<div class="timeline-ruler border-r border-stone-200/50 bg-surface-1/50 select-none">`;
   for (let h = startHour; h < endHour; h++) {
     const hStr = h.toString().padStart(2, '0');
 
@@ -159,8 +162,8 @@ function renderTimelineMatrix() {
   // Court Columns
   visibleCourts.forEach(court => {
     bodyHtml += `
-      <div class="relative border-r border-stone-200/40 last:border-r-0">
-        <div class="absolute inset-0 pointer-events-none">
+      <div class="timeline-court relative border-r border-stone-200/40 last:border-r-0">
+        <div class="timeline-court-background absolute inset-0 pointer-events-none">
     `;
 
     for (let h = startHour; h < endHour; h++) {
@@ -205,6 +208,11 @@ function renderTimelineMatrix() {
 
       // Multi-court span handling
       const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
+      // Reuse the grid's court labels when CSS presents events as a mobile agenda.
+      const eventCourtNames = (isSingleCourtView ? [court] : TOURNAMENT_CONFIG.courts.filter(c =>
+        ev.courtIds ? ev.courtIds.includes(c.id) : c.id === ev.courtId
+      )).map(c => c.name).join(' · ');
+      const mobileCourtLabel = `<div class="mobile-event-courts hidden">${eventCourtNames}</div>`;
       let spanStyle = effectiveSpan > 1
         ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
         : '';
@@ -216,10 +224,11 @@ function renderTimelineMatrix() {
 
         bodyHtml += `
           <div class="timeline-event-card staggered-tournament-card"
-               style="top: ${topPx}px; height: ${cardHeightPx}px; width: calc(400% - 10px); left: 5px; right: auto; z-index: 20; padding: 0; background: transparent; border: none; box-shadow: none; overflow: visible;">
+               style="--event-order: ${topMinutes}; top: ${topPx}px; height: ${cardHeightPx}px; width: calc(400% - 10px); left: 5px; right: auto; z-index: 20; padding: 0; background: transparent; border: none; box-shadow: none; overflow: visible;">
+            ${mobileCourtLabel}
             
             <!-- 4 Court Background & Border Lanes (Guaranteed crisp dashed dividers, zero interior shadows) -->
-            <div class="absolute inset-0 grid grid-cols-4 pointer-events-none">
+            <div class="staggered-background absolute inset-0 grid grid-cols-4 pointer-events-none">
               <!-- Court 1 Lane (11:00-17:00, 100%) -->
               <div class="staggered-lane relative border-t border-b border-l border-r border-dashed border-blue-300/80 rounded-tl-2xl rounded-bl-2xl rounded-br-2xl"
                    style="height: 100%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 0% 0%; background-repeat: no-repeat;">
@@ -239,7 +248,7 @@ function renderTimelineMatrix() {
             </div>
 
             <!-- Header Content (Logo + Title + Subtitle + Host + Players + Bracket) Centered across all 4 courts -->
-            <div class="absolute top-0 left-0 right-0 px-4 flex flex-col items-center justify-center text-center z-20 pointer-events-none" style="height: calc(4 / 6 * 100%);">
+            <div class="event-summary absolute top-0 left-0 right-0 px-4 flex flex-col items-center justify-center text-center z-20 pointer-events-none" style="height: calc(4 / 6 * 100%);">
               ${ev.logo ? `
                 <div class="p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-2 pointer-events-auto">
                   <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
@@ -277,7 +286,7 @@ function renderTimelineMatrix() {
             </div>
 
             <!-- Court 1 Top-Left Header: Category Badge + DUPR with To Be Confirmed + Reclub Link -->
-            <div class="absolute top-3 left-3 flex flex-col items-start gap-1 z-20 pointer-events-auto">
+            <div class="staggered-badges absolute top-3 left-3 flex flex-col items-start gap-1 z-20 pointer-events-auto">
               <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${catConfig.badge}">
                 ${catConfig.short}
               </span>
@@ -296,11 +305,12 @@ function renderTimelineMatrix() {
             </div>
 
             <!-- 4 Interactive Columns: Times at top, Matches button at bottom -->
-            <div class="absolute inset-0 grid grid-cols-4 z-10 pointer-events-none">
+            <div class="staggered-court-actions absolute inset-0 grid grid-cols-4 z-10 pointer-events-none">
               ${(ev.staggeredCourts || []).map(sc => {
                 const laneHeightStyle = sc.courtId === 'c1' ? '100%' : (sc.courtId === 'c2' ? 'calc(5 / 6 * 100%)' : 'calc(4 / 6 * 100%)');
                 return `
                   <div class="relative flex flex-col justify-between p-3 pointer-events-auto" style="height: ${laneHeightStyle};">
+                    <span class="mobile-court-name hidden">${sc.courtName}</span>
                     <div class="flex justify-end">
                       <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">${sc.start || ev.start}–${sc.end}</span>
                     </div>
@@ -328,8 +338,9 @@ function renderTimelineMatrix() {
       bodyHtml += `
         <div 
           class="timeline-event-card ${cardClasses}"
-          style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle}"
+          style="--event-order: ${topMinutes}; top: ${topPx}px; height: ${heightPx}px; ${spanStyle}"
           title="${ev.title}">
+          ${mobileCourtLabel}
           
           <div class="flex flex-col gap-1">
             <div class="flex items-start justify-between gap-1">
@@ -367,7 +378,7 @@ function renderTimelineMatrix() {
             </div>
           </div>
 
-          <div class="my-auto flex flex-col items-center text-center gap-1.5 py-1.5">
+          <div class="event-summary my-auto flex flex-col items-center text-center gap-1.5 py-1.5">
             ${ev.logo ? `
               <div class="p-2 rounded-2xl mb-1 bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
                 <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
@@ -530,6 +541,9 @@ window.openBracketModal = function(bracketId) {
   }
   if (window.lucide) {
     window.lucide.createIcons();
+  }
+  if (sbClient && bracketId) {
+    loadTournamentStateFromSupabase(bracketId);
   }
 };
 
@@ -783,7 +797,7 @@ function renderBracketModal() {
   // Modal Header
   let html = `
     <!-- Header -->
-    <div class="px-5 sm:px-7 py-4 border-b border-stone-200/80 bg-stone-50/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+    <div class="modal-heading px-5 sm:px-7 py-4 border-b border-stone-200/80 bg-stone-50/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
       <div class="min-w-0">
         <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
           ${bracket.title}
@@ -801,7 +815,7 @@ function renderBracketModal() {
     </div>
 
     <!-- Navigation Tabs Bar -->
-    <div class="px-5 sm:px-7 py-2.5 bg-white border-b border-stone-200/70 flex items-center justify-between gap-3 shrink-0 overflow-x-auto">
+    <div class="bracket-navigation px-5 sm:px-7 py-2.5 bg-white border-b border-stone-200/70 flex items-center justify-between gap-3 shrink-0 overflow-x-auto">
       <div class="inline-flex items-center p-1 rounded-xl bg-stone-100 border border-stone-200/60 shrink-0">
         <button 
           onclick="setBracketTab('players')" 
@@ -870,7 +884,7 @@ function renderBracketModal() {
           </div>
 
           <!-- Standings Table (Empty / Ready for input) -->
-          <div class="p-3 overflow-x-auto">
+          <div class="standings-scroll p-3 overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
@@ -904,7 +918,7 @@ function renderBracketModal() {
           </div>
 
           <!-- Group Matches (3 Rounds: Each with Each) -->
-          <div class="px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto">
+          <div class="group-matches px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto">
             <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2 flex items-center justify-between">
               <span>Americano Matches (3 Rounds):</span>
               <span class="text-[10px] font-normal text-stone-500 lowercase">each with each</span>
@@ -1401,7 +1415,7 @@ function renderCourtMatchesModal() {
 
   let html = `
     <!-- Header -->
-    <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-stone-50 flex items-center justify-between gap-3 shrink-0">
+    <div class="modal-heading px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-stone-50 flex items-center justify-between gap-3 shrink-0">
       <div class="min-w-0">
         <div class="flex items-center gap-2 mb-1">
           <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-stone-900 text-white font-display font-bold text-xs">
@@ -1479,9 +1493,15 @@ function renderCourtMatchesModal() {
             </div>
 
             <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
-              <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 font-mono text-[11px] font-semibold border border-stone-200/70">
-                ${m.format}
-              </span>
+              ${(m.score && m.score !== '—') ? `
+                <span class="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-900 border border-emerald-300 font-mono text-[11px] font-black shadow-2xs">
+                  ${m.score}
+                </span>
+              ` : `
+                <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 font-mono text-[11px] font-semibold border border-stone-200/70">
+                  ${m.format}
+                </span>
+              `}
             </div>
           </div>
         `).join('')}
@@ -1515,6 +1535,8 @@ function getCourtMatchesList(ev, overrideCourtName) {
             pair1: m.pair1 || 'Team A',
             pair2: m.pair2 || 'Team B',
             format: '1 Set to 11',
+            score: m.score || '—',
+            played: m.played || false,
             badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
           });
         }
@@ -1530,6 +1552,8 @@ function getCourtMatchesList(ev, overrideCourtName) {
         pair1: q.team1?.name || 'TBD',
         pair2: q.team2?.name || 'TBD',
         format: q.format || 'BO3 to 11',
+        score: q.score || '—',
+        played: q.status === 'completed' || (q.score && q.score !== '—'),
         badgeClass: 'bg-indigo-50 text-indigo-900 border border-indigo-200'
       });
     });
@@ -1543,6 +1567,8 @@ function getCourtMatchesList(ev, overrideCourtName) {
         pair1: s.team1?.name || 'Winner QF',
         pair2: s.team2?.name || 'Winner QF',
         format: s.format || 'BO3 to 11',
+        score: s.score || '—',
+        played: s.status === 'completed' || (s.score && s.score !== '—'),
         badgeClass: 'bg-purple-50 text-purple-900 border border-purple-200'
       });
     });
@@ -1556,6 +1582,8 @@ function getCourtMatchesList(ev, overrideCourtName) {
         pair1: gf.team1?.name || 'Winner SF1',
         pair2: gf.team2?.name || 'Winner SF2',
         format: 'BO5 to 11',
+        score: gf.score || '—',
+        played: gf.status === 'completed' || (gf.score && gf.score !== '—'),
         badgeClass: 'bg-amber-100 text-amber-950 border border-amber-300 font-bold'
       });
     }
@@ -1740,4 +1768,340 @@ window.exportDuprCsv = function() {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
+
+/**
+ * ==============================================================================
+ * NOI EXPAT OPEN — SUPABASE REALTIME & LIVE SCORING ENGINE
+ * Instant WebSocket synchronization between Telegram Bot, Database & GitHub Pages
+ * ==============================================================================
+ */
+
+let sbClient = null;
+let sbRealtimeChannel = null;
+
+async function initSupabaseLive() {
+  const cfg = window.SUPABASE_CONFIG;
+  const badge = document.getElementById('liveSyncBadge');
+  const dot = document.getElementById('liveSyncDot');
+  const text = document.getElementById('liveSyncText');
+
+  if (!cfg || !cfg.url || !cfg.anonKey || cfg.anonKey.startsWith('YOUR_') || typeof window.supabase === 'undefined') {
+    console.info('[Supabase] Running in local/standalone mode (Supabase credentials not configured).');
+    if (badge && text && dot) {
+      badge.classList.remove('hidden');
+      dot.className = 'w-2 h-2 rounded-full bg-stone-400';
+      text.textContent = 'Local Data';
+      badge.title = 'Supabase keys not set. Running in local standalone mode.';
+    }
+    return;
+  }
+
+  try {
+    sbClient = window.supabase.createClient(cfg.url, cfg.anonKey);
+    console.info('[Supabase] Client initialized successfully:', cfg.url);
+
+    // Initial fetch from Supabase
+    await loadTournamentStateFromSupabase();
+
+    // Subscribe to WebSockets
+    setupSupabaseRealtime();
+
+    if (badge && text && dot) {
+      badge.classList.remove('hidden');
+      badge.className = 'hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-semibold transition-all';
+      dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+      text.textContent = 'Live Sync';
+      badge.title = 'Connected to Supabase Realtime via WebSockets.';
+    }
+  } catch (err) {
+    console.warn('[Supabase] Could not connect to Supabase, running with fallback local data:', err);
+    if (badge && text && dot) {
+      badge.classList.remove('hidden');
+      dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+      text.textContent = 'Offline Fallback';
+      badge.title = 'Network error. Displaying local data.';
+    }
+  }
+}
+
+async function loadTournamentStateFromSupabase(targetId) {
+  if (!sbClient) return;
+  const tId = targetId || state.activeBracketId || (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.tournamentId) || 'picklehead-individual-doubles';
+
+  try {
+    const [tRes, pRes, mRes, poRes] = await Promise.all([
+      sbClient.from('tournaments').select('*').eq('id', tId).maybeSingle(),
+      sbClient.from('players').select('*').eq('tournament_id', tId).order('slot_number', { ascending: true }),
+      sbClient.from('group_matches').select('*').eq('tournament_id', tId).order('round_number', { ascending: true }),
+      sbClient.from('playoff_matches').select('*').eq('tournament_id', tId)
+    ]);
+
+    const tournament = tRes.data;
+    const players = pRes.data || [];
+    const matches = mRes.data || [];
+    const playoff = poRes.data || [];
+
+    updateAppStateFromSupabase(tournament, players, matches, playoff, tId);
+    renderAllViews();
+  } catch (e) {
+    console.warn('[Supabase] Error loading tournament state:', e);
+  }
+}
+
+function setupSupabaseRealtime() {
+  if (!sbClient) return;
+  if (sbRealtimeChannel) {
+    sbRealtimeChannel.unsubscribe();
+  }
+
+  sbRealtimeChannel = sbClient
+    .channel('tournament-live-feed')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'group_matches' }, payload => {
+      console.log('[Realtime] group_matches update received:', payload);
+      handleGroupMatchRealtimeUpdate(payload);
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'playoff_matches' }, payload => {
+      console.log('[Realtime] playoff_matches update received:', payload);
+      handlePlayoffMatchRealtimeUpdate(payload);
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'players' }, payload => {
+      console.log('[Realtime] players update received:', payload);
+      handlePlayerRealtimeUpdate(payload);
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'tournaments' }, payload => {
+      console.log('[Realtime] tournaments update received:', payload);
+      handleTournamentRealtimeUpdate(payload);
+    })
+    .subscribe((status) => {
+      console.info('[Realtime] WebSocket status:', status);
+    });
+}
+
+function updateAppStateFromSupabase(tournament, players, matches, playoff, tournamentId) {
+  const bracketId = tournamentId || state.activeBracketId || (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.tournamentId) || 'picklehead-individual-doubles';
+  const bracket = (TOURNAMENT_CONFIG.brackets && TOURNAMENT_CONFIG.brackets[bracketId])
+    || (typeof TOURNAMENT_BRACKETS !== 'undefined' && TOURNAMENT_BRACKETS[bracketId]);
+
+  if (!bracket) return;
+
+  // 1. Tournament metadata
+  if (tournament) {
+    state.isDrawCompleted = !!tournament.is_draw_completed;
+    bracket.isDrawCompleted = state.isDrawCompleted;
+  }
+
+  // 2. Players
+  if (players && players.length > 0) {
+    state.playersRoster = players.map(p => ({
+      id: p.slot_number || p.id,
+      name: p.name,
+      duprId: p.dupr_id || '',
+      duprRating: p.dupr_rating,
+      group: p.group_name
+    }));
+    bracket.players = state.playersRoster;
+  }
+
+  // 3. Group Matches & Dynamic Standings
+  if (bracket.groups && matches && matches.length > 0) {
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    letters.forEach((letter, gIdx) => {
+      const group = bracket.groups[gIdx];
+      if (!group) return;
+
+      const groupPlayers = (state.playersRoster || []).filter(p => p.group === `Group ${letter}`);
+      if (groupPlayers.length === 4) {
+        group.players = groupPlayers.map(p => p.name);
+      }
+
+      const gMatches = matches
+        .filter(m => m.group_name === `Group ${letter}`)
+        .sort((a, b) => a.round_number - b.round_number);
+
+      if (gMatches.length > 0) {
+        group.matches = gMatches.map(m => {
+          const p1 = (m.pair1_names || []).join(' & ');
+          const p2 = (m.pair2_names || []).join(' & ');
+          const hasScore = m.score1 !== null && m.score2 !== null;
+          const s1 = hasScore ? Number(m.score1) : null;
+          const s2 = hasScore ? Number(m.score2) : null;
+          return {
+            id: m.id,
+            round: `Round ${m.round_number}`,
+            pair1: p1,
+            pair2: p2,
+            score: hasScore ? `${s1} - ${s2}` : '—',
+            score1: s1,
+            score2: s2,
+            winner: hasScore ? (s1 > s2 ? p1 : (s2 > s1 ? p2 : null)) : null,
+            played: !!m.is_completed
+          };
+        });
+
+        // Dynamic Standings Calculation
+        group.standings = computeStandingsForGroup(group.players, group.matches);
+      }
+    });
+  }
+
+  // 4. Playoffs
+  if (bracket.playoffs && playoff && playoff.length > 0) {
+    const poMap = {};
+    playoff.forEach(pm => {
+      poMap[pm.id] = pm;
+      const code = pm.id.includes('_') ? pm.id.split('_').pop() : (pm.id.includes(':') ? pm.id.split(':').pop() : pm.id);
+      poMap[code] = pm;
+    });
+
+    // Quarterfinals
+    if (bracket.playoffs.quarterfinals) {
+      bracket.playoffs.quarterfinals.forEach(qf => {
+        const row = poMap[qf.id];
+        if (row) {
+          if (row.team1_name) qf.team1.duo = row.team1_name;
+          if (row.team2_name) qf.team2.duo = row.team2_name;
+          if (row.team1_seed) qf.team1.seed = row.team1_seed;
+          if (row.team2_seed) qf.team2.seed = row.team2_seed;
+          qf.score = row.score || '—';
+          qf.winner = row.winner_team ? (row.winner_team === 1 ? qf.team1.duo : qf.team2.duo) : null;
+          qf.status = row.is_completed ? 'completed' : 'upcoming';
+        }
+      });
+    }
+
+    // Semifinals
+    if (bracket.playoffs.semifinals) {
+      bracket.playoffs.semifinals.forEach(sf => {
+        const row = poMap[sf.id];
+        if (row) {
+          if (row.team1_name) sf.team1.name = row.team1_name;
+          if (row.team2_name) sf.team2.name = row.team2_name;
+          sf.score = row.score || '—';
+          sf.winner = row.winner_team ? (row.winner_team === 1 ? sf.team1.name : sf.team2.name) : null;
+          sf.status = row.is_completed ? 'completed' : 'upcoming';
+        }
+      });
+    }
+
+    // Grand Final
+    if (bracket.playoffs.grandFinal) {
+      const row = poMap['F-GOLD'];
+      if (row) {
+        const gf = bracket.playoffs.grandFinal;
+        if (row.team1_name) gf.team1.name = row.team1_name;
+        if (row.team2_name) gf.team2.name = row.team2_name;
+        gf.score = row.score || '—';
+        gf.winner = row.winner_team ? (row.winner_team === 1 ? gf.team1.name : gf.team2.name) : null;
+        gf.status = row.is_completed ? 'completed' : 'upcoming';
+
+        if (gf.status === 'completed' && gf.winner) {
+          const runnerUp = gf.winner === gf.team1.name ? gf.team2.name : gf.team1.name;
+          bracket.playoffs.podium = [
+            { place: 1, medal: "🥇 Champions", team: gf.winner, players: gf.winner },
+            { place: 2, medal: "🥈 Runners-up", team: runnerUp, players: runnerUp },
+            { place: 3, medal: "Semifinalists", team: "Semifinalists", players: "Semifinalists" }
+          ];
+        }
+      }
+    }
+  }
+}
+
+function computeStandingsForGroup(playerNames, groupMatches) {
+  const statsMap = {};
+  (playerNames || []).forEach(name => {
+    statsMap[name] = {
+      rank: 1,
+      name: name,
+      played: 0,
+      wins: 0,
+      losses: 0,
+      diff: 0,
+      points: 0,
+      qualified: false,
+      advanceTo: 'TBD'
+    };
+  });
+
+  (groupMatches || []).forEach(m => {
+    if (!m.played || m.score1 === null || m.score2 === null) return;
+    const s1 = Number(m.score1);
+    const s2 = Number(m.score2);
+
+    const t1 = (m.pair1 || '').split('&').map(s => s.trim());
+    const t2 = (m.pair2 || '').split('&').map(s => s.trim());
+
+    t1.forEach(pName => {
+      if (statsMap[pName]) {
+        statsMap[pName].played += 1;
+        statsMap[pName].points += s1;
+        statsMap[pName].diff += (s1 - s2);
+        if (s1 > s2) statsMap[pName].wins += 1;
+        else if (s1 < s2) statsMap[pName].losses += 1;
+      }
+    });
+
+    t2.forEach(pName => {
+      if (statsMap[pName]) {
+        statsMap[pName].played += 1;
+        statsMap[pName].points += s2;
+        statsMap[pName].diff += (s2 - s1);
+        if (s2 > s1) statsMap[pName].wins += 1;
+        else if (s2 < s1) statsMap[pName].losses += 1;
+      }
+    });
+  });
+
+  const list = Object.values(statsMap);
+  list.sort((a, b) => {
+    if (b.wins !== a.wins) return b.wins - a.wins;
+    if (b.diff !== a.diff) return b.diff - a.diff;
+    return b.points - a.points;
+  });
+
+  const allPlayed = (groupMatches || []).length === 6 && (groupMatches || []).every(m => m.played);
+  list.forEach((row, idx) => {
+    row.rank = idx + 1;
+    if (row.rank <= 2) {
+      row.qualified = allPlayed;
+      row.advanceTo = allPlayed ? 'Playoffs' : 'TBD';
+    } else {
+      row.qualified = false;
+      row.advanceTo = allPlayed ? 'Eliminated' : 'TBD';
+    }
+  });
+
+  return list;
+}
+
+function renderAllViews() {
+  renderTimelineMatrix();
+  if (state.activeBracketId) {
+    renderBracketModal();
+  }
+  if (state.activeCourtModalId) {
+    renderCourtMatchesModal();
+  }
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
+
+// ─── Realtime Event Handlers ───
+async function handleGroupMatchRealtimeUpdate(payload) {
+  // Reload state from Supabase to guarantee synchronized standings
+  await loadTournamentStateFromSupabase();
+}
+
+async function handlePlayoffMatchRealtimeUpdate(payload) {
+  await loadTournamentStateFromSupabase();
+}
+
+async function handlePlayerRealtimeUpdate(payload) {
+  await loadTournamentStateFromSupabase();
+}
+
+async function handleTournamentRealtimeUpdate(payload) {
+  await loadTournamentStateFromSupabase();
+}
 

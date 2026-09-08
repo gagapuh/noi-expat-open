@@ -102,3 +102,70 @@ Example entry:
 3. In GitHub repo settings: **Settings** → **Pages** → select branch `main` and folder `/(root)` → click **Save**.
 4. Your schedule will be live at `https://YOUR_USERNAME.github.io/noi-expat-open/`!
 
+---
+
+## 🤖 Telegram Bot & Live Backend (`ssh usavpn`)
+
+Для круглосуточной работы бота и мгновенной синхронизации турнирной таблицы бэкенд развернут на сервере **`usavpn`** (хост настроен в `~/.ssh/config`). Бот работает непрерывно 24/7 в качестве службы `systemd` (`noi-bot.service`).
+
+### 📌 Параметры подключения и размещение
+- **SSH хост:** `usavpn` (или `ssh root@5.78.204.27`)
+- **Папка с кодом бота:** `/opt/noi-expat-bot/`
+- **Имя службы systemd:** `noi-bot.service`
+- **Бот в Telegram:** [@noi_expat_open_bot](https://t.me/noi_expat_open_bot)
+
+---
+
+### 🛠️ Инструкция по работе с ботом и обновлениям
+
+Вы (и любой ИИ-ассистент) можете в любой момент подключаться к серверу `ssh usavpn`, проверять состояние, читать логи и обновлять функционал:
+
+#### 1. Проверить статус службы:
+```bash
+ssh usavpn "systemctl status noi-bot --no-pager"
+```
+
+#### 2. Просмотр логов в реальном времени:
+```bash
+ssh usavpn "journalctl -u noi-bot -f"
+```
+*(просмотреть последние 50 строк: `ssh usavpn "journalctl -u noi-bot -n 50 --no-pager"`)*
+
+#### 3. Перезапустить бота:
+```bash
+ssh usavpn "systemctl restart noi-bot"
+```
+
+#### 4. Остановить / Запустить:
+```bash
+ssh usavpn "systemctl stop noi-bot"
+ssh usavpn "systemctl start noi-bot"
+```
+
+#### 5. Как обновлять код бота:
+**Способ А (с локальной машины в одну команду через rsync):**
+```bash
+rsync -avz --exclude='venv/' --exclude='__pycache__/' bot/ usavpn:/opt/noi-expat-bot/ && ssh usavpn "systemctl restart noi-bot"
+```
+
+**Способ Б (напрямую на сервере):**
+```bash
+ssh usavpn
+cd /opt/noi-expat-bot
+# вносим правки
+systemctl restart noi-bot
+```
+
+#### 6. Мульти-турнирность (переключение и создание турниров):
+Бот поддерживает работу с несколькими турнирами одновременно:
+- Команда `/tournaments` или кнопка **«🏆 Турниры»** в главном меню — открывает список всех турниров из Supabase и позволяет в 1 клик выбрать активный.
+- Команда `/set_tournament <ID>` — быстрое переключение на нужный ID.
+- Команда `/new_tournament` — пошаговый мастер создания нового турнира (автоматически создаёт 32 слота игроков и сетку плей-офф в базе).
+- Выбранный активный турнир сохраняется индивидуально для каждого администратора в `active_tournaments.json`.
+
+#### 7. Конфигурация (.env на сервере):
+Файл с переменными окружения находится на сервере по пути `/opt/noi-expat-bot/.env`.
+
+Служба `systemd` настроена с флагом `Restart=always` и `RestartSec=5s`, поэтому бот автоматически перезапускается при любых сбоях и загружается при старте системы.
+
+

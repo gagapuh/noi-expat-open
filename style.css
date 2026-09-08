@@ -212,3 +212,386 @@ body {
 .modal-animate-scale {
   animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Mobile agenda uses the existing event cards; desktop and print keep the matrix. */
+@media screen and (max-width: 1023px) {
+  body > main.flex {
+    padding: 16px 12px 32px;
+    gap: 16px;
+  }
+
+  body .schedule-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  body .schedule-day-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .schedule-day-tabs .day-tab-btn {
+    height: auto;
+    min-height: 48px;
+    padding: 10px 12px;
+    white-space: normal;
+    text-wrap: balance;
+    line-height: 1.4;
+  }
+
+  #mobileCourtTabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    background: #e7e5e4;
+  }
+
+  #mobileCourtTabs .court-tab {
+    height: 44px;
+    padding: 0 4px;
+    font-weight: 600;
+  }
+
+  body .schedule-panel {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  #gridTableContainer {
+    overflow: visible;
+  }
+
+  body .timeline-heading,
+  body .timeline-ruler,
+  body .timeline-court-background,
+  body .staggered-background {
+    display: none;
+  }
+
+  body .timeline-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    height: auto !important;
+    background: transparent;
+  }
+
+  body .timeline-court {
+    display: contents;
+  }
+
+  body .timeline-event-card {
+    position: relative;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-width: 0;
+    padding: 14px;
+    gap: 12px;
+    order: var(--event-order);
+    z-index: auto !important;
+    overflow-wrap: anywhere;
+    opacity: 1;
+  }
+
+  .timeline-event-card .mobile-event-courts {
+    display: block;
+    color: #57534e;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .timeline-event-card .event-summary {
+    position: static;
+    height: auto !important;
+    margin: 0;
+    padding: 8px 0;
+    gap: 6px;
+  }
+
+  .event-summary > div:has(> img) {
+    margin-bottom: 4px;
+  }
+
+  .event-summary img {
+    max-height: 44px;
+  }
+
+  .event-summary > .font-black {
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .timeline-event-card button,
+  .timeline-event-card a {
+    min-height: 44px;
+    font-size: 12px;
+  }
+
+  .timeline-event-card:hover,
+  .staggered-tournament-card:hover {
+    transform: none;
+  }
+
+  /* The four stepped lanes become labeled rows with the same times and actions. */
+  body .staggered-tournament-card {
+    padding: 14px !important;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff 45%, #fff) !important;
+    border: 1px solid #bfdbfe !important;
+    filter: none;
+  }
+
+  .staggered-tournament-card .mobile-event-courts {
+    order: -2;
+  }
+
+  .staggered-tournament-card .staggered-badges {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    order: -1;
+  }
+
+  .staggered-badges > div {
+    margin-top: 0;
+  }
+
+  .staggered-tournament-card .staggered-court-actions {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #bfdbfe;
+    gap: 0;
+  }
+
+  .staggered-court-actions > div {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    height: auto !important;
+    padding: 10px 0;
+    border-bottom: 1px solid #dbeafe;
+  }
+
+  .staggered-court-actions > div:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .staggered-court-actions .mobile-court-name {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1c1917;
+  }
+
+  .staggered-court-actions .justify-end {
+    justify-content: center;
+  }
+
+  .staggered-court-actions .mt-auto {
+    margin: 0;
+    padding: 0;
+  }
+
+  .staggered-court-actions button {
+    padding: 8px;
+  }
+}
+
+@media screen and (max-width: 639px) {
+  body > header > .mx-auto {
+    min-height: 68px;
+    height: auto;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  body > header > div > div:first-child {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  body > header img.object-contain {
+    height: 30px;
+    flex-shrink: 0;
+  }
+
+  #tournamentTitle {
+    font-size: 15px;
+    line-height: 1.15;
+  }
+
+  #liveSyncBadge {
+    display: none;
+  }
+
+  #locationBtn {
+    min-height: 44px;
+    padding: 0 10px;
+    flex-shrink: 0;
+  }
+
+  /* Full-height sheets keep navigation and close controls above the scrolling body. */
+  #bracketModal,
+  #courtMatchesModal,
+  #locationModal {
+    padding: 0;
+  }
+
+  #courtMatchesModal.active {
+    display: flex;
+  }
+
+  :is(#bracketModal, #courtMatchesModal, #locationModal) > .modal-animate-scale {
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  :is(#bracketModalContent, #courtMatchesModalContent) > .modal-heading {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .modal-heading > div:last-child {
+    align-self: flex-start;
+    flex-shrink: 0;
+  }
+
+  .modal-heading h2,
+  .modal-heading h3 {
+    font-size: 17px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .modal-heading button,
+  #locationModal button {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  #bracketModalContent .bracket-navigation {
+    padding: 8px 12px;
+  }
+
+  .bracket-navigation > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .bracket-navigation button {
+    min-height: 44px;
+    padding: 8px 4px;
+    white-space: normal;
+  }
+
+  :is(#bracketModalContent, #courtMatchesModalContent) > .overflow-y-auto {
+    min-height: 0;
+    padding: 12px;
+    overscroll-behavior-y: contain;
+  }
+
+  #bracketModalContent .truncate {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  #bracketModalContent .flex.items-center.justify-between {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  #bracketModalContent .standings-scroll {
+    padding: 8px;
+  }
+
+  .standings-scroll table {
+    table-layout: fixed;
+    font-size: 11px;
+  }
+
+  .standings-scroll :is(th, td) {
+    padding: 10px 3px;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    letter-spacing: normal;
+  }
+
+  .standings-scroll th:first-child {
+    width: 7%;
+  }
+
+  .standings-scroll th:nth-child(2) {
+    width: 29%;
+  }
+
+  .standings-scroll th:last-child {
+    width: 23%;
+  }
+
+  #bracketModalContent .group-matches {
+    padding: 12px;
+  }
+
+  .group-matches .min-w-0 {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    flex: 1;
+    gap: 4px 8px;
+  }
+
+  .group-matches .min-w-0 > :first-child {
+    grid-row: 1 / 4;
+    align-self: start;
+  }
+
+  .group-matches .min-w-0 > :not(:first-child) {
+    grid-column: 2;
+  }
+
+  #courtMatchesModalContent > .overflow-x-auto {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 8px 12px;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  #courtMatchesModalContent > .overflow-x-auto > span {
+    grid-column: 1 / -1;
+  }
+
+  #courtMatchesModalContent > .overflow-x-auto button {
+    min-height: 44px;
+    white-space: normal;
+    padding: 6px;
+  }
+
+  #courtMatchesModalContent .modal-heading .mb-1,
+  #courtMatchesModalContent > .overflow-y-auto > .flex,
+  #locationModal .space-y-1\.5 > .flex {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
