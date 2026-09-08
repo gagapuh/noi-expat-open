@@ -249,18 +249,6 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
         {
-          id: "d2-c2-free-15-16",
-          courtId: "c2",
-          start: "15:00",
-          end: "16:00",
-          title: "Free Court / Open Play",
-          host: "",
-          logo: "",
-          reclubUrl: "",
-          category: "free",
-          status: "free"
-        },
-        {
           id: "d2-c3-picklehead",
           courtId: "c3",
           start: "11:00",
@@ -274,18 +262,6 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
         {
-          id: "d2-c3-free-14-19",
-          courtId: "c3",
-          start: "14:00",
-          end: "19:00",
-          title: "Free Court / Open Play",
-          host: "",
-          logo: "",
-          reclubUrl: "",
-          category: "free",
-          status: "free"
-        },
-        {
           id: "d2-c4-picklehead",
           courtId: "c4",
           start: "11:00",
@@ -297,18 +273,6 @@ const TOURNAMENT_CONFIG = {
           reclubUrl: "",
           category: "tournament",
           status: "occupied"
-        },
-        {
-          id: "d2-c4-free-14-19",
-          courtId: "c4",
-          start: "14:00",
-          end: "19:00",
-          title: "Free Court / Open Play",
-          host: "",
-          logo: "",
-          reclubUrl: "",
-          category: "free",
-          status: "free"
         },
 
         // 16:00 - 19:00 DUPR 3.5-4.0 (Courts 1, 2)
