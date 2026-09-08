@@ -218,13 +218,24 @@ function renderTimelineMatrix() {
 
       // ── Unified group: per-court cards + one floating title centered across all 4 ──
       if (isUnifiedGroup) {
-        const laneBorderClass = court.id === 'c4'
-          ? 'border border-blue-300/60 border-l-0'
-          : 'border border-blue-300/60 border-l-0 border-r border-dashed';
+        const unifiedBgPos = {
+          c1: '0% 0%',
+          c2: '33.333% 0%',
+          c3: '66.667% 0%',
+          c4: '100% 0%'
+        }[court.id] || '0% 0%';
+
+        const unifiedBgStyle = `background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: ${unifiedBgPos}; background-repeat: no-repeat;`;
+
+        const laneBorderClass = court.id === 'c1'
+          ? 'border border-blue-300/60 border-r border-dashed'
+          : (court.id === 'c4'
+              ? 'border-t border-b border-r border-blue-300/60 border-l-0'
+              : 'border-t border-b border-r border-dashed border-blue-300/60 border-l-0');
 
         bodyHtml += `
-          <div class="timeline-event-card bg-gradient-to-br ${catConfig.cardBg} ${laneBorderClass} shadow-card hover:shadow-card-hover"
-               style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle}">
+          <div class="timeline-event-card ${laneBorderClass} shadow-card hover:shadow-card-hover"
+               style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle} ${unifiedBgStyle}">
             <div class="flex items-center justify-between gap-1">
               <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-black uppercase tracking-wide ${catConfig.badge} leading-none whitespace-nowrap">${court.name}</span>
               <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-mono font-bold bg-white/90 text-stone-600 border border-stone-200 leading-none">${ev.start}–${ev.end}</span>
