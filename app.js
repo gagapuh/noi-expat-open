@@ -193,91 +193,35 @@ function renderTimelineMatrix() {
       const isFinals = ev.category === 'finals';
       const hasReclubUrl = Boolean(ev.reclubUrl && ev.reclubUrl.trim() !== '');
 
-      // Unified group: one header spanning all 4 courts, each court lane at its real height below
+
+      // Unified group: 4 cards, each at real height, dashed borders between courts, centered content
       const isUnifiedGroup = !isSingleCourtView && Boolean(ev.unifiedGroup);
-      const unifiedHeaderHeight = 110; // px — shared header height
+
+      let spanStyle = '';
+      if (isUnifiedGroup) {
+        if (court.id === 'c1') spanStyle = 'left: 5px; right: -1px; z-index: 15;';
+        else if (court.id === 'c2' || court.id === 'c3') spanStyle = 'left: 0px; right: -1px; z-index: 15;';
+        else if (court.id === 'c4') spanStyle = 'left: 0px; right: 5px; z-index: 15;';
+      }
 
       // Multi-court span handling (non-unified)
       const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
-      let spanStyle = effectiveSpan > 1
-        ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
-        : '';
-
-      if (isUnifiedGroup) {
-        // ── Render unified gradient header ONCE when we hit Court 1 ──
-        if (court.id === 'c1') {
-          bodyHtml += `
-            <div class="timeline-event-card rounded-2xl rounded-b-none border border-blue-500/60 bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white shadow-lg flex flex-col items-center justify-center text-center gap-2 px-4 py-3 overflow-hidden"
-                 style="top: ${topPx}px; height: ${unifiedHeaderHeight}px; left: 5px; width: calc(400% - 10px); z-index: 25;">
-              <div class="flex items-center justify-center gap-3">
-                ${ev.logo ? `
-                  <div class="p-1.5 rounded-xl bg-white/95 shadow-sm shrink-0">
-                    <img src="${ev.logo}" alt="" class="h-9 sm:h-10 w-auto object-contain rounded-md" onerror="this.parentElement.style.display='none'" />
-                  </div>
-                ` : ''}
-                <div class="flex flex-col items-start text-left">
-                  <div class="text-sm sm:text-base font-black text-white leading-tight drop-shadow-sm">${ev.title}</div>
-                  ${ev.subtitle ? `<div class="text-[11px] text-blue-200 font-medium mt-0.5 leading-snug">${ev.subtitle}</div>` : ''}
-                </div>
-              </div>
-              <div class="flex items-center gap-2 flex-wrap justify-center">
-                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] uppercase font-black tracking-wider bg-amber-400 text-stone-950 shadow-sm">Courts 1–4</span>
-                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] font-mono font-bold bg-white/15 text-white border border-white/20">11:00 – 17:00</span>
-                ${ev.host && ev.host !== 'TBA' ? `<span class="inline-flex items-center gap-1 h-[20px] px-2 rounded-md text-[9px] bg-white/10 text-white border border-white/15"><span class="opacity-70">Host:</span> <span class="font-bold">${ev.host}</span></span>` : ''}
-                <button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
-                  class="inline-flex items-center h-[20px] px-2 gap-1 rounded-md text-[9px] font-bold bg-white text-blue-900 hover:bg-blue-50 shadow-sm cursor-pointer transition-all whitespace-nowrap">
-                  <i data-lucide="trophy" class="w-3 h-3 text-amber-500"></i> Bracket
-                </button>
-              </div>
-            </div>
-          `;
-        }
-
-        // ── Court lane card: starts below header, real height per court ──
-        const laneTop = topPx + unifiedHeaderHeight;
-        const laneHeight = Math.max(48, heightPx - unifiedHeaderHeight);
-
-        let laneLeft = '', laneRight = '';
-        if (court.id === 'c1') { laneLeft = 'left: 5px; right: -1px;'; }
-        else if (court.id === 'c2' || court.id === 'c3') { laneLeft = 'left: 0px; right: -1px;'; }
-        else if (court.id === 'c4') { laneLeft = 'left: 0px; right: 5px;'; }
-
-        const dashedBorder = court.id === 'c4'
-          ? 'border-l-0 border-r border-b border-blue-300/70 rounded-bl-none rounded-br-2xl'
-          : 'border-l-0 border-r border-dashed border-r-blue-300/80 border-b border-blue-300/70 rounded-b-none';
-
-        bodyHtml += `
-          <div class="timeline-event-card bg-gradient-to-b from-blue-50/80 to-white/90 ${dashedBorder} shadow-sm"
-               style="top: ${laneTop}px; height: ${laneHeight}px; ${laneLeft} z-index: 15;">
-            <!-- Court badge + time -->
-            <div class="flex items-center justify-between gap-1 mb-1.5">
-              <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-black uppercase tracking-wide bg-blue-900 text-white leading-none">${court.name}</span>
-              <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-mono font-bold bg-white text-stone-600 border border-stone-200 leading-none">${ev.start}–${ev.end}</span>
-            </div>
-            <!-- Court stages -->
-            ${ev.courtStages ? `
-              <div class="my-auto text-center">
-                <div class="text-[9px] sm:text-[10px] font-semibold text-blue-800 bg-blue-50/90 border border-blue-200/80 rounded-md px-1.5 py-1 leading-snug">${ev.courtStages}</div>
-              </div>
-            ` : ''}
-            <!-- Scheduled Matches button -->
-            <div class="mt-auto pt-1.5">
-              <button type="button" onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
-                class="w-full py-1 px-1.5 rounded-md bg-white hover:bg-blue-600 hover:text-white border border-blue-200 hover:border-blue-600 text-[9px] font-extrabold text-blue-700 flex items-center justify-center gap-1 transition-all cursor-pointer group">
-                <i data-lucide="calendar-days" class="w-2.5 h-2.5 text-blue-600 group-hover:text-white transition-colors"></i>
-                <span>Scheduled Matches</span>
-              </button>
-            </div>
-          </div>
-        `;
-
-        return; // skip default bodyHtml += below
+      if (!isUnifiedGroup && effectiveSpan > 1) {
+        spanStyle = `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`;
       }
 
-      // ── Standard (non-unified) card ──
-      const cardClasses = isPlanned
+      const unifiedBorderClass = isUnifiedGroup
+        ? (court.id === 'c4'
+            ? 'border border-blue-300/70 border-l-0'
+            : 'border border-blue-300/70 border-l-0 border-r border-dashed')
+        : '';
+
+      const cardClasses = isUnifiedGroup
+        ? `bg-gradient-to-br ${catConfig.cardBg} ${unifiedBorderClass} shadow-card hover:shadow-card-hover`
+        : isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
         : `bg-gradient-to-br ${catConfig.cardBg} border ${catConfig.cardBorder} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
+
 
       bodyHtml += `
         <div 
