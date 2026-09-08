@@ -239,7 +239,7 @@ function renderTimelineMatrix() {
             </div>
 
             <!-- Header Content (Logo + Title + Subtitle + Host + Players + Bracket) Centered across all 4 courts -->
-            <div class="absolute top-0 left-0 right-0 pt-10 px-4 flex flex-col items-center text-center z-20 pointer-events-none">
+            <div class="absolute top-0 left-0 right-0 px-4 flex flex-col items-center justify-center text-center z-20 pointer-events-none" style="height: calc(4 / 6 * 100%);">
               ${ev.logo ? `
                 <div class="p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-2 pointer-events-auto">
                   <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
