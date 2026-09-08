@@ -351,6 +351,8 @@ function renderTimelineMatrix() {
                     <img src="dupr.png?v=3" alt="DUPR" class="h-6 sm:h-7 w-auto object-contain rounded-md" />
                     <span class="text-[9px] sm:text-[10px] text-stone-600 font-bold tracking-tight pr-1">${ev.duprStatus || 'To Be Confirmed'}</span>
                   </div>
+                ` : ''}
+                ${(ev.isDupr || ev.showReclubBadge) ? `
                   <${hasReclubUrl ? 'a' : 'div'} ${hasReclubUrl ? `href="${ev.reclubUrl}" target="_blank" rel="noopener noreferrer"` : ''}
                     class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs ${hasReclubUrl ? 'cursor-pointer' : 'cursor-default'}"
                     title="${hasReclubUrl ? 'Open Reclub Activity' : 'Reclub Activity'}">

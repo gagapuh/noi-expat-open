@@ -282,12 +282,12 @@ const TOURNAMENT_CONFIG = {
           courtId: "c1",
           courtIds: ["c1", "c2"],
           courtSpan: 2,
-          courtLabel: "Courts 1 & 2",
           start: "19:00",
           end: "22:00",
           title: "The Grand Kitchen Party",
           host: "TBA",
           logo: "002.svg",
+          showReclubBadge: true,
           reclubUrl: "",
           category: "social",
           status: "occupied"
@@ -302,6 +302,7 @@ const TOURNAMENT_CONFIG = {
           title: "The Grand Kitchen Party",
           host: "TBA",
           logo: "picklehead.webp",
+          showReclubBadge: true,
           reclubUrl: "",
           category: "social",
           status: "occupied"
