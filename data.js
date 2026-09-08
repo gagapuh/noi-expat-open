@@ -372,20 +372,20 @@ const TOURNAMENT_BRACKETS = {
     courts: "Courts 1, 2, 3, 4",
     format: "Individual Doubles (Americano)",
     playersCount: 32,
-    poolsCount: 8,
+    groupsCount: 8,
     advanceCount: 2,
     totalAdvancing: 16,
-    description: "32 players seeded into 8 pools (4 players each). Every player plays 3 matches, partnering with each other pool member once. Individual points are accumulated; the top 2 players from each pool advance to the 16-player single elimination playoffs.",
+    description: "32 players seeded into 8 groups of 4 players (Groups A to H). Every player plays 3 matches, partnering with each other group member once. Individual points are accumulated; the top 2 players from each group advance to the 16-player single elimination playoffs.",
     rules: [
-      { title: "32 Participants · 8 Pools", desc: "Players 1 to 32 are divided into 8 baskets/pools of 4 players." },
-      { title: "Americano Individual Doubles", desc: "In each pool, every player plays 3 matches, rotating partners so they play with every pool member once." },
+      { title: "32 Participants · 8 Groups", desc: "Players 1 to 32 are divided into 8 groups (Group A to Group H) of 4 players each." },
+      { title: "Americano Individual Doubles", desc: "In each group, every player plays 3 matches, rotating partners so they play with every group member once." },
       { title: "Scoring & Points Accumulation", desc: "Each match is played to 11 points. The points your pair scores in each game are added to your individual total." },
-      { title: "Top 2 Advance (16 Players)", desc: "The top 2 players with the highest points tally in each pool advance to the Round of 16 Championship Playoff Bracket." }
+      { title: "Top 2 Advance (16 Players)", desc: "The top 2 players with the highest points tally in each group advance to the Round of 16 Championship Playoff Bracket." }
     ],
-    pools: [
+    groups: [
       {
-        id: "pool-1",
-        name: "Pool 1 (Group A)",
+        id: "group-a",
+        name: "Group A",
         court: "Court 1",
         players: ["Player 1", "Player 2", "Player 3", "Player 4"],
         matches: [
@@ -401,8 +401,8 @@ const TOURNAMENT_BRACKETS = {
         ]
       },
       {
-        id: "pool-2",
-        name: "Pool 2 (Group B)",
+        id: "group-b",
+        name: "Group B",
         court: "Court 2",
         players: ["Player 5", "Player 6", "Player 7", "Player 8"],
         matches: [
@@ -418,8 +418,8 @@ const TOURNAMENT_BRACKETS = {
         ]
       },
       {
-        id: "pool-3",
-        name: "Pool 3 (Group C)",
+        id: "group-c",
+        name: "Group C",
         court: "Court 3",
         players: ["Player 9", "Player 10", "Player 11", "Player 12"],
         matches: [
@@ -435,8 +435,8 @@ const TOURNAMENT_BRACKETS = {
         ]
       },
       {
-        id: "pool-4",
-        name: "Pool 4 (Group D)",
+        id: "group-d",
+        name: "Group D",
         court: "Court 4",
         players: ["Player 13", "Player 14", "Player 15", "Player 16"],
         matches: [
@@ -452,8 +452,8 @@ const TOURNAMENT_BRACKETS = {
         ]
       },
       {
-        id: "pool-5",
-        name: "Pool 5 (Group E)",
+        id: "group-e",
+        name: "Group E",
         court: "Court 1",
         players: ["Player 17", "Player 18", "Player 19", "Player 20"],
         matches: [
@@ -469,8 +469,8 @@ const TOURNAMENT_BRACKETS = {
         ]
       },
       {
-        id: "pool-6",
-        name: "Pool 6 (Group F)",
+        id: "group-f",
+        name: "Group F",
         court: "Court 2",
         players: ["Player 21", "Player 22", "Player 23", "Player 24"],
         matches: [
@@ -486,8 +486,8 @@ const TOURNAMENT_BRACKETS = {
         ]
       },
       {
-        id: "pool-7",
-        name: "Pool 7 (Group G)",
+        id: "group-g",
+        name: "Group G",
         court: "Court 3",
         players: ["Player 25", "Player 26", "Player 27", "Player 28"],
         matches: [
@@ -503,8 +503,8 @@ const TOURNAMENT_BRACKETS = {
         ]
       },
       {
-        id: "pool-8",
-        name: "Pool 8 (Group H)",
+        id: "group-h",
+        name: "Group H",
         court: "Court 4",
         players: ["Player 29", "Player 30", "Player 31", "Player 32"],
         matches: [
@@ -522,16 +522,16 @@ const TOURNAMENT_BRACKETS = {
     ],
     playoffs: {
       title: "Playoffs — 16 Advancing Players",
-      description: "Top 2 players from each of the 8 pools advance into the single-elimination doubles championship bracket.",
+      description: "Top 2 players from each of the 8 groups advance into the single-elimination doubles championship bracket.",
       rounds: [
         {
           name: "Round of 16",
           badge: "16 Players · 4 Matches",
           matches: [
-            { id: "R16-1", court: "Court 1", pair1: "Pool 1 #1 (Player 1) & Pool 2 #2 (Player 5)", pair2: "Pool 3 #1 (Player 9) & Pool 4 #2 (Player 14)", score: "11 — 7", winner: 1 },
-            { id: "R16-2", court: "Court 2", pair1: "Pool 2 #1 (Player 6) & Pool 1 #2 (Player 2)", pair2: "Pool 4 #1 (Player 13) & Pool 3 #2 (Player 10)", score: "8 — 11", winner: 2 },
-            { id: "R16-3", court: "Court 3", pair1: "Pool 5 #1 (Player 18) & Pool 6 #2 (Player 22)", pair2: "Pool 7 #1 (Player 25) & Pool 8 #2 (Player 30)", score: "11 — 9", winner: 1 },
-            { id: "R16-4", court: "Court 4", pair1: "Pool 6 #1 (Player 21) & Pool 5 #2 (Player 17)", pair2: "Pool 8 #1 (Player 29) & Pool 7 #2 (Player 26)", score: "11 — 8", winner: 1 }
+            { id: "R16-1", court: "Court 1", pair1: "Group A #1 (Player 1) & Group B #2 (Player 5)", pair2: "Group C #1 (Player 9) & Group D #2 (Player 14)", score: "11 — 7", winner: 1 },
+            { id: "R16-2", court: "Court 2", pair1: "Group B #1 (Player 6) & Group A #2 (Player 2)", pair2: "Group D #1 (Player 13) & Group C #2 (Player 10)", score: "8 — 11", winner: 2 },
+            { id: "R16-3", court: "Court 3", pair1: "Group E #1 (Player 18) & Group F #2 (Player 22)", pair2: "Group G #1 (Player 25) & Group H #2 (Player 30)", score: "11 — 9", winner: 1 },
+            { id: "R16-4", court: "Court 4", pair1: "Group F #1 (Player 21) & Group E #2 (Player 17)", pair2: "Group H #1 (Player 29) & Group G #2 (Player 26)", score: "11 — 8", winner: 1 }
           ]
         },
         {

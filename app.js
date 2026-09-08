@@ -10,8 +10,8 @@ const state = {
   currentDayId: 'day1',
   selectedMobileCourt: 'all',
   activeBracketId: null,
-  bracketActiveTab: 'pools',
-  bracketPoolFilter: 'all'
+  bracketActiveTab: 'groups',
+  bracketGroupFilter: 'all'
 };
 
 // ─── Constants ───
@@ -304,11 +304,11 @@ function setupEventListeners() {
   });
 }
 
-// ─── Tournament Draw / Bracket Modal Functions ───
+/// ─── Tournament Draw / Bracket Modal Functions ───
 window.openBracketModal = function(bracketId) {
   state.activeBracketId = bracketId;
-  state.bracketActiveTab = 'pools';
-  state.bracketPoolFilter = 'all';
+  state.bracketActiveTab = 'groups';
+  state.bracketGroupFilter = 'all';
   renderBracketModal();
   const modal = document.getElementById('bracketModal');
   if (modal) {
@@ -339,8 +339,8 @@ window.setBracketTab = function(tabName) {
   }
 };
 
-window.setBracketPoolFilter = function(poolId) {
-  state.bracketPoolFilter = poolId;
+window.setBracketGroupFilter = function(groupId) {
+  state.bracketGroupFilter = groupId;
   renderBracketModal();
   if (window.lucide) {
     window.lucide.createIcons();
@@ -359,6 +359,8 @@ function renderBracketModal() {
     return;
   }
 
+  const groupsList = bracket.groups || bracket.pools || [];
+
   // Modal Header
   let html = `
     <!-- Header -->
@@ -372,7 +374,7 @@ function renderBracketModal() {
             ${bracket.format}
           </span>
           <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-bold">
-            ${bracket.playersCount} Players · ${bracket.poolsCount} Pools · Top ${bracket.advanceCount} Advance
+            ${bracket.playersCount} Players · 8 Groups · Top ${bracket.advanceCount} Advance
           </span>
         </div>
         <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
@@ -397,13 +399,13 @@ function renderBracketModal() {
     <div class="px-5 sm:px-7 py-2.5 bg-white border-b border-stone-200/70 flex items-center justify-between gap-3 shrink-0 overflow-x-auto">
       <div class="inline-flex items-center p-1 rounded-xl bg-stone-100 border border-stone-200/60">
         <button 
-          onclick="setBracketTab('pools')" 
+          onclick="setBracketTab('groups')" 
           class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            state.bracketActiveTab === 'pools' 
+            state.bracketActiveTab === 'groups' 
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Group Stage (8 Pools)
+          Group Stage (Groups A–H)
         </button>
         <button 
           onclick="setBracketTab('playoffs')" 
@@ -425,25 +427,25 @@ function renderBracketModal() {
         </button>
       </div>
 
-      ${state.bracketActiveTab === 'pools' ? `
-        <!-- Pool Quick Filter -->
+      ${state.bracketActiveTab === 'groups' ? `
+        <!-- Group Quick Filter -->
         <div class="hidden md:inline-flex items-center gap-1 overflow-x-auto">
           <span class="text-[10px] font-bold text-stone-400 uppercase tracking-wider mr-1">Filter:</span>
           <button 
-            onclick="setBracketPoolFilter('all')" 
+            onclick="setBracketGroupFilter('all')" 
             class="px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer ${
-              state.bracketPoolFilter === 'all' 
+              state.bracketGroupFilter === 'all' 
                 ? 'bg-stone-900 text-white shadow-2xs' 
                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
             }">All</button>
-          ${bracket.pools.map(p => `
+          ${groupsList.map(g => `
             <button 
-              onclick="setBracketPoolFilter('${p.id}')" 
-              class="px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer ${
-                state.bracketPoolFilter === p.id 
+              onclick="setBracketGroupFilter('${g.id}')" 
+              class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer ${
+                state.bracketGroupFilter === g.id 
                   ? 'bg-stone-900 text-white shadow-2xs' 
                   : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-              }">${p.id.replace('pool-', 'P')}</button>
+              }">${g.name}</button>
           `).join('')}
         </div>
       ` : ''}
@@ -453,34 +455,34 @@ function renderBracketModal() {
     <div class="flex-1 overflow-y-auto p-4 sm:p-7 space-y-6 bg-surface-1">
   `;
 
-  // ── Tab 1: Pools / Group Stage ──
-  if (state.bracketActiveTab === 'pools') {
-    const visiblePools = state.bracketPoolFilter === 'all'
-      ? bracket.pools
-      : bracket.pools.filter(p => p.id === state.bracketPoolFilter);
+  // ── Tab 1: Groups (Group Stage) ──
+  if (state.bracketActiveTab === 'groups') {
+    const visibleGroups = state.bracketGroupFilter === 'all'
+      ? groupsList
+      : groupsList.filter(g => g.id === state.bracketGroupFilter);
 
     html += `
       <div class="bg-blue-50/70 border border-blue-200/80 rounded-xl p-3.5 sm:p-4 text-xs text-blue-900 flex items-start gap-3">
         <i data-lucide="info" class="w-4 h-4 text-blue-600 shrink-0 mt-0.5"></i>
         <div>
-          <span class="font-bold">Americano / Individual Doubles Format:</span> 32 individual players are seeded into 8 pools (4 players per pool). 
-          Each player plays <strong>3 matches</strong> (partnering with each of the other 3 players in their pool once). 
-          The <strong>Top 2 players</strong> from each pool advance to the 16-player Championship Playoff stage!
+          <span class="font-bold">Americano / Individual Doubles Format:</span> 32 individual players are seeded into 8 groups of 4 players each (Group A to Group H). 
+          Each player plays <strong>3 matches</strong> (partnering with each of the other 3 players in their group once). 
+          The <strong>Top 2 players</strong> from each group advance to the 16-player Championship Playoff stage!
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
     `;
 
-    visiblePools.forEach(pool => {
+    visibleGroups.forEach(group => {
       html += `
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card overflow-hidden flex flex-col">
-          <!-- Pool Header -->
+          <!-- Group Header -->
           <div class="px-4 py-3 bg-stone-50 border-b border-stone-200/70 flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-              <span class="font-bold text-sm text-stone-900 font-display">${pool.name}</span>
-              <span class="text-[11px] text-stone-400 font-mono">(${pool.court})</span>
+              <span class="font-bold text-sm text-stone-900 font-display">${group.name}</span>
+              <span class="text-[11px] text-stone-400 font-mono">(${group.court})</span>
             </div>
             <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider">
               Top 2 Advance
@@ -502,7 +504,7 @@ function renderBracketModal() {
                 </tr>
               </thead>
               <tbody class="divide-y divide-stone-100">
-                ${pool.standings.map(row => `
+                ${group.standings.map(row => `
                   <tr class="${row.qualified ? 'bg-emerald-50/40 font-medium' : 'text-stone-600'} hover:bg-stone-50 transition-colors">
                     <td class="py-2 px-2.5 text-center font-mono font-bold ${row.qualified ? 'text-emerald-700' : 'text-stone-400'}">
                       ${row.rank}
@@ -528,14 +530,14 @@ function renderBracketModal() {
             </table>
           </div>
 
-          <!-- Pool Matches (3 Rounds: Each with Each) -->
+          <!-- Group Matches (3 Rounds: Each with Each) -->
           <div class="px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto">
             <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2 flex items-center justify-between">
-              <span>Pool Matches (3 Rounds):</span>
+              <span>Group Matches (3 Rounds):</span>
               <span class="text-[10px] font-normal text-stone-500 lowercase">each with each</span>
             </div>
             <div class="space-y-1.5 text-xs">
-              ${pool.matches.map(m => `
+              ${group.matches.map(m => `
                 <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white border border-stone-200/60 text-stone-700 shadow-2xs">
                   <div class="flex items-center gap-2 min-w-0">
                     <span class="text-[10px] font-mono font-bold text-stone-400 uppercase shrink-0">${m.round}</span>
@@ -599,11 +601,11 @@ function renderBracketModal() {
                   <div class="space-y-1.5 text-xs">
                     <div class="flex items-center justify-between gap-2 p-2 rounded-lg ${match.winner === 1 ? 'bg-emerald-50 border border-emerald-200 font-bold text-emerald-950' : 'bg-white border border-stone-200/60 text-stone-600'}">
                       <span class="truncate">${match.pair1}</span>
-                      ${match.winner === 1 ? '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>' : ''}
+                      ${match.winner === 1 ? '<i data-lucide="check" class="w-3 h-3 text-emerald-600 shrink-0"></i>' : ''}
                     </div>
                     <div class="flex items-center justify-between gap-2 p-2 rounded-lg ${match.winner === 2 ? 'bg-emerald-50 border border-emerald-200 font-bold text-emerald-950' : 'bg-white border border-stone-200/60 text-stone-600'}">
                       <span class="truncate">${match.pair2}</span>
-                      ${match.winner === 2 ? '<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>' : ''}
+                      ${match.winner === 2 ? '<i data-lucide="check" class="w-3 h-3 text-emerald-600 shrink-0"></i>' : ''}
                     </div>
                   </div>
 
@@ -650,7 +652,7 @@ function renderBracketModal() {
         <div class="p-4 sm:p-5 rounded-xl bg-stone-50 border border-stone-200">
           <h4 class="text-xs font-bold uppercase tracking-wider text-stone-700 mb-3 flex items-center gap-2">
             <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-blue-600"></i>
-            <span>4-Player Americano Rotation Matrix per Pool</span>
+            <span>4-Player Americano Rotation Matrix per Group</span>
           </h4>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
             <div class="p-3.5 rounded-xl bg-white border border-stone-200 shadow-2xs">
