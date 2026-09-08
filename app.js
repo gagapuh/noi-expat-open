@@ -355,6 +355,11 @@ function renderTimelineMatrix() {
             <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-xs sm:text-[13px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight">
               ${ev.title}
             </div>
+            ${ev.subtitle ? `
+              <div class="text-xs sm:text-[13px] text-stone-600 font-semibold leading-snug">
+                ${ev.subtitle}
+              </div>
+            ` : ''}
             ${ev.host && ev.host !== 'TBA' ? `
               <div class="text-[10px] sm:text-[11px] text-stone-500 font-medium">
                 Host: <span class="font-bold text-stone-800">${ev.host}</span>
