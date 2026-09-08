@@ -210,7 +210,7 @@ function renderTimelineMatrix() {
                 ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
               </span>
             </div>
-            ${!isFree ? `
+            ${ev.bracketId ? `
               <button 
                 type="button" 
                 onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
