@@ -196,219 +196,110 @@ function renderTimelineMatrix() {
       // Multi-court span handling
       const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
       let spanStyle = effectiveSpan > 1
-        ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
+        ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: ${effectiveSpan >= 4 ? '15' : '20'};`
         : '';
 
-      // Unified tournament group handling (Picklehead with centered master header and dashed court lanes)
-      const isUnifiedGroup = !isSingleCourtView && Boolean(ev.unifiedGroup);
-      const unifiedHeaderHeight = 118;
-      let unifiedClasses = '';
-      let cardTopPx = topPx;
-      let cardHeightPx = heightPx;
-
-      if (isUnifiedGroup) {
-        cardTopPx = topPx + unifiedHeaderHeight;
-        cardHeightPx = Math.max(48, heightPx - unifiedHeaderHeight);
-
-        if (court.id === 'c1') {
-          unifiedClasses = 'rounded-none border-l border-b border-blue-300 border-r-2 border-dashed border-blue-400/70 rounded-bl-2xl';
-          spanStyle = 'left: 5px; right: -1px; z-index: 15;';
-
-          // Render Master Header spanning Courts 1–4 ONCE
-          bodyHtml += `
-            <div 
-              class="timeline-event-card border border-blue-400/90 bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white rounded-t-2xl rounded-b-none shadow-md flex flex-col justify-between p-3 sm:p-3.5 z-25 overflow-hidden"
-              style="top: ${topPx}px; height: ${unifiedHeaderHeight}px; left: 5px; width: calc(400% - 10px);"
-              title="${ev.title}">
-              
-              <!-- Top Row: Badges & Staggered Notice -->
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-1.5">
-                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] uppercase font-black tracking-wider bg-white/20 text-white border border-white/20">
-                    Tournament
-                  </span>
-                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] uppercase font-bold tracking-wide bg-amber-400 text-stone-950 shadow-2xs">
-                    Courts 1–4
-                  </span>
-                </div>
-                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[10px] font-mono font-bold bg-white/15 text-white border border-white/15">
-                  11:00 – 17:00 <span class="text-blue-200 font-normal ml-1 hidden sm:inline">(Staggered Finish)</span>
-                </span>
-              </div>
-
-              <!-- Center: Single Centered Logo & Title -->
-              <div class="my-auto flex items-center justify-center gap-3.5 text-center py-0.5">
-                <div class="p-1 rounded-xl bg-white shadow-2xs shrink-0 flex items-center justify-center">
-                  <img src="picklehead.webp" alt="Picklehead" class="h-8 sm:h-9 w-auto object-contain rounded-md" />
-                </div>
-                <div class="flex flex-col items-center">
-                  <h3 class="text-sm sm:text-base font-display font-black text-white leading-tight tracking-tight drop-shadow-xs">
-                    Picklehead Main Stage: Individual Doubles (2.5–3.0)
-                  </h3>
-                  <p class="text-[11px] text-blue-100 font-medium mt-0.5">
-                    32 Players · 8 Americano Pools (Courts 1–4) · Top 16 Advance to Championship Playoffs
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bottom Action Controls -->
-              <div class="flex items-center justify-between gap-2 pt-1 border-t border-white/15 text-xs">
-                <div class="flex items-center gap-2">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/10 text-white text-[10px]">
-                    <span class="text-white/60 font-medium">Host:</span>
-                    <span class="font-extrabold text-white">Ho</span>
-                  </span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button 
-                    type="button" 
-                    onclick="window.openBracketModal && window.openBracketModal('picklehead-individual-doubles')"
-                    class="inline-flex items-center justify-center h-6 px-2.5 rounded-md text-[11px] font-bold text-blue-900 bg-white hover:bg-blue-50 shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap">
-                    <i data-lucide="trophy" class="w-3 h-3 text-amber-500 mr-1"></i>
-                    <span>Tournament Bracket (32 Players)</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          `;
-        } else if (court.id === 'c2') {
-          unifiedClasses = 'rounded-none border-b border-blue-300 border-l-0 border-r-2 border-dashed border-blue-400/70 rounded-b-2xl';
-          spanStyle = 'left: 0px; right: -1px; z-index: 15;';
-        } else if (court.id === 'c3') {
-          unifiedClasses = 'rounded-none border-b border-blue-300 border-l-0 border-r-2 border-dashed border-blue-400/70 rounded-bl-2xl';
-          spanStyle = 'left: 0px; right: -1px; z-index: 15;';
-        } else if (court.id === 'c4') {
-          unifiedClasses = 'rounded-none border-r border-b border-blue-300 border-l-0 rounded-br-2xl';
-          spanStyle = 'left: 0px; right: 5px; z-index: 15;';
-        }
-      }
-
       // Card classes
-      const cardClasses = isUnifiedGroup
-        ? `bg-gradient-to-br from-blue-100/90 via-blue-50/80 to-white/95 ${unifiedClasses} shadow-card hover:shadow-card-hover`
-        : isPlanned
+      const cardClasses = isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
         : `bg-gradient-to-br ${catConfig.cardBg} border ${catConfig.cardBorder} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
 
       bodyHtml += `
         <div 
           class="timeline-event-card ${cardClasses}"
-          style="top: ${cardTopPx}px; height: ${cardHeightPx}px; ${spanStyle}"
+          style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle}"
           title="${ev.title}">
           
-          ${isUnifiedGroup ? `
-            <!-- Unified Court Lane Inner Content -->
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center justify-between gap-1">
-                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[10px] font-extrabold uppercase tracking-wide bg-blue-900 text-white shadow-2xs leading-none">
-                  ${court.name}
+          <!-- Header: Badge + Time -->
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-wrap items-center justify-between gap-1">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
+                  isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
+                }">
+                  ${isFree ? 'Free Court' : catConfig.short}
                 </span>
-                <span class="inline-flex items-center h-[20px] px-1.5 rounded-md text-[10px] font-mono font-semibold bg-white/90 text-stone-700 border border-stone-200 leading-none">
-                  ${ev.start}–${ev.end}
-                </span>
+                ${(ev.courtSpan > 1 || (ev.courtIds && ev.courtIds.length > 1) || ev.courtLabel) ? `
+                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-black tracking-wider bg-stone-900 text-white shadow-2xs leading-none whitespace-nowrap">
+                    ${ev.courtLabel || 'Courts 3 & 4'}
+                  </span>
+                ` : ''}
               </div>
+              <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
+                ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Content: Logo + Title + Subtitle + Host (vertically centered) -->
+          <div class="my-auto flex flex-col items-center text-center gap-2 py-2">
+            ${ev.logo ? `
+              <div class="p-1.5 sm:p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
+                <img src="${ev.logo}" alt="" class="${effectiveSpan >= 4 ? 'h-10 sm:h-12' : 'h-8 sm:h-9'} w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
+              </div>
+            ` : ''}
+            <div class="${effectiveSpan > 1 ? (effectiveSpan >= 4 ? 'text-base sm:text-lg font-black' : 'text-[14px] sm:text-base font-black') : 'text-xs sm:text-[13px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight max-w-xl">
+              ${ev.title}
+            </div>
+            ${ev.subtitle ? `
+              <div class="text-[11px] sm:text-xs text-stone-600 font-medium max-w-lg leading-snug">
+                ${ev.subtitle}
+              </div>
+            ` : ''}
+            ${ev.host !== undefined ? `
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${
+                isPlanned 
+                  ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' 
+                  : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
+              } text-[11px] leading-none">
+                <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
+                <span class="w-1 h-2.5 rounded-full bg-stone-300"></span>
+                <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
+              </div>
+            ` : ''}
+
+            ${(effectiveSpan >= 4 && ev.courtScheduleList) ? `
+              <!-- Multi-Court Lane Schedule Breakdown with Dashed Dividers -->
+              <div class="mt-3 w-full max-w-2xl grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-dashed border-blue-200/90">
+                ${ev.courtScheduleList.map((cs, cIdx) => `
+                  <div class="flex flex-col items-center text-center p-2 rounded-xl bg-white/70 border border-blue-100/80 shadow-2xs ${cIdx < 3 ? 'sm:border-r sm:border-dashed sm:border-blue-200' : ''}">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-blue-950">${cs.courtName}</span>
+                    <span class="text-[10px] font-mono font-bold text-blue-700">${cs.time}</span>
+                    <span class="text-[9px] text-stone-500 font-medium leading-tight mt-0.5">${cs.stages}</span>
+                    <button 
+                      type="button" 
+                      onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}', '${cs.courtId}')"
+                      class="mt-1.5 px-2 py-0.5 text-[9px] font-extrabold text-blue-700 bg-blue-50 hover:bg-blue-600 hover:text-white border border-blue-200 rounded-md transition-all cursor-pointer shadow-2xs whitespace-nowrap">
+                      Matches &rarr;
+                    </button>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Footer: Bracket (Left) + Reclub (Right) -->
+          <div class="pt-2.5 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
+            ${ev.bracketId ? `
               <button 
                 type="button" 
-                onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
-                class="w-full py-1.5 px-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs hover:shadow-xs group">
-                <i data-lucide="calendar-days" class="w-3.5 h-3.5 text-white"></i>
-                <span>Scheduled Matches</span>
+                onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
+                class="inline-flex items-center justify-center h-7 px-2.5 sm:px-3 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all duration-150 cursor-pointer whitespace-nowrap">
+                <i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-500 mr-1.5"></i>
+                <span>Tournament Bracket (32 Players)</span>
               </button>
-            </div>
-
-            <div class="my-auto flex flex-col items-center text-center gap-2 py-2">
-              <div class="w-full p-2.5 rounded-xl bg-blue-50/90 border border-blue-200/80 text-center space-y-1">
-                <div class="text-[10px] font-black uppercase tracking-wider text-blue-900">${court.name} Stages</div>
-                <div class="text-xs font-black text-blue-950 leading-snug">${ev.courtStages || 'Tournament Play'}</div>
-              </div>
-            </div>
-
-            <div class="pt-2 border-t border-blue-200/60 flex items-center justify-between text-[11px] font-semibold text-stone-600">
-              <span class="text-blue-800 font-bold">${court.name}</span>
-              <button 
-                type="button"
-                onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
-                class="text-blue-600 font-bold hover:underline cursor-pointer">
-                View Matches &rarr;
-              </button>
-            </div>
-          ` : `
-            <!-- Standard / Independent Event Card Content -->
-            <!-- Header: Badge + Time -->
-            <div class="flex flex-col gap-1">
-              <div class="flex flex-wrap items-center justify-between gap-1">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
-                    isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
-                  }">
-                    ${isFree ? 'Free Court' : catConfig.short}
-                  </span>
-                  ${(ev.courtSpan > 1 || (ev.courtIds && ev.courtIds.length > 1) || ev.courtLabel) ? `
-                    <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-black tracking-wider bg-stone-900 text-white shadow-2xs leading-none whitespace-nowrap">
-                      ${ev.courtLabel || 'Courts 3 & 4'}
-                    </span>
-                  ` : ''}
-                </div>
-                <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
-                  ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
-                </span>
-              </div>
-              ${ev.bracketId ? `
-                <button 
-                  type="button" 
-                  onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
-                  class="w-full mt-1 py-1.5 px-2 rounded-lg bg-white/95 hover:bg-blue-600 hover:text-white border border-blue-200 hover:border-blue-600 text-[11px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs hover:shadow-xs group">
-                  <i data-lucide="calendar-days" class="w-3.5 h-3.5 text-blue-600 group-hover:text-white transition-colors"></i>
-                  <span>Scheduled Matches</span>
-                </button>
-              ` : ''}
-            </div>
-
-            <!-- Content: Logo + Title + Host (vertically centered) -->
-            <div class="my-auto flex flex-col items-center text-center gap-1.5 py-1.5">
-              ${ev.logo ? `
-                <div class="p-1 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
-                  <img src="${ev.logo}" alt="" class="h-8 sm:h-9 w-auto max-w-full object-contain rounded-md" onerror="this.parentElement.style.display='none'" />
-                </div>
-              ` : ''}
-              <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-xs sm:text-[13px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight">
-                ${ev.title}
-              </div>
-              ${ev.host !== undefined ? `
-                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${
-                  isPlanned 
-                    ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' 
-                    : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
-                } text-[11px] leading-none mt-1">
-                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
-                  <span class="w-1 h-2.5 rounded-full bg-stone-300"></span>
-                  <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
-                </div>
-              ` : ''}
-            </div>
-
-            <!-- Footer: Bracket (Left) + Reclub (Right) -->
-            <div class="pt-2.5 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
-              ${ev.bracketId ? `
-                <button 
-                  type="button" 
-                  onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
-                  class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all duration-150 cursor-pointer whitespace-nowrap">
-                  <span>Bracket</span>
-                </button>
-              ` : `<div></div>`}
-              <a 
-                href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" 
-                ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''}
-                class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-semibold transition-all duration-150 ${
-                  hasReclubUrl 
-                    ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' 
-                    : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'
-                }">
-                <span>Reclub</span>
-              </a>
-            </div>
-          `}
+            ` : `<div></div>`}
+            <a 
+              href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" 
+              ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''}
+              class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-semibold transition-all duration-150 ${
+                hasReclubUrl 
+                  ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' 
+                  : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'
+              }">
+              <span>Reclub</span>
+            </a>
+          </div>
         </div>
       `;
     });
@@ -1350,8 +1241,9 @@ function renderBracketModal() {
 }
 
 /// ─── Court Matches / Order of Play Modal Functions ───
-window.openCourtMatchesModal = function(eventId) {
+window.openCourtMatchesModal = function(eventId, courtId) {
   state.activeCourtModalId = eventId;
+  state.activeCourtModalCourtId = courtId || null;
   renderCourtMatchesModal();
   const modal = document.getElementById('courtMatchesModal');
   if (modal) {
@@ -1366,6 +1258,7 @@ window.openCourtMatchesModal = function(eventId) {
 
 window.closeCourtMatchesModal = function() {
   state.activeCourtModalId = null;
+  state.activeCourtModalCourtId = null;
   const modal = document.getElementById('courtMatchesModal');
   if (modal) {
     modal.classList.add('hidden');
@@ -1396,8 +1289,11 @@ function renderCourtMatchesModal() {
     return;
   }
 
-  const courtObj = TOURNAMENT_CONFIG.courts.find(c => c.id === targetEvent.courtId) || { name: targetEvent.courtId };
-  const matches = getCourtMatchesList(targetEvent);
+  const activeCourtId = state.activeCourtModalCourtId || targetEvent.courtId;
+  const courtObj = TOURNAMENT_CONFIG.courts.find(c => c.id === activeCourtId) || { name: activeCourtId };
+  const courtScheduleItem = targetEvent.courtScheduleList ? targetEvent.courtScheduleList.find(cs => cs.courtId === activeCourtId) : null;
+  const timeDisplay = courtScheduleItem ? courtScheduleItem.time : `${targetEvent.start} – ${targetEvent.end}`;
+  const matches = getCourtMatchesList(targetEvent, courtObj.name);
 
   let html = `
     <!-- Header -->
@@ -1409,7 +1305,7 @@ function renderCourtMatchesModal() {
             ${courtObj.name}
           </span>
           <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-stone-200/80 text-stone-700 text-[11px] font-mono font-semibold">
-            ${targetEvent.start} – ${targetEvent.end}
+            ${timeDisplay}
           </span>
         </div>
         <h3 class="text-base sm:text-lg font-display font-extrabold text-stone-900 truncate">
@@ -1427,6 +1323,25 @@ function renderCourtMatchesModal() {
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
+
+    ${targetEvent.courtScheduleList ? `
+      <!-- Court Switcher Tabs for Multi-Court Tournaments -->
+      <div class="flex items-center gap-2 px-5 sm:px-6 py-2.5 bg-blue-50/70 border-b border-blue-200/70 overflow-x-auto">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-900 mr-1 shrink-0">Switch Court:</span>
+        ${targetEvent.courtScheduleList.map(cs => `
+          <button 
+            type="button" 
+            onclick="state.activeCourtModalCourtId='${cs.courtId}'; renderCourtMatchesModal(); if(window.lucide)window.lucide.createIcons();"
+            class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              (activeCourtId === cs.courtId)
+                ? 'bg-blue-600 text-white shadow-2xs'
+                : 'bg-white text-blue-900 hover:bg-blue-100 border border-blue-200'
+            }">
+            ${cs.courtName} (${cs.time.replace(/ /g, '')})
+          </button>
+        `).join('')}
+      </div>
+    ` : ''}
 
     <!-- Body: Order of Play List -->
     <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-surface-1">
@@ -1473,9 +1388,9 @@ function renderCourtMatchesModal() {
   container.innerHTML = html;
 }
 
-function getCourtMatchesList(ev) {
+function getCourtMatchesList(ev, overrideCourtName) {
   const courtObj = TOURNAMENT_CONFIG.courts.find(c => c.id === ev.courtId) || { name: ev.courtId };
-  const courtName = courtObj.name; // e.g. "Court 1", "Court 2", "Court 3", "Court 4"
+  const courtName = overrideCourtName || courtObj.name; // e.g. "Court 1", "Court 2", "Court 3", "Court 4"
 
   // 1. If it links to a bracket (Picklehead Individual Doubles)
   if (ev.bracketId && TOURNAMENT_BRACKETS[ev.bracketId]) {
