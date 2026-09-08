@@ -233,15 +233,15 @@ function renderTimelineMatrix() {
               ? 'border-t border-b border-r border-blue-300/60 border-l-0'
               : 'border-t border-b border-r border-dashed border-blue-300/60 border-l-0');
 
-        let laneRoundedClass = 'rounded-t-none';
+        let laneRoundedClass = '';
         if (court.id === 'c1') {
-          laneRoundedClass = 'rounded-t-none rounded-b-2xl';
+          laneRoundedClass = 'rounded-tl-2xl rounded-tr-none rounded-b-2xl';
         } else if (court.id === 'c2') {
           laneRoundedClass = 'rounded-t-none rounded-b-2xl';
         } else if (court.id === 'c3') {
           laneRoundedClass = 'rounded-t-none rounded-bl-2xl rounded-br-none';
         } else if (court.id === 'c4') {
-          laneRoundedClass = 'rounded-t-none rounded-br-2xl rounded-bl-none';
+          laneRoundedClass = 'rounded-tr-2xl rounded-tl-none rounded-br-2xl rounded-bl-none';
         }
 
         bodyHtml += `
