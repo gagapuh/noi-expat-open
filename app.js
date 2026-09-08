@@ -238,31 +238,40 @@ function renderTimelineMatrix() {
               </div>
             </div>
 
-            <!-- Header Content (Logo + Title + Subtitle + Host + Players) Centered across all 4 courts (Selectable & Copyable) -->
-            <div class="absolute top-0 left-0 right-0 pt-10 px-4 flex flex-col items-center text-center z-10 select-text">
+            <!-- Header Content (Logo + Title + Subtitle + Host + Players + Bracket) Centered across all 4 courts -->
+            <div class="absolute top-0 left-0 right-0 pt-10 px-4 flex flex-col items-center text-center z-20 pointer-events-none">
               ${ev.logo ? `
-                <div class="p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-2">
+                <div class="p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-2 pointer-events-auto">
                   <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
                 </div>
               ` : ''}
-              <div class="text-base sm:text-lg font-black text-stone-900 leading-tight select-text">
+              <div class="text-base sm:text-lg font-black text-stone-900 leading-tight select-text pointer-events-auto">
                 ${ev.title}
               </div>
               ${ev.subtitle ? `
-                <div class="text-xs sm:text-[13px] text-stone-600 font-semibold mt-1 leading-snug select-text">
+                <div class="text-xs sm:text-[13px] text-stone-600 font-semibold mt-1 leading-snug select-text pointer-events-auto">
                   ${ev.subtitle}
                 </div>
               ` : ''}
               ${ev.host && ev.host !== 'TBA' ? `
-                <div class="text-[11px] sm:text-xs text-stone-500 font-medium mt-1 select-text">
+                <div class="text-[11px] sm:text-xs text-stone-500 font-medium mt-1 select-text pointer-events-auto">
                   Host: <span class="font-bold text-stone-800">${ev.host}</span>
                 </div>
               ` : ''}
               ${ev.playersCount ? `
-                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-stone-200 shadow-2xs text-stone-800 text-[10px] leading-none mt-2 select-text">
-                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Players</span>
-                  <span class="w-px h-2 rounded-full bg-stone-300"></span>
+                <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-stone-200 shadow-2xs text-stone-800 text-[10px] sm:text-[11px] leading-none mt-2 select-text pointer-events-auto">
+                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px] sm:text-[9px]">Players</span>
+                  <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
                   <span class="font-black text-blue-700">${ev.playersCount}</span>
+                </div>
+              ` : ''}
+              ${ev.bracketId ? `
+                <div class="mt-2.5 pointer-events-auto">
+                  <button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
+                    class="inline-flex items-center justify-center h-7 px-3 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap">
+                    <i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-500 mr-1.5"></i>
+                    <span>Bracket</span>
+                  </button>
                 </div>
               ` : ''}
             </div>
@@ -294,10 +303,7 @@ function renderTimelineMatrix() {
                         class="w-full py-1.5 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[10px] sm:text-[11px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group">
                         <i data-lucide="calendar-days" class="w-3 h-3 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
                       </button>
-                      <div class="flex items-center justify-between gap-1">
-                        ${ev.bracketId ? `<button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')" class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 shadow-2xs transition-all cursor-pointer whitespace-nowrap"><i data-lucide="trophy" class="w-3 h-3 text-amber-500 mr-1"></i>Bracket</button>` : '<div></div>'}
-                        <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-semibold transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
-                      </div>
+                      <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="w-full h-6 rounded-md text-[9px] sm:text-[10px] font-semibold flex items-center justify-center transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
                     </div>
                   </div>
                 `;
