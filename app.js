@@ -193,14 +193,36 @@ function renderTimelineMatrix() {
       const isFinals = ev.category === 'finals';
       const hasReclubUrl = Boolean(ev.reclubUrl && ev.reclubUrl.trim() !== '');
 
-      // Multi-court span handling
+      // Unified group: same styling, dashed borders between court lanes, correct individual heights
+      const isUnifiedGroup = !isSingleCourtView && Boolean(ev.unifiedGroup);
+
+      // Multi-court span handling (non-unified)
       const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
       let spanStyle = effectiveSpan > 1
-        ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: ${effectiveSpan >= 4 ? '15' : '20'};`
+        ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
         : '';
 
+      // Dashed border between unified court lanes
+      if (isUnifiedGroup && !isSingleCourtView) {
+        if (court.id === 'c1') {
+          spanStyle = 'left: 5px; right: -1px; z-index: 15;';
+        } else if (court.id === 'c2' || court.id === 'c3') {
+          spanStyle = 'left: 0px; right: -1px; z-index: 15;';
+        } else if (court.id === 'c4') {
+          spanStyle = 'left: 0px; right: 5px; z-index: 15;';
+        }
+      }
+
       // Card classes
-      const cardClasses = isPlanned
+      const unifiedBorder = isUnifiedGroup && !isSingleCourtView
+        ? (court.id === 'c4'
+            ? 'border border-blue-300/80 border-r-0'
+            : 'border border-blue-300/80 border-r border-r-blue-300 border-dashed')
+        : '';
+
+      const cardClasses = isUnifiedGroup
+        ? `bg-gradient-to-br ${catConfig.cardBg} ${unifiedBorder} shadow-card hover:shadow-card-hover`
+        : isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
         : `bg-gradient-to-br ${catConfig.cardBg} border ${catConfig.cardBorder} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
 
@@ -226,84 +248,71 @@ function renderTimelineMatrix() {
                 ` : ''}
               </div>
               <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
-                ${ev.start}–${ev.end}${ev.courtScheduleList ? `<span class="text-stone-400 font-normal ml-1 hidden sm:inline"> Staggered</span>` : `<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>`}
+                ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
               </span>
             </div>
           </div>
 
           <!-- Content: Logo + Title + Subtitle + Host (vertically centered) -->
-          <div class="my-auto flex flex-col items-center text-center gap-2 py-2">
+          <div class="my-auto flex flex-col items-center text-center gap-1.5 py-1.5">
             ${ev.logo ? `
-              <div class="p-1.5 sm:p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
-                <img src="${ev.logo}" alt="" class="${effectiveSpan >= 4 ? 'h-10 sm:h-12' : 'h-8 sm:h-9'} w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
+              <div class="p-1.5 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
+                <img src="${ev.logo}" alt="" class="h-8 sm:h-9 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
               </div>
             ` : ''}
-            <div class="${effectiveSpan > 1 ? (effectiveSpan >= 4 ? 'text-base sm:text-lg font-black' : 'text-[14px] sm:text-base font-black') : 'text-xs sm:text-[13px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight max-w-xl">
+            <div class="text-xs sm:text-[13px] font-black ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight">
               ${ev.title}
             </div>
-            ${ev.subtitle ? `
-              <div class="text-[11px] sm:text-xs text-stone-600 font-medium max-w-lg leading-snug">
-                ${ev.subtitle}
+            ${ev.courtStages ? `
+              <div class="text-[9px] sm:text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-md px-1.5 py-0.5 leading-snug">
+                ${ev.courtStages}
               </div>
             ` : ''}
             ${ev.host !== undefined ? `
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${
+              <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
                 isPlanned 
                   ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' 
                   : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
-              } text-[11px] leading-none">
-                <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
-                <span class="w-1 h-2.5 rounded-full bg-stone-300"></span>
+              } text-[10px] leading-none">
+                <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Host</span>
+                <span class="w-px h-2 rounded-full bg-stone-300"></span>
                 <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
-              </div>
-            ` : ''}
-
-            ${(effectiveSpan >= 4 && ev.courtScheduleList) ? `
-              <!-- Multi-Court Lane Schedule Breakdown with real dashed vertical dividers -->
-              <div class="mt-3 w-full max-w-2xl pt-3 border-t border-dashed border-blue-300/80">
-                <div class="flex items-stretch w-full">
-                  ${ev.courtScheduleList.map((cs, cIdx) => {
-                    const isShort = cs.time.includes('15:00');
-                    return `
-                    ${cIdx > 0 ? `<div class="w-px border-l border-dashed border-blue-300 mx-0 shrink-0"></div>` : ''}
-                    <div class="flex-1 flex flex-col items-center text-center px-2 py-1 ${isShort ? 'opacity-70' : ''}">
-                      <span class="text-[10px] font-black uppercase tracking-wider text-blue-950 leading-none">${cs.courtName}</span>
-                      <span class="text-[10px] font-mono font-bold ${isShort ? 'text-stone-500' : 'text-blue-700'} mt-0.5 leading-none">${cs.time}</span>
-                      <span class="text-[9px] text-stone-500 font-medium leading-tight mt-1 px-1">${cs.stages}</span>
-                      <button 
-                        type="button" 
-                        onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}', '${cs.courtId}')"
-                        class="mt-2 px-2 py-0.5 text-[9px] font-extrabold text-blue-700 bg-blue-50 hover:bg-blue-600 hover:text-white border border-blue-200 rounded-md transition-all cursor-pointer shadow-2xs whitespace-nowrap">
-                        Matches &rarr;
-                      </button>
-                    </div>`;
-                  }).join('')}
-                </div>
               </div>
             ` : ''}
           </div>
 
-          <!-- Footer: Bracket (Left) + Reclub (Right) -->
-          <div class="pt-2.5 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
+          <!-- Footer: Matches + Bracket + Reclub -->
+          <div class="pt-2 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex flex-col gap-1.5">
             ${ev.bracketId ? `
               <button 
                 type="button" 
-                onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
-                class="inline-flex items-center justify-center h-7 px-2.5 sm:px-3 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all duration-150 cursor-pointer whitespace-nowrap">
-                <i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-500 mr-1.5"></i>
-                <span>Tournament Bracket (32 Players)</span>
+                onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
+                class="w-full py-1.5 px-2 rounded-lg bg-white/95 hover:bg-blue-600 hover:text-white border border-blue-200 hover:border-blue-600 text-[10px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group">
+                <i data-lucide="calendar-days" class="w-3 h-3 text-blue-600 group-hover:text-white transition-colors"></i>
+                <span>Scheduled Matches</span>
               </button>
-            ` : `<div></div>`}
-            <a 
-              href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" 
-              ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''}
-              class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-semibold transition-all duration-150 ${
-                hasReclubUrl 
-                  ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' 
-                  : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'
-              }">
-              <span>Reclub</span>
-            </a>
+            ` : ''}
+            <div class="flex items-center justify-between gap-1">
+              ${ev.bracketId ? `
+                <button 
+                  type="button" 
+                  onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
+                  class="inline-flex items-center justify-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs transition-all cursor-pointer whitespace-nowrap">
+                  <i data-lucide="trophy" class="w-3 h-3 text-amber-500 mr-1"></i>
+                  <span>Bracket</span>
+                </button>
+              ` : `<div></div>`}
+              <a 
+                href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" 
+                ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''}
+                class="inline-flex items-center justify-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-semibold transition-all ${
+                  hasReclubUrl 
+                    ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' 
+                    : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'
+                }">
+                <span>Reclub</span>
+              </a>
+            </div>
           </div>
         </div>
       `;

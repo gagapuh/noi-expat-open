@@ -228,29 +228,70 @@ const TOURNAMENT_CONFIG = {
       title: "Day 2 — Sunday, Oct 4",
       dateFormatted: "Sunday, Oct 4",
       schedule: [
-        // 11:00 - 17:00 Picklehead Main Stage: Individual Doubles (2.5–3.0) (Courts 1–4 combined)
+        // 11:00–17:00 Picklehead Main Stage (Courts 1–4, staggered finish — Unified Group)
         {
-          id: "d2-c1c4-picklehead",
+          id: "d2-c1-picklehead",
           courtId: "c1",
-          courtIds: ["c1", "c2", "c3", "c4"],
-          courtSpan: 4,
-          courtLabel: "Courts 1–4",
           start: "11:00",
           end: "17:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           subtitle: "32 Players · 8 Americano Pools · Top 16 Advance to Championship Playoffs",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools A & E · QF1 · SF1 · Final",
           logo: "picklehead.webp",
           reclubUrl: "https://reclub.co/m/SGYX9E",
           category: "tournament",
-          status: "occupied",
-          courtScheduleList: [
-            { courtId: "c1", courtName: "Court 1", time: "11:00 – 17:00", stages: "Pools A & E · QF1 · SF1 · Final" },
-            { courtId: "c2", courtName: "Court 2", time: "11:00 – 16:00", stages: "Pools B & F · QF2 · SF2" },
-            { courtId: "c3", courtName: "Court 3", time: "11:00 – 15:00", stages: "Pools C & G · QF3" },
-            { courtId: "c4", courtName: "Court 4", time: "11:00 – 15:00", stages: "Pools D & H · QF4" }
-          ]
+          status: "occupied"
+        },
+        {
+          id: "d2-c2-picklehead",
+          courtId: "c2",
+          start: "11:00",
+          end: "16:00",
+          title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
+          subtitle: "32 Players · 8 Americano Pools · Top 16 Advance to Championship Playoffs",
+          host: "Ho",
+          bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools B & F · QF2 · SF2",
+          logo: "picklehead.webp",
+          reclubUrl: "https://reclub.co/m/SGYX9E",
+          category: "tournament",
+          status: "occupied"
+        },
+        {
+          id: "d2-c3-picklehead",
+          courtId: "c3",
+          start: "11:00",
+          end: "15:00",
+          title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
+          subtitle: "32 Players · 8 Americano Pools · Top 16 Advance to Championship Playoffs",
+          host: "Ho",
+          bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools C & G · QF3",
+          logo: "picklehead.webp",
+          reclubUrl: "https://reclub.co/m/SGYX9E",
+          category: "tournament",
+          status: "occupied"
+        },
+        {
+          id: "d2-c4-picklehead",
+          courtId: "c4",
+          start: "11:00",
+          end: "15:00",
+          title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
+          subtitle: "32 Players · 8 Americano Pools · Top 16 Advance to Championship Playoffs",
+          host: "Ho",
+          bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools D & H · QF4",
+          logo: "picklehead.webp",
+          reclubUrl: "https://reclub.co/m/SGYX9E",
+          category: "tournament",
+          status: "occupied"
         },
 
         // 15:30 - 19:00 Prime Division (4.0+) (Courts 3 & 4 combined)
