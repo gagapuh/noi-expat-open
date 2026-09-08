@@ -1307,17 +1307,9 @@ function renderBracketModal() {
 
     html += `
       <!-- Players Tab Header -->
-      <div class="flex items-center justify-between gap-3 mb-4 flex-wrap">
-        <div>
-          <h3 class="font-display font-bold text-stone-900 text-sm sm:text-base">Tournament Participants (${roster.length})</h3>
-          <p class="text-xs text-stone-500">Official Roster & DUPR Player Verification</p>
-        </div>
-        <button 
-          onclick="exportDuprCsv()"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-display font-semibold text-xs transition-colors shadow-2xs cursor-pointer">
-          <i data-lucide="download" class="w-3.5 h-3.5 text-amber-400"></i>
-          Export DUPR CSV
-        </button>
+      <div class="mb-4">
+        <h3 class="font-display font-bold text-stone-900 text-sm sm:text-base">Tournament Participants (${roster.length})</h3>
+        <p class="text-xs text-stone-500">Official Roster & DUPR Player Verification</p>
       </div>
 
       <!-- 32 Players Grid / List -->
