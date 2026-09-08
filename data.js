@@ -221,7 +221,7 @@ const TOURNAMENT_CONFIG = {
       title: "Day 2 — Sunday, Oct 4",
       dateFormatted: "Sunday, Oct 4",
       schedule: [
-        // 11:00 - 16:00 Picklehead Cup (Courts 1, 2, 3, 4)
+        // 11:00 - Picklehead Cup with staggered finish times
         {
           id: "d2-c1-picklehead",
           courtId: "c1",
@@ -239,7 +239,7 @@ const TOURNAMENT_CONFIG = {
           id: "d2-c2-picklehead",
           courtId: "c2",
           start: "11:00",
-          end: "16:00",
+          end: "15:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
@@ -247,12 +247,24 @@ const TOURNAMENT_CONFIG = {
           reclubUrl: "",
           category: "tournament",
           status: "occupied"
+        },
+        {
+          id: "d2-c2-free-15-16",
+          courtId: "c2",
+          start: "15:00",
+          end: "16:00",
+          title: "Free Court / Open Play",
+          host: "",
+          logo: "",
+          reclubUrl: "",
+          category: "free",
+          status: "free"
         },
         {
           id: "d2-c3-picklehead",
           courtId: "c3",
           start: "11:00",
-          end: "16:00",
+          end: "14:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
@@ -262,10 +274,22 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
         {
+          id: "d2-c3-free-14-19",
+          courtId: "c3",
+          start: "14:00",
+          end: "19:00",
+          title: "Free Court / Open Play",
+          host: "",
+          logo: "",
+          reclubUrl: "",
+          category: "free",
+          status: "free"
+        },
+        {
           id: "d2-c4-picklehead",
           courtId: "c4",
           start: "11:00",
-          end: "16:00",
+          end: "14:00",
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
@@ -273,6 +297,18 @@ const TOURNAMENT_CONFIG = {
           reclubUrl: "",
           category: "tournament",
           status: "occupied"
+        },
+        {
+          id: "d2-c4-free-14-19",
+          courtId: "c4",
+          start: "14:00",
+          end: "19:00",
+          title: "Free Court / Open Play",
+          host: "",
+          logo: "",
+          reclubUrl: "",
+          category: "free",
+          status: "free"
         },
 
         // 16:00 - 19:00 DUPR 3.5-4.0 (Courts 1, 2)
