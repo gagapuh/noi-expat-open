@@ -287,13 +287,22 @@ function renderTimelineMatrix() {
                   ${ev.subtitle}
                 </div>
               ` : ''}
-              ${ev.host && ev.host !== 'TBA' ? `
-                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none mt-2">
-                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
-                  <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
-                  <span class="font-extrabold text-stone-950">${ev.host}</span>
-                </div>
-              ` : ''}
+              <div class="flex items-center gap-1.5 flex-wrap justify-center mt-2">
+                ${ev.playersCount ? `
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none">
+                    <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Players</span>
+                    <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
+                    <span class="font-black text-blue-700">${ev.playersCount}</span>
+                  </div>
+                ` : ''}
+                ${ev.host && ev.host !== 'TBA' ? `
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none">
+                    <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
+                    <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
+                    <span class="font-extrabold text-stone-950">${ev.host}</span>
+                  </div>
+                ` : ''}
+              </div>
             </div>
           `;
         }
@@ -340,15 +349,26 @@ function renderTimelineMatrix() {
             <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-xs sm:text-[13px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight">
               ${ev.title}
             </div>
-            ${ev.host !== undefined ? `
-              <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
-                isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
-              } text-[10px] leading-none">
-                <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Host</span>
-                <span class="w-px h-2 rounded-full bg-stone-300"></span>
-                <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
-              </div>
-            ` : ''}
+            <div class="flex items-center gap-1.5 flex-wrap justify-center">
+              ${ev.playersCount ? `
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
+                  isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
+                } text-[10px] leading-none">
+                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Players</span>
+                  <span class="w-px h-2 rounded-full bg-stone-300"></span>
+                  <span class="font-black text-violet-700">${ev.playersCount}</span>
+                </div>
+              ` : ''}
+              ${ev.host !== undefined ? `
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
+                  isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
+                } text-[10px] leading-none">
+                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Host</span>
+                  <span class="w-px h-2 rounded-full bg-stone-300"></span>
+                  <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
+                </div>
+              ` : ''}
+            </div>
           </div>
 
           <div class="pt-2 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
