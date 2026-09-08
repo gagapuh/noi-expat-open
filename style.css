@@ -240,19 +240,6 @@ body {
     line-height: 1.4;
   }
 
-  #mobileCourtTabs {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 2px;
-    background: #e7e5e4;
-  }
-
-  #mobileCourtTabs .court-tab {
-    height: 44px;
-    padding: 0 4px;
-    font-weight: 600;
-  }
-
   body .schedule-panel {
     overflow: visible;
     border: 0;

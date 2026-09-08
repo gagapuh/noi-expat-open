@@ -8,7 +8,6 @@
 // ─── State ───
 const state = {
   currentDayId: 'day1',
-  selectedMobileCourt: 'all',
   activeBracketId: null,
   activeCourtModalId: null,
   bracketActiveTab: 'groups', // 'groups', 'playoffs', 'pathway', 'players'
@@ -41,7 +40,6 @@ function formatDuration(minutes) {
 // ─── Init ───
 document.addEventListener('DOMContentLoaded', () => {
   renderHeaderAndMeta();
-  renderCourtFilterTabs();
   renderTimelineMatrix();
   setupEventListeners();
   if (typeof initSupabaseLive === 'function') {
@@ -52,41 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderHeaderAndMeta() {
   const titleEl = document.getElementById('tournamentTitle');
   if (titleEl) titleEl.textContent = TOURNAMENT_CONFIG.title;
-}
-
-// ─── Mobile Court Tabs ───
-function renderCourtFilterTabs() {
-  const container = document.getElementById('mobileCourtTabs');
-  if (!container) return;
-
-  let html = `
-    <button data-court="all" class="court-tab h-8 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-150 ${
-      state.selectedMobileCourt === 'all'
-        ? 'bg-white text-stone-900 shadow-sm font-semibold'
-        : 'text-stone-500 hover:text-stone-800'
-    }">All</button>
-  `;
-
-  TOURNAMENT_CONFIG.courts.forEach(court => {
-    const isSelected = state.selectedMobileCourt === court.id;
-    html += `
-      <button data-court="${court.id}" class="court-tab h-8 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-150 ${
-        isSelected
-          ? 'bg-white text-stone-900 shadow-sm font-semibold'
-          : 'text-stone-500 hover:text-stone-800'
-      }">${court.name}</button>
-    `;
-  });
-
-  container.innerHTML = html;
-
-  container.querySelectorAll('.court-tab').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      state.selectedMobileCourt = e.currentTarget.getAttribute('data-court');
-      renderCourtFilterTabs();
-      renderTimelineMatrix();
-    });
-  });
 }
 
 // ─── Timeline Matrix ───
@@ -112,9 +75,7 @@ function renderTimelineMatrix() {
   const totalMinutes = (endHour - startHour) * 60;
   const totalHeightPx = totalMinutes * PIXELS_PER_MINUTE;
 
-  const visibleCourts = state.selectedMobileCourt === 'all'
-    ? TOURNAMENT_CONFIG.courts
-    : TOURNAMENT_CONFIG.courts.filter(c => c.id === state.selectedMobileCourt);
+  const visibleCourts = TOURNAMENT_CONFIG.courts;
 
   const container = document.getElementById('gridTableContainer');
   if (!container) return;
@@ -176,13 +137,7 @@ function renderTimelineMatrix() {
     bodyHtml += `</div>`;
 
     // Events
-    const isSingleCourtView = state.selectedMobileCourt !== 'all';
-    const courtEvents = (currentDay.schedule || []).filter(ev => {
-      if (isSingleCourtView) {
-        return ev.courtId === court.id || (ev.courtIds && ev.courtIds.includes(court.id));
-      }
-      return ev.courtId === court.id;
-    });
+    const courtEvents = (currentDay.schedule || []).filter(ev => ev.courtId === court.id);
 
     courtEvents.forEach(ev => {
       const topMinutes = timeToMinutesFromStart(ev.start, startHour);
@@ -197,28 +152,19 @@ function renderTimelineMatrix() {
       const hasReclubUrl = Boolean(ev.reclubUrl && ev.reclubUrl.trim() !== '');
 
 
-      let evStart = ev.start;
-      let evEnd = ev.end;
-      if (isSingleCourtView && ev.staggeredCourts) {
-        const scInfo = ev.staggeredCourts.find(sc => sc.courtId === court.id);
-        if (scInfo) {
-          evEnd = scInfo.end;
-        }
-      }
-
       // Multi-court span handling
-      const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
+      const effectiveSpan = ev.courtSpan || 1;
       // Reuse the grid's court labels when CSS presents events as a mobile agenda.
-      const eventCourtNames = (isSingleCourtView ? [court] : TOURNAMENT_CONFIG.courts.filter(c =>
+      const eventCourtNames = TOURNAMENT_CONFIG.courts.filter(c =>
         ev.courtIds ? ev.courtIds.includes(c.id) : c.id === ev.courtId
-      )).map(c => c.name).join(' · ');
+      ).map(c => c.name).join(' · ');
       const mobileCourtLabel = `<div class="mobile-event-courts hidden">${eventCourtNames}</div>`;
       let spanStyle = effectiveSpan > 1
         ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
         : '';
 
       // ── Staggered 4-court card: single unified native DOM object ──
-      if (!isSingleCourtView && ev.staggeredCourts && effectiveSpan === 4) {
+      if (ev.staggeredCourts && effectiveSpan === 4) {
         const maxDurationMinutes = getDurationMinutes(ev.start, ev.end);
         const cardHeightPx = Math.max(48, maxDurationMinutes * PIXELS_PER_MINUTE - 4);
 
