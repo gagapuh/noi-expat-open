@@ -382,161 +382,193 @@ const TOURNAMENT_BRACKETS = {
       {
             "id": 1,
             "name": "Player 1",
+            "duprId": "",
             "group": null
       },
       {
             "id": 2,
             "name": "Player 2",
+            "duprId": "",
             "group": null
       },
       {
             "id": 3,
             "name": "Player 3",
+            "duprId": "",
             "group": null
       },
       {
             "id": 4,
             "name": "Player 4",
+            "duprId": "",
             "group": null
       },
       {
             "id": 5,
             "name": "Player 5",
+            "duprId": "",
             "group": null
       },
       {
             "id": 6,
             "name": "Player 6",
+            "duprId": "",
             "group": null
       },
       {
             "id": 7,
             "name": "Player 7",
+            "duprId": "",
             "group": null
       },
       {
             "id": 8,
             "name": "Player 8",
+            "duprId": "",
             "group": null
       },
       {
             "id": 9,
             "name": "Player 9",
+            "duprId": "",
             "group": null
       },
       {
             "id": 10,
             "name": "Player 10",
+            "duprId": "",
             "group": null
       },
       {
             "id": 11,
             "name": "Player 11",
+            "duprId": "",
             "group": null
       },
       {
             "id": 12,
             "name": "Player 12",
+            "duprId": "",
             "group": null
       },
       {
             "id": 13,
             "name": "Player 13",
+            "duprId": "",
             "group": null
       },
       {
             "id": 14,
             "name": "Player 14",
+            "duprId": "",
             "group": null
       },
       {
             "id": 15,
             "name": "Player 15",
+            "duprId": "",
             "group": null
       },
       {
             "id": 16,
             "name": "Player 16",
+            "duprId": "",
             "group": null
       },
       {
             "id": 17,
             "name": "Player 17",
+            "duprId": "",
             "group": null
       },
       {
             "id": 18,
             "name": "Player 18",
+            "duprId": "",
             "group": null
       },
       {
             "id": 19,
             "name": "Player 19",
+            "duprId": "",
             "group": null
       },
       {
             "id": 20,
             "name": "Player 20",
+            "duprId": "",
             "group": null
       },
       {
             "id": 21,
             "name": "Player 21",
+            "duprId": "",
             "group": null
       },
       {
             "id": 22,
             "name": "Player 22",
+            "duprId": "",
             "group": null
       },
       {
             "id": 23,
             "name": "Player 23",
+            "duprId": "",
             "group": null
       },
       {
             "id": 24,
             "name": "Player 24",
+            "duprId": "",
             "group": null
       },
       {
             "id": 25,
             "name": "Player 25",
+            "duprId": "",
             "group": null
       },
       {
             "id": 26,
             "name": "Player 26",
+            "duprId": "",
             "group": null
       },
       {
             "id": 27,
             "name": "Player 27",
+            "duprId": "",
             "group": null
       },
       {
             "id": 28,
             "name": "Player 28",
+            "duprId": "",
             "group": null
       },
       {
             "id": 29,
             "name": "Player 29",
+            "duprId": "",
             "group": null
       },
       {
             "id": 30,
             "name": "Player 30",
+            "duprId": "",
             "group": null
       },
       {
             "id": 31,
             "name": "Player 31",
+            "duprId": "",
             "group": null
       },
       {
             "id": 32,
             "name": "Player 32",
+            "duprId": "",
             "group": null
       }
 ],

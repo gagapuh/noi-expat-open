@@ -1121,6 +1121,20 @@ function renderBracketModal() {
     const isDrawn = !!(state.isDrawCompleted && roster.some(p => p.group));
 
     html += `
+      <!-- Players Tab Header -->
+      <div class="flex items-center justify-between gap-3 mb-4 flex-wrap">
+        <div>
+          <h3 class="font-display font-bold text-stone-900 text-sm sm:text-base">Tournament Participants (${roster.length})</h3>
+          <p class="text-xs text-stone-500">Official Roster & DUPR Player Verification</p>
+        </div>
+        <button 
+          onclick="exportDuprCsv()"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-display font-semibold text-xs transition-colors shadow-2xs cursor-pointer">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-amber-400"></i>
+          Export DUPR CSV
+        </button>
+      </div>
+
       <!-- 32 Players Grid / List -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         ${roster.map(p => `
@@ -1129,7 +1143,12 @@ function renderBracketModal() {
               <span class="w-7 h-7 rounded-lg bg-stone-100 text-stone-700 font-mono font-bold text-xs flex items-center justify-center shrink-0">
                 ${p.id}
               </span>
-              <span class="font-bold text-stone-900 text-xs truncate">${p.name}</span>
+              <div class="min-w-0">
+                <div class="font-bold text-stone-900 text-xs truncate">${p.name}</div>
+                <div class="text-[10px] font-mono ${p.duprId ? 'text-blue-600 font-semibold' : 'text-stone-400'}">
+                  ${p.duprId ? `DUPR: ${p.duprId}` : 'DUPR: —'}
+                </div>
+              </div>
             </div>
             ${(isDrawn && p.group) ? `
               <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200 shrink-0">
@@ -1430,4 +1449,89 @@ function getCourtMatchesList(ev) {
     }
   ];
 }
+
+/// ─── DUPR Official Club CSV Export ───
+window.exportDuprCsv = function() {
+  const bracket = getActiveBracket();
+  if (!bracket) {
+    alert('Tournament bracket not found.');
+    return;
+  }
+
+  const roster = state.playersRoster || [];
+  const playerMap = {};
+  roster.forEach(p => {
+    playerMap[p.name] = p.duprId || '';
+  });
+
+  // Official DUPR CSV Column Headers
+  const rows = [
+    [
+      'Match Date',
+      'Event Name',
+      'Match Type',
+      'Player 1 Name',
+      'Player 1 DUPR ID',
+      'Player 2 Name',
+      'Player 2 DUPR ID',
+      'Player 3 Name',
+      'Player 3 DUPR ID',
+      'Player 4 Name',
+      'Player 4 DUPR ID',
+      'Game 1 Team 1',
+      'Game 1 Team 2',
+      'Game 2 Team 1',
+      'Game 2 Team 2',
+      'Game 3 Team 1',
+      'Game 3 Team 2'
+    ]
+  ];
+
+  const matchDate = '2026-10-04';
+  const eventName = 'NOI EXPAT OPEN';
+
+  // 1. Group stage matches (Double Americano)
+  (bracket.groups || []).forEach(group => {
+    (group.matches || []).forEach(m => {
+      const t1 = (m.pair1 || '').split('&').map(s => s.trim());
+      const t2 = (m.pair2 || '').split('&').map(s => s.trim());
+      const p1 = t1[0] || '';
+      const p2 = t1[1] || '';
+      const p3 = t2[0] || '';
+      const p4 = t2[1] || '';
+
+      let g1t1 = '', g1t2 = '';
+      if (m.score && m.score.includes('-') && m.score !== '—') {
+        const parts = m.score.split('-').map(s => s.trim());
+        g1t1 = parts[0] || '';
+        g1t2 = parts[1] || '';
+      }
+
+      rows.push([
+        matchDate,
+        eventName,
+        'DOUBLES',
+        p1, playerMap[p1] || '',
+        p2, playerMap[p2] || '',
+        p3, playerMap[p3] || '',
+        p4, playerMap[p4] || '',
+        g1t1, g1t2,
+        '', '',
+        '', ''
+      ]);
+    });
+  });
+
+  // Build CSV content
+  const csvString = rows.map(r => r.map(val => `"${String(val).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', `noi-expat-open-dupr-matches.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
 
