@@ -256,7 +256,7 @@ function renderTimelineMatrix() {
                     ${catConfig.short}
                   </span>
                   ${ev.isDupr ? `
-                    <img src="dupr.png" alt="DUPR" class="h-3.5 w-auto object-contain mt-0.5 opacity-90" title="DUPR Rated" />
+                    <img src="dupr.png?v=3" alt="DUPR" class="h-4 sm:h-5 w-auto object-contain mt-1" title="DUPR Rated" />
                   ` : ''}
                 </div>
               ` : ''}
@@ -335,7 +335,7 @@ function renderTimelineMatrix() {
                   </span>
                 ` : ''}
                 ${ev.isDupr ? `
-                  <img src="dupr.png" alt="DUPR" class="h-3.5 w-auto object-contain opacity-90 ml-0.5" title="DUPR Rated" />
+                  <img src="dupr.png?v=3" alt="DUPR" class="h-4 sm:h-5 w-auto object-contain ml-1" title="DUPR Rated" />
                 ` : ''}
               </div>
               <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
