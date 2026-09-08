@@ -259,12 +259,12 @@ function renderTimelineMatrix() {
             </div>
             <div class="mt-auto flex flex-col gap-1.5 pt-1">
               <button type="button" onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
-                class="w-full py-1 rounded-md bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[9px] font-extrabold text-blue-700 flex items-center justify-center gap-1 transition-all cursor-pointer group">
-                <i data-lucide="calendar-days" class="w-2.5 h-2.5 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
+                class="w-full py-1.5 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[10px] sm:text-[11px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group">
+                <i data-lucide="calendar-days" class="w-3 h-3 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
               </button>
               <div class="flex items-center justify-between gap-1">
-                ${ev.bracketId ? `<button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')" class="inline-flex items-center h-5 px-1.5 rounded-md text-[8px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 shadow-2xs transition-all cursor-pointer whitespace-nowrap"><i data-lucide="trophy" class="w-2.5 h-2.5 text-amber-500 mr-0.5"></i>Bracket</button>` : '<div></div>'}
-                <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="inline-flex items-center h-5 px-1.5 rounded-md text-[8px] font-semibold transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
+                ${ev.bracketId ? `<button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')" class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 shadow-2xs transition-all cursor-pointer whitespace-nowrap"><i data-lucide="trophy" class="w-3 h-3 text-amber-500 mr-1"></i>Bracket</button>` : '<div></div>'}
+                <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-semibold transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
               </div>
             </div>
           </div>
@@ -273,24 +273,24 @@ function renderTimelineMatrix() {
         // Floating title — once only, on Court 1, spans all 4 courts
         if (court.id === 'c1') {
           bodyHtml += `
-            <div style="position:absolute;top:${topPx}px;left:5px;width:calc(400% - 10px);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 16px 0;">
+            <div style="position:absolute;top:${topPx}px;left:5px;width:calc(400% - 10px);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 16px 0;">
               ${ev.logo ? `
-                <div class="p-1.5 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-1.5">
-                  <img src="${ev.logo}" alt="" class="h-8 sm:h-9 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
+                <div class="p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-2">
+                  <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
                 </div>
               ` : ''}
-              <div class="text-[14px] sm:text-base font-black text-stone-900 leading-tight">
+              <div class="text-base sm:text-lg font-black text-stone-900 leading-tight">
                 ${ev.title}
               </div>
               ${ev.subtitle ? `
-                <div class="text-[11px] sm:text-xs text-stone-600 font-semibold mt-0.5 leading-snug">
+                <div class="text-xs sm:text-[13px] text-stone-600 font-semibold mt-1 leading-snug">
                   ${ev.subtitle}
                 </div>
               ` : ''}
               ${ev.host && ev.host !== 'TBA' ? `
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[10px] leading-none mt-1.5">
-                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Host</span>
-                  <span class="w-px h-2 rounded-full bg-stone-300"></span>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none mt-2">
+                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
+                  <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
                   <span class="font-extrabold text-stone-950">${ev.host}</span>
                 </div>
               ` : ''}
