@@ -119,7 +119,7 @@ const TOURNAMENT_CONFIG = {
     {
       id: "day1",
       name: "Day 1",
-      title: "Day 1 — Saturday, Oct 3",
+      title: "Day 1 · Oct 3",
       dateFormatted: "Saturday, Oct 3",
       schedule: [
         // 11:30 - 15:30 Mixed Doubles: Max 5.2 Cap (Courts 1, 2, 3, 4)
@@ -218,7 +218,7 @@ const TOURNAMENT_CONFIG = {
     {
       id: "day2",
       name: "Day 2",
-      title: "Day 2 — Sunday, Oct 4",
+      title: "Day 2 · Oct 4",
       dateFormatted: "Sunday, Oct 4",
       schedule: [
         // 11:00–17:00 Picklehead Main Stage (Courts 1–4, staggered finish)
