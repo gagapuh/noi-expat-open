@@ -282,13 +282,13 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 16:00 - 19:00 DUPR 3.5-4.0 (Courts 3, 4)
+        // 15:30 - 19:00 Prime Division (4.0+) (Courts 3, 4)
         {
           id: "d2-c3-dupr",
           courtId: "c3",
-          start: "16:00",
+          start: "15:30",
           end: "19:00",
-          title: "DUPR Prime Division (3.5–4.0)",
+          title: "Prime Division (4.0+)",
           host: "TBA",
           logo: "picklehead.webp",
           reclubUrl: "",
@@ -298,9 +298,9 @@ const TOURNAMENT_CONFIG = {
         {
           id: "d2-c4-dupr",
           courtId: "c4",
-          start: "16:00",
+          start: "15:30",
           end: "19:00",
-          title: "DUPR Prime Division (3.5–4.0)",
+          title: "Prime Division (4.0+)",
           host: "TBA",
           logo: "picklehead.webp",
           reclubUrl: "",
