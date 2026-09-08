@@ -353,37 +353,62 @@ function initBracketRoster() {
   const bracket = getActiveBracket();
   if (!bracket) return;
 
-  // Try to load saved custom roster from localStorage
+  // Try to load saved custom roster and draw status from localStorage
   try {
     const saved = localStorage.getItem('noi_players_roster');
+    const savedDraw = localStorage.getItem('noi_draw_completed');
     if (saved) {
       state.playersRoster = JSON.parse(saved);
-      applyRosterToBracket(state.playersRoster, bracket);
+      state.isDrawCompleted = (savedDraw === 'true') && state.playersRoster.some(p => p.group !== null && p.group !== undefined);
+      if (state.isDrawCompleted) {
+        applyRosterToBracket(state.playersRoster, bracket);
+      } else {
+        resetBracketToSlots(bracket);
+      }
       return;
     }
   } catch (e) {}
 
-  // Otherwise initialize from bracket default players
+  // Otherwise initialize from bracket default players (group: null initially)
   if (bracket.players && bracket.players.length === 32) {
     state.playersRoster = bracket.players.map(p => ({ ...p }));
   } else {
     const defaultRoster = [];
-    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     for (let i = 1; i <= 32; i++) {
       defaultRoster.push({
         id: i,
         name: `Player ${i}`,
-        group: `Group ${letters[Math.floor((i - 1) / 4)]}`
+        group: null
       });
     }
     state.playersRoster = defaultRoster;
   }
+  state.isDrawCompleted = false;
+  resetBracketToSlots(bracket);
 }
 
 function getActiveBracket() {
   if (!state.activeBracketId) return null;
   return (TOURNAMENT_CONFIG.brackets && TOURNAMENT_CONFIG.brackets[state.activeBracketId])
     || (typeof TOURNAMENT_BRACKETS !== 'undefined' && TOURNAMENT_BRACKETS[state.activeBracketId]);
+}
+
+function resetBracketToSlots(bracket) {
+  if (!bracket || !bracket.groups) return;
+  bracket.groups.forEach(group => {
+    group.players = ["Slot 1", "Slot 2", "Slot 3", "Slot 4"];
+    group.matches = [
+      { round: "Round 1", pair1: "Slot 1 & Slot 2", pair2: "Slot 3 & Slot 4", score: "—", winner: null, played: false },
+      { round: "Round 2", pair1: "Slot 1 & Slot 3", pair2: "Slot 2 & Slot 4", score: "—", winner: null, played: false },
+      { round: "Round 3", pair1: "Slot 1 & Slot 4", pair2: "Slot 2 & Slot 3", score: "—", winner: null, played: false }
+    ];
+    group.standings = [
+      { rank: 1, name: "Slot 1", played: 0, wins: 0, losses: 0, diff: 0, points: 0, qualified: false, advanceTo: "TBD" },
+      { rank: 2, name: "Slot 2", played: 0, wins: 0, losses: 0, diff: 0, points: 0, qualified: false, advanceTo: "TBD" },
+      { rank: 3, name: "Slot 3", played: 0, wins: 0, losses: 0, diff: 0, points: 0, qualified: false, advanceTo: "Eliminated" },
+      { rank: 4, name: "Slot 4", played: 0, wins: 0, losses: 0, diff: 0, points: 0, qualified: false, advanceTo: "Eliminated" }
+    ];
+  });
 }
 
 function applyRosterToBracket(roster, bracket) {
@@ -403,6 +428,12 @@ function applyRosterToBracket(roster, bracket) {
       ];
       group.standings.forEach((s, idx) => {
         s.name = group.players[idx] || s.name;
+        s.played = 0;
+        s.wins = 0;
+        s.losses = 0;
+        s.diff = 0;
+        s.points = 0;
+        s.qualified = false;
       });
     }
   });
@@ -426,8 +457,10 @@ window.randomizeGroupsDraw = function() {
   });
 
   state.playersRoster = shuffled;
+  state.isDrawCompleted = true;
   try {
     localStorage.setItem('noi_players_roster', JSON.stringify(state.playersRoster));
+    localStorage.setItem('noi_draw_completed', 'true');
   } catch (e) {}
 
   applyRosterToBracket(state.playersRoster, bracket);
@@ -440,7 +473,10 @@ window.randomizeGroupsDraw = function() {
   const notifyEl = document.getElementById('drawNotification');
   if (notifyEl) {
     notifyEl.classList.remove('hidden');
-    setTimeout(() => notifyEl.classList.add('hidden'), 3500);
+    setTimeout(() => {
+      const el = document.getElementById('drawNotification');
+      if (el) el.classList.add('hidden');
+    }, 4000);
   }
 };
 
@@ -450,13 +486,11 @@ window.saveRosterFromText = function() {
   const lines = textarea.value.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   if (lines.length === 0) return;
 
-  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const currentRoster = state.playersRoster || [];
   const newRoster = [];
   for (let i = 1; i <= 32; i++) {
     const name = lines[i - 1] || `Player ${i}`;
-    const group = (state.playersRoster && state.playersRoster[i - 1]) 
-      ? state.playersRoster[i - 1].group 
-      : `Group ${letters[Math.floor((i - 1) / 4)]}`;
+    const group = currentRoster[i - 1] ? currentRoster[i - 1].group : null;
     newRoster.push({ id: i, name, group });
   }
 
@@ -466,7 +500,7 @@ window.saveRosterFromText = function() {
   } catch (e) {}
 
   const bracket = getActiveBracket();
-  if (bracket) {
+  if (bracket && state.isDrawCompleted) {
     applyRosterToBracket(state.playersRoster, bracket);
   }
 
@@ -476,15 +510,37 @@ window.saveRosterFromText = function() {
   }
 };
 
+window.resetDrawOnly = function() {
+  if (!state.playersRoster) return;
+  state.playersRoster.forEach(p => {
+    p.group = null;
+  });
+  state.isDrawCompleted = false;
+  try {
+    localStorage.setItem('noi_players_roster', JSON.stringify(state.playersRoster));
+    localStorage.setItem('noi_draw_completed', 'false');
+  } catch (e) {}
+  const bracket = getActiveBracket();
+  if (bracket) {
+    resetBracketToSlots(bracket);
+  }
+  renderBracketModal();
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
 window.resetRosterDefault = function() {
   try {
     localStorage.removeItem('noi_players_roster');
+    localStorage.removeItem('noi_draw_completed');
   } catch (e) {}
+  state.isDrawCompleted = false;
   state.playersRoster = null;
   initBracketRoster();
   const bracket = getActiveBracket();
   if (bracket) {
-    applyRosterToBracket(state.playersRoster, bracket);
+    resetBracketToSlots(bracket);
   }
   renderBracketModal();
   if (window.lucide) {
@@ -621,25 +677,51 @@ function renderBracketModal() {
 
     html += `
       <!-- Banner -->
-      <div class="bg-blue-50/80 border border-blue-200/90 rounded-2xl p-4 sm:p-5 text-xs text-blue-950 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xs">
+      <div class="${state.isDrawCompleted ? 'bg-blue-50/80 border-blue-200/90 text-blue-950' : 'bg-amber-50/90 border-amber-200 text-amber-950'} border rounded-2xl p-4 sm:p-5 text-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xs">
         <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
-            <i data-lucide="layers" class="w-4 h-4"></i>
+          <div class="w-8 h-8 rounded-xl ${state.isDrawCompleted ? 'bg-blue-600' : 'bg-amber-500'} text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
+            <i data-lucide="${state.isDrawCompleted ? 'layers' : 'shuffle'}" class="w-4 h-4"></i>
           </div>
           <div>
-            <div class="font-bold text-sm text-blue-950">Stage 1: Americano Groups (Groups A to H) · 11:00 – 13:00</div>
-            <p class="text-blue-800 text-xs mt-0.5 max-w-2xl leading-relaxed">
-              32 individual players play 3 matches rotating partners ("each with each"). 
-              Matches played to 11 points. Top 2 players from each group advance to the playoffs and pair up based on merit seed!
+            <div class="font-bold text-sm">
+              Stage 1: Americano Groups (Groups A to H) · ${state.isDrawCompleted ? '11:00 – 13:00 (Draw Completed)' : 'Awaiting Random Draw 🎲'}
+            </div>
+            <p class="${state.isDrawCompleted ? 'text-blue-800' : 'text-amber-800'} text-xs mt-0.5 max-w-2xl leading-relaxed">
+              ${state.isDrawCompleted 
+                ? '32 players drawn into 8 groups. Each player plays 3 matches rotating partners ("each with each") to 11 points. Top 2 players from each group advance to the playoffs.'
+                : '32 players are currently in an open roster list without groups. Run the random draw to shuffle and assign participants to Groups A–H!'}
             </p>
           </div>
         </div>
-        <button 
-          onclick="setBracketTab('players')" 
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-blue-100 border border-blue-300 text-blue-900 font-bold text-xs shadow-2xs transition-all shrink-0 cursor-pointer">
-          <i data-lucide="shuffle" class="w-3.5 h-3.5 text-blue-600"></i>
-          <span>Randomize Players 🎲</span>
-        </button>
+        <div class="flex items-center gap-2 shrink-0">
+          ${state.isDrawCompleted ? `
+            <button 
+              onclick="setBracketTab('players')" 
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-blue-100 border border-blue-300 text-blue-900 font-bold text-xs shadow-2xs transition-all cursor-pointer">
+              <i data-lucide="users" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>View Roster</span>
+            </button>
+            <button 
+              onclick="randomizeGroupsDraw()" 
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-2xs transition-all cursor-pointer">
+              <i data-lucide="shuffle" class="w-3.5 h-3.5 text-white"></i>
+              <span>Re-Draw 🎲</span>
+            </button>
+          ` : `
+            <button 
+              onclick="randomizeGroupsDraw()" 
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
+              <i data-lucide="shuffle" class="w-4 h-4 text-white"></i>
+              <span>Run Random Draw 🎲</span>
+            </button>
+            <button 
+              onclick="setBracketTab('players')" 
+              class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs shadow-2xs transition-all cursor-pointer">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-700"></i>
+              <span>Edit Players</span>
+            </button>
+          `}
+        </div>
       </div>
 
       <!-- Groups Grid -->
@@ -1138,9 +1220,12 @@ function renderBracketModal() {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════════════
   // TAB 4: PLAYERS ROSTER (32) & RANDOM DRAW 🎲
   // ══════════════════════════════════════════════════════════════════════════
   else if (activeTab === 'players') {
+    const isDrawn = !!(state.isDrawCompleted && roster.some(p => p.group));
+
     html += `
       <!-- Notification banner (hidden by default) -->
       <div id="drawNotification" class="hidden bg-emerald-500 text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center justify-between shadow-md">
@@ -1155,25 +1240,46 @@ function renderBracketModal() {
       <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-5 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-4">
           <div>
-            <h3 class="font-display font-extrabold text-base text-stone-900">
-              Tournament Roster: 32 Participants
-            </h3>
-            <p class="text-xs text-stone-500 mt-0.5">
-              Add real participant names, then click "Random Draw" to shuffle and distribute players into Groups A–H!
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-display font-extrabold text-base text-stone-900">
+                Tournament Roster: 32 Participants
+              </h3>
+              ${isDrawn ? `
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-[10px] font-bold">
+                  <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> Groups Drawn (A–H)
+                </span>
+              ` : `
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200 text-[10px] font-bold">
+                  <i data-lucide="list" class="w-3 h-3 text-stone-500"></i> Open List (No Groups)
+                </span>
+              `}
+            </div>
+            <p class="text-xs text-stone-500">
+              ${isDrawn 
+                ? 'Random draw completed! Players are distributed across Groups A–H. Click "Re-Draw" to shuffle again, or "Clear Groups" to return to an ungrouped list.' 
+                : 'Initial list of 32 participants without groups. Add or paste real player names below, then click "Random Draw into Groups 🎲" to distribute them into Groups A–H!'}
             </p>
           </div>
-          <div class="flex items-center gap-2 shrink-0">
+          <div class="flex items-center gap-2 shrink-0 flex-wrap">
             <button 
               onclick="randomizeGroupsDraw()" 
               class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
               <i data-lucide="shuffle" class="w-4 h-4 text-amber-400"></i>
-              <span>Random Draw into Groups 🎲</span>
+              <span>${isDrawn ? 'Re-Shuffle / Re-Draw 🎲' : 'Random Draw into Groups 🎲'}</span>
             </button>
+            ${isDrawn ? `
+              <button 
+                onclick="resetDrawOnly()" 
+                class="px-3 py-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-600 font-semibold text-xs shadow-2xs transition-all cursor-pointer"
+                title="Clear group assignments and return to plain list">
+                Clear Groups
+              </button>
+            ` : ''}
             <button 
               onclick="resetRosterDefault()" 
               class="px-3 py-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-600 font-semibold text-xs shadow-2xs transition-all cursor-pointer"
-              title="Reset to default Player 1..32">
-              Reset
+              title="Reset all names to Player 1..32">
+              Reset Names
             </button>
           </div>
         </div>
@@ -1189,7 +1295,7 @@ function renderBracketModal() {
           </summary>
           <div class="mt-3 space-y-2 text-xs">
             <p class="text-stone-500 text-[11px]">
-              Paste one name per line (or comma-separated). Missing names will remain as "Player N".
+              Paste one name per line. If fewer than 32 names are provided, remaining slots keep "Player N".
             </p>
             <textarea 
               id="bulkPlayersInput" 
@@ -1207,25 +1313,26 @@ function renderBracketModal() {
         </details>
       </div>
 
-      <!-- 32 Players Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+      <!-- 32 Players Grid / List -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         ${roster.map(p => `
-          <div class="p-3 rounded-xl bg-white border border-stone-200/80 shadow-card flex items-center justify-between gap-2 hover:border-blue-300 transition-colors">
+          <div class="p-3 rounded-xl bg-white border border-stone-200/80 shadow-card flex items-center justify-between gap-2.5 hover:border-blue-300 transition-colors">
             <div class="flex items-center gap-2.5 min-w-0">
               <span class="w-7 h-7 rounded-lg bg-stone-100 text-stone-700 font-mono font-bold text-xs flex items-center justify-center shrink-0">
                 ${p.id}
               </span>
               <span class="font-bold text-stone-900 text-xs truncate">${p.name}</span>
             </div>
-            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200 shrink-0">
-              ${p.group}
-            </span>
+            ${(isDrawn && p.group) ? `
+              <span class="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200 shrink-0">
+                ${p.group}
+              </span>
+            ` : ''}
           </div>
         `).join('')}
       </div>
     `;
   }
-
   html += `
     </div>
   `;

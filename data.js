@@ -375,168 +375,169 @@ const TOURNAMENT_BRACKETS = {
     groupsCount: 8,
     advanceCount: 2,
     totalTeams: 8,
-    description: "32 players start in 8 Americano groups (Groups A to H). The 8 group winners and 8 runners-up are ranked by points and paired using a balanced merit seed (#1 Winner + #8 Runner-up, #2 Winner + #7 Runner-up, etc.). Teams then clash in single-elimination Best-of-3 Quarterfinals, Semifinals, and a Best-of-5 Grand Championship Final!",
+    isDrawCompleted: false,
+    description: "32 players start as an open roster. Once drawn into 8 Americano groups (Groups A to H), each player plays 3 matches rotating partners ('each with each'). Top 2 from each group advance and pair up using merit ranking (1st with 8th, 2nd with 7th...) into 8 balanced playoff teams competing in Best-of-3 Quarterfinals, Semifinals, and a Best-of-5 Grand Final!",
     pairingFormula: "Merit-Based Seed: Winner Rank #k + Runner-up Rank #(9 - k) (1st with 8th, 2nd with 7th...)",
     players: [
       {
             "id": 1,
             "name": "Player 1",
-            "group": "Group A"
+            "group": null
       },
       {
             "id": 2,
             "name": "Player 2",
-            "group": "Group A"
+            "group": null
       },
       {
             "id": 3,
             "name": "Player 3",
-            "group": "Group A"
+            "group": null
       },
       {
             "id": 4,
             "name": "Player 4",
-            "group": "Group A"
+            "group": null
       },
       {
             "id": 5,
             "name": "Player 5",
-            "group": "Group B"
+            "group": null
       },
       {
             "id": 6,
             "name": "Player 6",
-            "group": "Group B"
+            "group": null
       },
       {
             "id": 7,
             "name": "Player 7",
-            "group": "Group B"
+            "group": null
       },
       {
             "id": 8,
             "name": "Player 8",
-            "group": "Group B"
+            "group": null
       },
       {
             "id": 9,
             "name": "Player 9",
-            "group": "Group C"
+            "group": null
       },
       {
             "id": 10,
             "name": "Player 10",
-            "group": "Group C"
+            "group": null
       },
       {
             "id": 11,
             "name": "Player 11",
-            "group": "Group C"
+            "group": null
       },
       {
             "id": 12,
             "name": "Player 12",
-            "group": "Group C"
+            "group": null
       },
       {
             "id": 13,
             "name": "Player 13",
-            "group": "Group D"
+            "group": null
       },
       {
             "id": 14,
             "name": "Player 14",
-            "group": "Group D"
+            "group": null
       },
       {
             "id": 15,
             "name": "Player 15",
-            "group": "Group D"
+            "group": null
       },
       {
             "id": 16,
             "name": "Player 16",
-            "group": "Group D"
+            "group": null
       },
       {
             "id": 17,
             "name": "Player 17",
-            "group": "Group E"
+            "group": null
       },
       {
             "id": 18,
             "name": "Player 18",
-            "group": "Group E"
+            "group": null
       },
       {
             "id": 19,
             "name": "Player 19",
-            "group": "Group E"
+            "group": null
       },
       {
             "id": 20,
             "name": "Player 20",
-            "group": "Group E"
+            "group": null
       },
       {
             "id": 21,
             "name": "Player 21",
-            "group": "Group F"
+            "group": null
       },
       {
             "id": 22,
             "name": "Player 22",
-            "group": "Group F"
+            "group": null
       },
       {
             "id": 23,
             "name": "Player 23",
-            "group": "Group F"
+            "group": null
       },
       {
             "id": 24,
             "name": "Player 24",
-            "group": "Group F"
+            "group": null
       },
       {
             "id": 25,
             "name": "Player 25",
-            "group": "Group G"
+            "group": null
       },
       {
             "id": 26,
             "name": "Player 26",
-            "group": "Group G"
+            "group": null
       },
       {
             "id": 27,
             "name": "Player 27",
-            "group": "Group G"
+            "group": null
       },
       {
             "id": 28,
             "name": "Player 28",
-            "group": "Group G"
+            "group": null
       },
       {
             "id": 29,
             "name": "Player 29",
-            "group": "Group H"
+            "group": null
       },
       {
             "id": 30,
             "name": "Player 30",
-            "group": "Group H"
+            "group": null
       },
       {
             "id": 31,
             "name": "Player 31",
-            "group": "Group H"
+            "group": null
       },
       {
             "id": 32,
             "name": "Player 32",
-            "group": "Group H"
+            "group": null
       }
 ],
     teams: [
@@ -555,32 +556,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group A",
             "court": "Court 1",
             "players": [
-                  "Player 1",
-                  "Player 2",
-                  "Player 3",
-                  "Player 4"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 1 & Player 2",
-                        "pair2": "Player 3 & Player 4",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 1 & Player 3",
-                        "pair2": "Player 2 & Player 4",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 1 & Player 4",
-                        "pair2": "Player 2 & Player 3",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -589,7 +590,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 1",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -600,7 +601,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 2",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -611,7 +612,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 3",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -622,7 +623,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 4",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -638,32 +639,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group B",
             "court": "Court 2",
             "players": [
-                  "Player 5",
-                  "Player 6",
-                  "Player 7",
-                  "Player 8"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 5 & Player 6",
-                        "pair2": "Player 7 & Player 8",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 5 & Player 7",
-                        "pair2": "Player 6 & Player 8",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 5 & Player 8",
-                        "pair2": "Player 6 & Player 7",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -672,7 +673,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 5",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -683,7 +684,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 6",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -694,7 +695,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 7",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -705,7 +706,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 8",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -721,32 +722,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group C",
             "court": "Court 3",
             "players": [
-                  "Player 9",
-                  "Player 10",
-                  "Player 11",
-                  "Player 12"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 9 & Player 10",
-                        "pair2": "Player 11 & Player 12",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 9 & Player 11",
-                        "pair2": "Player 10 & Player 12",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 9 & Player 12",
-                        "pair2": "Player 10 & Player 11",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -755,7 +756,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 9",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -766,7 +767,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 10",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -777,7 +778,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 11",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -788,7 +789,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 12",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -804,32 +805,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group D",
             "court": "Court 4",
             "players": [
-                  "Player 13",
-                  "Player 14",
-                  "Player 15",
-                  "Player 16"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 13 & Player 14",
-                        "pair2": "Player 15 & Player 16",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 13 & Player 15",
-                        "pair2": "Player 14 & Player 16",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 13 & Player 16",
-                        "pair2": "Player 14 & Player 15",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -838,7 +839,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 13",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -849,7 +850,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 14",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -860,7 +861,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 15",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -871,7 +872,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 16",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -887,32 +888,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group E",
             "court": "Court 1",
             "players": [
-                  "Player 17",
-                  "Player 18",
-                  "Player 19",
-                  "Player 20"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 17 & Player 18",
-                        "pair2": "Player 19 & Player 20",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 17 & Player 19",
-                        "pair2": "Player 18 & Player 20",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 17 & Player 20",
-                        "pair2": "Player 18 & Player 19",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -921,7 +922,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 17",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -932,7 +933,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 18",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -943,7 +944,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 19",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -954,7 +955,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 20",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -970,32 +971,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group F",
             "court": "Court 2",
             "players": [
-                  "Player 21",
-                  "Player 22",
-                  "Player 23",
-                  "Player 24"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 21 & Player 22",
-                        "pair2": "Player 23 & Player 24",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 21 & Player 23",
-                        "pair2": "Player 22 & Player 24",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 21 & Player 24",
-                        "pair2": "Player 22 & Player 23",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -1004,7 +1005,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 21",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1015,7 +1016,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 22",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1026,7 +1027,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 23",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1037,7 +1038,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 24",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1053,32 +1054,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group G",
             "court": "Court 3",
             "players": [
-                  "Player 25",
-                  "Player 26",
-                  "Player 27",
-                  "Player 28"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 25 & Player 26",
-                        "pair2": "Player 27 & Player 28",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 25 & Player 27",
-                        "pair2": "Player 26 & Player 28",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 25 & Player 28",
-                        "pair2": "Player 26 & Player 27",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -1087,7 +1088,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 25",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1098,7 +1099,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 26",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1109,7 +1110,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 27",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1120,7 +1121,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 28",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1136,32 +1137,32 @@ const TOURNAMENT_BRACKETS = {
             "name": "Group H",
             "court": "Court 4",
             "players": [
-                  "Player 29",
-                  "Player 30",
-                  "Player 31",
-                  "Player 32"
+                  "Slot 1",
+                  "Slot 2",
+                  "Slot 3",
+                  "Slot 4"
             ],
             "matches": [
                   {
                         "round": "Round 1",
-                        "pair1": "Player 29 & Player 30",
-                        "pair2": "Player 31 & Player 32",
+                        "pair1": "Slot 1 & Slot 2",
+                        "pair2": "Slot 3 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 2",
-                        "pair1": "Player 29 & Player 31",
-                        "pair2": "Player 30 & Player 32",
+                        "pair1": "Slot 1 & Slot 3",
+                        "pair2": "Slot 2 & Slot 4",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
                   },
                   {
                         "round": "Round 3",
-                        "pair1": "Player 29 & Player 32",
-                        "pair2": "Player 30 & Player 31",
+                        "pair1": "Slot 1 & Slot 4",
+                        "pair2": "Slot 2 & Slot 3",
                         "score": "\u2014",
                         "winner": null,
                         "played": false
@@ -1170,7 +1171,7 @@ const TOURNAMENT_BRACKETS = {
             "standings": [
                   {
                         "rank": 1,
-                        "name": "Player 29",
+                        "name": "Slot 1",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1181,7 +1182,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 2,
-                        "name": "Player 30",
+                        "name": "Slot 2",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1192,7 +1193,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 3,
-                        "name": "Player 31",
+                        "name": "Slot 3",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
@@ -1203,7 +1204,7 @@ const TOURNAMENT_BRACKETS = {
                   },
                   {
                         "rank": 4,
-                        "name": "Player 32",
+                        "name": "Slot 4",
                         "played": 0,
                         "wins": 0,
                         "losses": 0,
