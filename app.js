@@ -287,25 +287,24 @@ function renderTimelineMatrix() {
                   ${ev.subtitle}
                 </div>
               ` : ''}
-              <div class="flex items-center gap-1.5 flex-wrap justify-center mt-2">
-                ${ev.isDupr ? `
-                  <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none" title="DUPR Rated Match - Results recorded to DUPR rating">
-                    <img src="dupr.png" alt="DUPR" class="h-3 w-auto object-contain" />
-                    <span class="font-bold text-stone-900 uppercase tracking-wide text-[9px]">Rated</span>
+              <div class="flex items-center gap-2 flex-wrap justify-center mt-2.5">
+                ${ev.host && ev.host !== 'TBA' ? `
+                  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-stone-900 text-white shadow-sm text-[11px] sm:text-xs leading-none">
+                    <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
+                    <span class="w-1 h-2.5 rounded-full bg-stone-600"></span>
+                    <span class="font-black text-amber-300 tracking-wide">${ev.host}</span>
                   </div>
                 ` : ''}
                 ${ev.playersCount ? `
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none">
-                    <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Players</span>
-                    <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
-                    <span class="font-black text-blue-700">${ev.playersCount}</span>
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-stone-100/90 text-stone-600 border border-stone-200/80 text-[10px] leading-none">
+                    <span class="text-stone-400 font-semibold uppercase tracking-wider text-[8px]">Players</span>
+                    <span class="font-bold text-stone-700">${ev.playersCount}</span>
                   </div>
                 ` : ''}
-                ${ev.host && ev.host !== 'TBA' ? `
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none">
-                    <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
-                    <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
-                    <span class="font-extrabold text-stone-950">${ev.host}</span>
+                ${ev.isDupr ? `
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[10px] leading-none" title="DUPR Rated Match - Results recorded to DUPR rating">
+                    <img src="dupr.png" alt="DUPR" class="h-2.5 w-auto object-contain" />
+                    <span class="font-bold text-stone-900 uppercase tracking-wide text-[8px]">Rated</span>
                   </div>
                 ` : ''}
               </div>
@@ -356,30 +355,27 @@ function renderTimelineMatrix() {
               ${ev.title}
             </div>
             <div class="flex items-center gap-1.5 flex-wrap justify-center">
-              ${ev.isDupr ? `
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
-                  isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
-                } text-[10px] leading-none" title="DUPR Rated Match - Results recorded to DUPR rating">
-                  <img src="dupr.png" alt="DUPR" class="h-2.5 w-auto object-contain" />
-                  <span class="font-bold text-stone-900 uppercase tracking-wide text-[8px]">Rated</span>
+              ${ev.host !== undefined ? `
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${
+                  ev.host && ev.host !== 'TBA'
+                    ? 'bg-stone-900 text-white shadow-2xs'
+                    : (isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800')
+                } text-[11px] leading-none">
+                  <span class="${ev.host && ev.host !== 'TBA' ? 'text-stone-400' : 'text-stone-400'} font-bold uppercase tracking-wider text-[8px]">Host</span>
+                  <span class="w-px h-2 rounded-full ${ev.host && ev.host !== 'TBA' ? 'bg-stone-600' : 'bg-stone-300'}"></span>
+                  <span class="font-black ${ev.host && ev.host !== 'TBA' ? 'text-amber-300' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
                 </div>
               ` : ''}
               ${ev.playersCount ? `
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
-                  isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
-                } text-[10px] leading-none">
-                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Players</span>
-                  <span class="w-px h-2 rounded-full bg-stone-300"></span>
-                  <span class="font-black text-violet-700">${ev.playersCount}</span>
+                <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-100/90 text-stone-600 border border-stone-200/80 text-[9px] leading-none">
+                  <span class="text-stone-400 font-semibold uppercase tracking-wider text-[7.5px]">Players</span>
+                  <span class="font-bold text-stone-700">${ev.playersCount}</span>
                 </div>
               ` : ''}
-              ${ev.host !== undefined ? `
-                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
-                  isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
-                } text-[10px] leading-none">
-                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Host</span>
-                  <span class="w-px h-2 rounded-full bg-stone-300"></span>
-                  <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
+              ${ev.isDupr ? `
+                <div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[9px] leading-none" title="DUPR Rated Match - Results recorded to DUPR rating">
+                  <img src="dupr.png" alt="DUPR" class="h-2 w-auto object-contain" />
+                  <span class="font-bold text-stone-900 uppercase tracking-wide text-[7.5px]">Rated</span>
                 </div>
               ` : ''}
             </div>
