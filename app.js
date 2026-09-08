@@ -86,9 +86,13 @@ function renderCourtFilterTabs() {
 function renderTimelineMatrix() {
   const currentDay = TOURNAMENT_CONFIG.days.find(d => d.id === state.currentDayId) || TOURNAMENT_CONFIG.days[0];
 
-  // Update day tab styles
+  // Update day tab styles & labels
   document.querySelectorAll('.day-tab-btn').forEach(btn => {
     const dayId = btn.getAttribute('data-day');
+    const dayConfig = TOURNAMENT_CONFIG.days.find(d => d.id === dayId);
+    if (dayConfig && dayConfig.title) {
+      btn.textContent = dayConfig.title;
+    }
     const isActive = dayId === state.currentDayId;
     btn.className = `day-tab-btn h-10 px-6 rounded-xl font-bold text-sm transition-all duration-200 whitespace-nowrap cursor-pointer ${
       isActive 
@@ -202,8 +206,8 @@ function renderTimelineMatrix() {
             </span>
           </div>
 
-          <!-- Content: Logo + Title (vertically centered) -->
-          <div class="my-auto flex flex-col items-center text-center gap-2.5 py-2">
+          <!-- Content: Logo + Title + Host (vertically centered) -->
+          <div class="my-auto flex flex-col items-center text-center gap-2 py-2">
             ${ev.logo ? `
               <div class="p-1.5 rounded-xl bg-white border border-stone-200 shadow-sm flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
                 <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
@@ -212,6 +216,16 @@ function renderTimelineMatrix() {
             <div class="text-[13px] sm:text-sm font-extrabold ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-snug">
               ${ev.title}
             </div>
+            ${ev.host !== undefined ? `
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${
+                isPlanned 
+                  ? 'bg-stone-100/70 border border-stone-200/60 text-stone-500' 
+                  : 'bg-white/95 border border-stone-200/90 shadow-2xs text-stone-700'
+              } text-[11px] leading-none">
+                <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host:</span>
+                <span class="font-bold ${ev.host && ev.host !== 'TBA' ? 'text-stone-900' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
+              </div>
+            ` : ''}
           </div>
 
           <!-- Footer: Link -->

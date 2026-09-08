@@ -31,10 +31,11 @@ Example entry:
   start: "09:30",                                           // Start time (HH:MM)
   end: "11:00",                                             // End time (HH:MM)
   title: "Men's Doubles (MD) — Group Stage",                // Activity / Match title
-  category: "tournament",                                   // tournament, free, finals, clinic, event, break
-  status: "occupied",                                       // "occupied" (in use) or "free" (free court)
-  stage: "Group A",                                         // Stage
-  note: "Matches tracked live in Reclub"                    // Notes / Reclub info
+  host: "Picklehead",                                       // Host / Organizer name
+  logo: "picklehead.webp",                                  // Logo image path or placeholder.svg
+  reclubUrl: "",                                            // Optional Reclub event link
+  category: "tournament",                                   // tournament, round_robin, social, free, finals, clinic, event, break
+  status: "occupied"                                        // "occupied" (confirmed) or "planned" (dashed)
 }
 ```
 
