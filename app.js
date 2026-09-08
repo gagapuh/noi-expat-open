@@ -236,9 +236,13 @@ function renderTimelineMatrix() {
         bodyHtml += `
           <div class="timeline-event-card ${laneBorderClass} shadow-card hover:shadow-card-hover"
                style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle} ${unifiedBgStyle}">
-            <div class="flex items-center justify-between gap-1">
-              <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-black uppercase tracking-wide ${catConfig.badge} leading-none whitespace-nowrap">${court.name}</span>
-              <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-mono font-bold bg-white/90 text-stone-600 border border-stone-200 leading-none">${ev.start}–${ev.end}</span>
+            <div class="flex items-center ${court.id === 'c1' ? 'justify-between' : 'justify-end'} gap-1">
+              ${court.id === 'c1' ? `
+                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${catConfig.badge}">
+                  ${catConfig.short}
+                </span>
+              ` : ''}
+              <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">${ev.start}–${ev.end}</span>
             </div>
             <div class="mt-auto flex flex-col gap-1.5 pt-1">
               ${ev.courtStages ? `<div class="text-[9px] font-semibold text-blue-800 bg-blue-50/90 border border-blue-200/80 rounded-md px-1.5 py-1 text-center leading-snug">${ev.courtStages}</div>` : ''}
