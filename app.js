@@ -233,8 +233,19 @@ function renderTimelineMatrix() {
               ? 'border-t border-b border-r border-blue-300/60 border-l-0'
               : 'border-t border-b border-r border-dashed border-blue-300/60 border-l-0');
 
+        let laneRoundedClass = 'rounded-t-none';
+        if (court.id === 'c1') {
+          laneRoundedClass = 'rounded-t-none rounded-b-2xl';
+        } else if (court.id === 'c2') {
+          laneRoundedClass = 'rounded-t-none rounded-b-2xl';
+        } else if (court.id === 'c3') {
+          laneRoundedClass = 'rounded-t-none rounded-bl-2xl rounded-br-none';
+        } else if (court.id === 'c4') {
+          laneRoundedClass = 'rounded-t-none rounded-br-2xl rounded-bl-none';
+        }
+
         bodyHtml += `
-          <div class="timeline-event-card ${laneBorderClass} shadow-card hover:shadow-card-hover"
+          <div class="timeline-event-card ${laneBorderClass} ${laneRoundedClass} shadow-card hover:shadow-card-hover"
                style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle} ${unifiedBgStyle}">
             <div class="flex items-center ${court.id === 'c1' ? 'justify-between' : 'justify-end'} gap-1">
               ${court.id === 'c1' ? `
