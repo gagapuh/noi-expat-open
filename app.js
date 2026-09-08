@@ -202,7 +202,7 @@ function renderTimelineMatrix() {
           <div class="flex flex-col gap-1">
             <div class="flex flex-wrap items-center justify-between gap-1">
               <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
-                isFree ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : catConfig.badge
+                isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
               }">
                 ${isFree ? 'Free Court' : catConfig.short}
               </span>
