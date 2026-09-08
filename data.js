@@ -171,27 +171,20 @@ const TOURNAMENT_CONFIG = {
           category: "tournament",
           status: "planned"
         },
-        // 19:00 - 22:00 Noi Sunset Social (Courts 1, 2, 3, 4)
+        // 19:00 - 22:00 Noi Sunset Social (Courts 1 & 2 combined)
         {
-          id: "d1-c1-sunset-social",
+          id: "d1-c1c2-sunset-social",
           courtId: "c1",
+          courtIds: ["c1", "c2"],
+          courtSpan: 2,
           start: "19:00",
           end: "22:00",
           title: "Noi Sunset Social",
-          host: "TBA",
+          subtitle: "All levels",
+          host: "Eugen",
+          playersCount: "0/16",
           logo: "002.svg",
-          reclubUrl: "",
-          category: "social",
-          status: "occupied"
-        },
-        {
-          id: "d1-c2-sunset-social",
-          courtId: "c2",
-          start: "19:00",
-          end: "22:00",
-          title: "Noi Sunset Social",
-          host: "TBA",
-          logo: "002.svg",
+          showReclubBadge: true,
           reclubUrl: "",
           category: "social",
           status: "occupied"
