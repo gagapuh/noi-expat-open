@@ -258,7 +258,6 @@ function renderTimelineMatrix() {
               <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">${ev.start}–${ev.end}</span>
             </div>
             <div class="mt-auto flex flex-col gap-1.5 pt-1">
-              ${ev.courtStages ? `<div class="text-[9px] font-semibold text-blue-800 bg-blue-50/90 border border-blue-200/80 rounded-md px-1.5 py-1 text-center leading-snug">${ev.courtStages}</div>` : ''}
               <button type="button" onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
                 class="w-full py-1 rounded-md bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[9px] font-extrabold text-blue-700 flex items-center justify-center gap-1 transition-all cursor-pointer group">
                 <i data-lucide="calendar-days" class="w-2.5 h-2.5 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
