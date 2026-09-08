@@ -276,8 +276,8 @@ function renderTimelineMatrix() {
               ` : ''}
             </div>
 
-            <!-- Court 1 Top-Left Header: Category Badge + DUPR with To Be Confirmed -->
-            <div class="absolute top-3 left-3 flex flex-col items-start gap-1 z-10">
+            <!-- Court 1 Top-Left Header: Category Badge + DUPR with To Be Confirmed + Reclub Link -->
+            <div class="absolute top-3 left-3 flex flex-col items-start gap-1 z-20 pointer-events-auto">
               <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${catConfig.badge}">
                 ${catConfig.short}
               </span>
@@ -287,9 +287,15 @@ function renderTimelineMatrix() {
                   <span class="text-[9px] sm:text-[10px] text-stone-600 font-bold tracking-tight pr-1">${ev.duprStatus || 'To Be Confirmed'}</span>
                 </div>
               ` : ''}
+              <${hasReclubUrl ? 'a' : 'div'} ${hasReclubUrl ? `href="${ev.reclubUrl}" target="_blank" rel="noopener noreferrer"` : ''}
+                class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs transition-all ${hasReclubUrl ? 'hover:bg-blue-50/80 hover:border-blue-300 cursor-pointer group' : 'cursor-default'}"
+                title="${hasReclubUrl ? 'Open Reclub Event' : 'Reclub Link'}">
+                <img src="reclub.svg?v=1" alt="Reclub" class="h-6 sm:h-7 w-auto object-contain rounded-md" />
+                <span class="text-[9px] sm:text-[10px] ${hasReclubUrl ? 'text-blue-700 font-bold group-hover:underline' : 'text-stone-600 font-bold'} tracking-tight pr-1">Link</span>
+              </${hasReclubUrl ? 'a' : 'div'}>
             </div>
 
-            <!-- 4 Interactive Columns: Times at top, Buttons at bottom -->
+            <!-- 4 Interactive Columns: Times at top, Matches button at bottom -->
             <div class="absolute inset-0 grid grid-cols-4 z-10 pointer-events-none">
               ${(ev.staggeredCourts || []).map(sc => {
                 const laneHeightStyle = sc.courtId === 'c1' ? '100%' : (sc.courtId === 'c2' ? 'calc(5 / 6 * 100%)' : 'calc(4 / 6 * 100%)');
@@ -303,7 +309,6 @@ function renderTimelineMatrix() {
                         class="w-full py-1.5 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[10px] sm:text-[11px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group">
                         <i data-lucide="calendar-days" class="w-3 h-3 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
                       </button>
-                      <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="w-full h-6 rounded-md text-[9px] sm:text-[10px] font-semibold flex items-center justify-center transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
                     </div>
                   </div>
                 `;
