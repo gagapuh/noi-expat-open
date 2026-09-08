@@ -288,10 +288,10 @@ function renderTimelineMatrix() {
                 </div>
               ` : ''}
               <${hasReclubUrl ? 'a' : 'div'} ${hasReclubUrl ? `href="${ev.reclubUrl}" target="_blank" rel="noopener noreferrer"` : ''}
-                class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs transition-all ${hasReclubUrl ? 'hover:bg-blue-50/80 hover:border-blue-300 cursor-pointer group' : 'cursor-default'}"
+                class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs ${hasReclubUrl ? 'cursor-pointer' : 'cursor-default'}"
                 title="${hasReclubUrl ? 'Open Reclub Activity' : 'Reclub Activity'}">
                 <img src="reclub.png?v=1" alt="Reclub" class="h-6 sm:h-7 w-auto object-contain rounded-md" />
-                <span class="text-[9px] sm:text-[10px] ${hasReclubUrl ? 'text-blue-700 font-bold group-hover:underline' : 'text-stone-600 font-bold'} tracking-tight pr-1">Activity</span>
+                <span class="text-[9px] sm:text-[10px] text-stone-600 font-bold tracking-tight pr-1">Activity</span>
               </${hasReclubUrl ? 'a' : 'div'}>
             </div>
 
