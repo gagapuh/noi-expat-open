@@ -226,7 +226,7 @@ function renderTimelineMatrix() {
                 ` : ''}
               </div>
               <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
-                ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
+                ${ev.start}–${ev.end}${ev.courtScheduleList ? `<span class="text-stone-400 font-normal ml-1 hidden sm:inline"> Staggered</span>` : `<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>`}
               </span>
             </div>
           </div>
@@ -259,21 +259,26 @@ function renderTimelineMatrix() {
             ` : ''}
 
             ${(effectiveSpan >= 4 && ev.courtScheduleList) ? `
-              <!-- Multi-Court Lane Schedule Breakdown with Dashed Dividers -->
-              <div class="mt-3 w-full max-w-2xl grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-dashed border-blue-200/90">
-                ${ev.courtScheduleList.map((cs, cIdx) => `
-                  <div class="flex flex-col items-center text-center p-2 rounded-xl bg-white/70 border border-blue-100/80 shadow-2xs ${cIdx < 3 ? 'sm:border-r sm:border-dashed sm:border-blue-200' : ''}">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-blue-950">${cs.courtName}</span>
-                    <span class="text-[10px] font-mono font-bold text-blue-700">${cs.time}</span>
-                    <span class="text-[9px] text-stone-500 font-medium leading-tight mt-0.5">${cs.stages}</span>
-                    <button 
-                      type="button" 
-                      onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}', '${cs.courtId}')"
-                      class="mt-1.5 px-2 py-0.5 text-[9px] font-extrabold text-blue-700 bg-blue-50 hover:bg-blue-600 hover:text-white border border-blue-200 rounded-md transition-all cursor-pointer shadow-2xs whitespace-nowrap">
-                      Matches &rarr;
-                    </button>
-                  </div>
-                `).join('')}
+              <!-- Multi-Court Lane Schedule Breakdown with real dashed vertical dividers -->
+              <div class="mt-3 w-full max-w-2xl pt-3 border-t border-dashed border-blue-300/80">
+                <div class="flex items-stretch w-full">
+                  ${ev.courtScheduleList.map((cs, cIdx) => {
+                    const isShort = cs.time.includes('15:00');
+                    return `
+                    ${cIdx > 0 ? `<div class="w-px border-l border-dashed border-blue-300 mx-0 shrink-0"></div>` : ''}
+                    <div class="flex-1 flex flex-col items-center text-center px-2 py-1 ${isShort ? 'opacity-70' : ''}">
+                      <span class="text-[10px] font-black uppercase tracking-wider text-blue-950 leading-none">${cs.courtName}</span>
+                      <span class="text-[10px] font-mono font-bold ${isShort ? 'text-stone-500' : 'text-blue-700'} mt-0.5 leading-none">${cs.time}</span>
+                      <span class="text-[9px] text-stone-500 font-medium leading-tight mt-1 px-1">${cs.stages}</span>
+                      <button 
+                        type="button" 
+                        onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}', '${cs.courtId}')"
+                        class="mt-2 px-2 py-0.5 text-[9px] font-extrabold text-blue-700 bg-blue-50 hover:bg-blue-600 hover:text-white border border-blue-200 rounded-md transition-all cursor-pointer shadow-2xs whitespace-nowrap">
+                        Matches &rarr;
+                      </button>
+                    </div>`;
+                  }).join('')}
+                </div>
               </div>
             ` : ''}
           </div>
