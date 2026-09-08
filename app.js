@@ -291,10 +291,11 @@ function setupEventListeners() {
     });
   });
 
-  const printBtn = document.getElementById('printScheduleBtn');
-  if (printBtn) {
-    printBtn.addEventListener('click', () => {
-      window.print();
+  // Location modal backdrop click to close
+  const locationBackdrop = document.getElementById('locationModalBackdrop');
+  if (locationBackdrop) {
+    locationBackdrop.addEventListener('click', () => {
+      window.closeLocationModal();
     });
   }
 
@@ -317,7 +318,10 @@ function setupEventListeners() {
   // Keyboard Escape key to close modals
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (state.activeCourtModalId) {
+      const locModal = document.getElementById('locationModal');
+      if (locModal && !locModal.classList.contains('hidden')) {
+        window.closeLocationModal();
+      } else if (state.activeCourtModalId) {
         window.closeCourtMatchesModal();
       } else if (state.activeBracketId) {
         window.closeBracketModal();
@@ -325,6 +329,40 @@ function setupEventListeners() {
     }
   });
 }
+
+/// ─── Location / Directions Modal Functions ───
+window.openLocationModal = function() {
+  const modal = document.getElementById('locationModal');
+  if (!modal) return;
+
+  const venue = (typeof TOURNAMENT_CONFIG !== 'undefined' && TOURNAMENT_CONFIG.venue) || {};
+  const nameEl = document.getElementById('locationVenueName');
+  const addrEl = document.getElementById('locationVenueAddress');
+  const gmapsBtn = document.getElementById('googleMapsBtn');
+  const appleBtn = document.getElementById('appleMapsBtn');
+
+  if (nameEl && venue.name) nameEl.textContent = venue.name;
+  if (addrEl && venue.address) addrEl.textContent = venue.address;
+  if (gmapsBtn && venue.googleMapsUrl) gmapsBtn.href = venue.googleMapsUrl;
+  if (appleBtn && venue.appleMapsUrl) appleBtn.href = venue.appleMapsUrl;
+
+  modal.classList.remove('hidden');
+  modal.classList.add('active', 'flex');
+  document.body.style.overflow = 'hidden';
+
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeLocationModal = function() {
+  const modal = document.getElementById('locationModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('active', 'flex');
+    document.body.style.overflow = '';
+  }
+};
 
 /// ─── Tournament Draw / Bracket Modal Functions ───
 window.openBracketModal = function(bracketId) {

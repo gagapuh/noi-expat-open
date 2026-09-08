@@ -77,9 +77,12 @@
 
       <!-- Actions -->
       <div class="flex items-center gap-2 no-print">
-        <button id="printScheduleBtn" class="h-8 px-3 rounded-lg text-[13px] font-medium border border-stone-200 bg-white text-stone-500 hover:text-stone-800 hover:border-stone-300 transition-all duration-150 flex items-center gap-1.5 cursor-pointer">
-          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Print</span>
+        <button 
+          id="locationBtn" 
+          onclick="openLocationModal()" 
+          class="h-8 sm:h-9 px-3 rounded-xl text-xs font-bold border border-stone-200/90 bg-white hover:bg-stone-50 text-stone-800 shadow-2xs hover:shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i>
+          <span>Directions</span>
         </button>
       </div>
     </div>
@@ -135,8 +138,63 @@
     </div>
   </div>
 
+  <!-- ═══════════════ LOCATION / DIRECTIONS MODAL ═══════════════ -->
+  <div id="locationModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-950/60 backdrop-blur-sm overflow-hidden" role="dialog" aria-modal="true">
+    <div id="locationModalBackdrop" class="fixed inset-0 cursor-pointer"></div>
+    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-stone-200/80 flex flex-col z-10 modal-animate-scale overflow-hidden">
+      <!-- Header -->
+      <div class="px-5 py-4 border-b border-stone-100 bg-stone-50/50 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center shadow-2xs">
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-display font-extrabold text-stone-900 leading-tight">Tournament Venue</h3>
+            <p class="text-[11px] text-stone-400 font-medium">How to Get There & Maps</p>
+          </div>
+        </div>
+        <button 
+          onclick="closeLocationModal()" 
+          class="w-8 h-8 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-500 hover:text-stone-800 flex items-center justify-center cursor-pointer transition-colors shadow-2xs"
+          title="Close (Esc)">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-5 space-y-4 bg-surface-1">
+        <div class="p-4 rounded-xl bg-white border border-stone-200/80 shadow-card space-y-1">
+          <div class="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Official Venue</div>
+          <div id="locationVenueName" class="text-base font-display font-black text-stone-900">NOI Pickleball Club</div>
+          <div id="locationVenueAddress" class="text-xs text-stone-600">Noi Sports Arena & Pickleball Club</div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+          <a 
+            id="googleMapsBtn"
+            href="https://maps.google.com/?q=Noi+Pickleball" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs shadow-sm transition-all cursor-pointer">
+            <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+            <span>Google Maps</span>
+          </a>
+          <a 
+            id="appleMapsBtn"
+            href="https://maps.apple.com/?q=Noi+Pickleball" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-display font-bold text-xs shadow-sm transition-all cursor-pointer">
+            <i data-lucide="map" class="w-3.5 h-3.5"></i>
+            <span>Apple Maps</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
-  <script src="data.js?v=221"></script>
-  <script src="app.js?v=221"></script>
+  <script src="data.js?v=222"></script>
+  <script src="app.js?v=222"></script>
 </body>
 </html>
