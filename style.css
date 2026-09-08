@@ -359,6 +359,14 @@ body {
     order: -1;
   }
 
+  /* Brand badges retain one visual footprint even when their labels differ. */
+  .timeline-event-card .brand-status-badge {
+    width: 136px;
+    min-width: 136px;
+    height: 34px;
+    min-height: 34px;
+  }
+
   .staggered-badges > div {
     margin-top: 0;
   }
