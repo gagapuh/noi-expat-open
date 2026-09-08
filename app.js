@@ -216,7 +216,7 @@ function renderTimelineMatrix() {
                 onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
                 class="w-full mt-0.5 py-1 px-2 rounded-md bg-stone-100 hover:bg-amber-50 hover:text-amber-900 border border-stone-200/80 hover:border-amber-200 text-[10px] font-bold text-stone-600 flex items-center justify-center gap-1 transition-all cursor-pointer shadow-2xs">
                 <i data-lucide="list-ordered" class="w-3 h-3 text-amber-600"></i>
-                <span>Order of Play (Очередность игр)</span>
+                <span>Order of Play</span>
               </button>
             ` : ''}
           </div>
@@ -904,7 +904,7 @@ function renderBracketModal() {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB 3: 32-PLAYER PATHWAY (Корзина прохода всех 32 игроков)
+  // TAB 3: 32-PLAYER PATHWAY
   // ══════════════════════════════════════════════════════════════════════════
   else if (activeTab === 'pathway') {
     html += `
@@ -1209,7 +1209,7 @@ function renderCourtMatchesModal() {
           ${targetEvent.title}
         </h3>
         <p class="text-xs text-stone-500 mt-0.5">
-          ${eventDay ? eventDay.dateFormatted : ''} • Court Order of Play (Очередность матчей)
+          ${eventDay ? eventDay.dateFormatted : ''} • Court Order of Play
         </p>
       </div>
 
