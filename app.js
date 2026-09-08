@@ -173,7 +173,13 @@ function renderTimelineMatrix() {
     bodyHtml += `</div>`;
 
     // Events
-    const courtEvents = (currentDay.schedule || []).filter(ev => ev.courtId === court.id);
+    const isSingleCourtView = state.selectedMobileCourt !== 'all';
+    const courtEvents = (currentDay.schedule || []).filter(ev => {
+      if (isSingleCourtView) {
+        return ev.courtId === court.id || (ev.courtIds && ev.courtIds.includes(court.id));
+      }
+      return ev.courtId === court.id;
+    });
 
     courtEvents.forEach(ev => {
       const topMinutes = timeToMinutesFromStart(ev.start, startHour);
@@ -187,6 +193,12 @@ function renderTimelineMatrix() {
       const isFinals = ev.category === 'finals';
       const hasReclubUrl = Boolean(ev.reclubUrl && ev.reclubUrl.trim() !== '');
 
+      // Multi-court span handling
+      const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
+      const spanStyle = effectiveSpan > 1
+        ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
+        : '';
+
       // Card classes
       const cardClasses = isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
@@ -195,17 +207,24 @@ function renderTimelineMatrix() {
       bodyHtml += `
         <div 
           class="timeline-event-card ${cardClasses}"
-          style="top: ${topPx}px; height: ${heightPx}px;"
+          style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle}"
           title="${ev.title}">
           
           <!-- Header: Badge + Time -->
           <div class="flex flex-col gap-1">
             <div class="flex flex-wrap items-center justify-between gap-1">
-              <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
-                isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
-              }">
-                ${isFree ? 'Free Court' : catConfig.short}
-              </span>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
+                  isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
+                }">
+                  ${isFree ? 'Free Court' : catConfig.short}
+                </span>
+                ${(ev.courtSpan > 1 || (ev.courtIds && ev.courtIds.length > 1) || ev.courtLabel) ? `
+                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-black tracking-wider bg-stone-900 text-white shadow-2xs leading-none whitespace-nowrap">
+                    ${ev.courtLabel || 'Courts 3 & 4'}
+                  </span>
+                ` : ''}
+              </div>
               <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
                 ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
               </span>
@@ -228,7 +247,7 @@ function renderTimelineMatrix() {
                 <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
               </div>
             ` : ''}
-            <div class="text-[13px] sm:text-sm font-extrabold ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-snug">
+            <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-[13px] sm:text-sm font-extrabold'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-snug">
               ${ev.title}
             </div>
             ${ev.host !== undefined ? `
