@@ -110,8 +110,18 @@
 
   </main>
 
+  <!-- ═══════════════ TOURNAMENT DRAW / TABLE MODAL ═══════════════ -->
+  <div id="bracketModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-stone-950/60 backdrop-blur-sm overflow-hidden" role="dialog" aria-modal="true">
+    <div id="bracketModalBackdrop" class="fixed inset-0 cursor-pointer"></div>
+    <div class="relative w-full max-w-5xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-stone-200/80 flex flex-col z-10 modal-animate-scale overflow-hidden">
+      <div id="bracketModalContent" class="flex flex-col h-full min-h-0 overflow-hidden">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
-  <script src="data.js?v=201"></script>
-  <script src="app.js?v=201"></script>
+  <script src="data.js?v=202"></script>
+  <script src="app.js?v=202"></script>
 </body>
 </html>
