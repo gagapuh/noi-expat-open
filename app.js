@@ -1509,20 +1509,25 @@ function getCourtMatchesList(ev, overrideCourtName) {
     const bracket = TOURNAMENT_BRACKETS[ev.bracketId];
     const courtMatches = [];
 
-    // Stage 1 Americano Groups assigned to this court
+    // Stage 1 Americano Groups assigned to this court (Interleaved round by round across groups)
     const groupsOnCourt = (bracket.groups || []).filter(g => g.court && g.court.includes(courtName));
-    groupsOnCourt.forEach(group => {
-      (group.matches || []).forEach((m, mIdx) => {
-        courtMatches.push({
-          stage: group.name,
-          title: `${group.name} · ${m.round || `Match ${mIdx + 1}`}`,
-          pair1: m.pair1 || 'Team A',
-          pair2: m.pair2 || 'Team B',
-          format: '1 Set to 11',
-          badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
-        });
+    const maxRounds = Math.max(0, ...groupsOnCourt.map(g => (g.matches || []).length));
+
+    for (let r = 0; r < maxRounds; r++) {
+      groupsOnCourt.forEach(group => {
+        const m = (group.matches || [])[r];
+        if (m) {
+          courtMatches.push({
+            stage: group.name,
+            title: `${group.name} · ${m.round || `Match ${r + 1}`}`,
+            pair1: m.pair1 || 'Team A',
+            pair2: m.pair2 || 'Team B',
+            format: '1 Set to 11',
+            badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+          });
+        }
       });
-    });
+    }
 
     // Playoffs: Quarterfinals on this court
     const qfOnCourt = (bracket.playoffs?.quarterfinals || []).filter(q => q.court && q.court.includes(courtName));
