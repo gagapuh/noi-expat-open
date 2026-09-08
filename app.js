@@ -216,12 +216,51 @@ function renderTimelineMatrix() {
             : 'border border-blue-300/70 border-l-0 border-r border-dashed')
         : '';
 
-      const cardClasses = isUnifiedGroup
-        ? `bg-gradient-to-br ${catConfig.cardBg} ${unifiedBorderClass} shadow-card hover:shadow-card-hover`
-        : isPlanned
+      // ── Unified group: per-court cards + one floating title centered across all 4 ──
+      if (isUnifiedGroup) {
+        const laneBorderClass = court.id === 'c4'
+          ? 'border border-blue-300/60 border-l-0'
+          : 'border border-blue-300/60 border-l-0 border-r border-dashed';
+
+        bodyHtml += `
+          <div class="timeline-event-card bg-gradient-to-br ${catConfig.cardBg} ${laneBorderClass} shadow-card hover:shadow-card-hover"
+               style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle}">
+            <div class="flex items-center justify-between gap-1">
+              <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-black uppercase tracking-wide ${catConfig.badge} leading-none whitespace-nowrap">${court.name}</span>
+              <span class="inline-flex items-center h-[18px] px-1.5 rounded-md text-[9px] font-mono font-bold bg-white/90 text-stone-600 border border-stone-200 leading-none">${ev.start}–${ev.end}</span>
+            </div>
+            <div class="mt-auto flex flex-col gap-1.5 pt-1">
+              ${ev.courtStages ? `<div class="text-[9px] font-semibold text-blue-800 bg-blue-50/90 border border-blue-200/80 rounded-md px-1.5 py-1 text-center leading-snug">${ev.courtStages}</div>` : ''}
+              <button type="button" onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
+                class="w-full py-1 rounded-md bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[9px] font-extrabold text-blue-700 flex items-center justify-center gap-1 transition-all cursor-pointer group">
+                <i data-lucide="calendar-days" class="w-2.5 h-2.5 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
+              </button>
+              <div class="flex items-center justify-between gap-1">
+                ${ev.bracketId ? `<button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')" class="inline-flex items-center h-5 px-1.5 rounded-md text-[8px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 shadow-2xs transition-all cursor-pointer whitespace-nowrap"><i data-lucide="trophy" class="w-2.5 h-2.5 text-amber-500 mr-0.5"></i>Bracket</button>` : '<div></div>'}
+                <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="inline-flex items-center h-5 px-1.5 rounded-md text-[8px] font-semibold transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Floating title — once only, on Court 1, spans all 4 courts
+        if (court.id === 'c1') {
+          bodyHtml += `
+            <div style="position:absolute;top:${topPx}px;left:5px;width:calc(400% - 10px);height:${heightPx}px;z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:8px;">
+              ${ev.logo ? `<div style="padding:8px;border-radius:14px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.08);box-shadow:0 2px 12px rgba(0,0,0,0.08);"><img src="${ev.logo}" alt="" style="height:44px;width:auto;object-fit:contain;border-radius:8px;display:block;" onerror="this.parentElement.style.display='none'" /></div>` : ''}
+              <div style="font-size:14px;font-weight:900;color:#0f172a;line-height:1.25;max-width:320px;text-shadow:0 0 16px rgba(255,255,255,1),0 0 32px rgba(255,255,255,0.9);">${ev.title}</div>
+              ${ev.subtitle ? `<div style="font-size:10px;color:#475569;font-weight:500;max-width:300px;line-height:1.4;text-shadow:0 0 8px rgba(255,255,255,1);">${ev.subtitle}</div>` : ''}
+              ${ev.host && ev.host !== 'TBA' ? `<div style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.07);font-size:9px;color:#1e293b;box-shadow:0 1px 4px rgba(0,0,0,0.06);"><span style="color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;font-size:8px;">Host</span><span style="font-weight:900;">${ev.host}</span></div>` : ''}
+            </div>
+          `;
+        }
+
+        return;
+      }
+
+      const cardClasses = isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
         : `bg-gradient-to-br ${catConfig.cardBg} border ${catConfig.cardBorder} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
-
 
       bodyHtml += `
         <div 
@@ -229,7 +268,6 @@ function renderTimelineMatrix() {
           style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle}"
           title="${ev.title}">
           
-          <!-- Header: Badge + Time -->
           <div class="flex flex-col gap-1">
             <div class="flex flex-wrap items-center justify-between gap-1">
               <div class="flex items-center gap-1.5 flex-wrap">
@@ -250,7 +288,6 @@ function renderTimelineMatrix() {
             </div>
           </div>
 
-          <!-- Content: Logo + Title + Host -->
           <div class="my-auto flex flex-col items-center text-center gap-1.5 py-1.5">
             ${ev.logo ? `
               <div class="p-1.5 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
@@ -271,7 +308,6 @@ function renderTimelineMatrix() {
             ` : ''}
           </div>
 
-          <!-- Footer -->
           <div class="pt-2 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
             ${ev.bracketId ? `
               <button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
@@ -289,6 +325,8 @@ function renderTimelineMatrix() {
           </div>
         </div>
       `;
+
+
     });
 
     bodyHtml += `</div>`;
