@@ -6,12 +6,13 @@
 
 const TOURNAMENT_CONFIG = {
   title: "NOI EXPAT OPEN",
-  location: "Noi Sports Arena & Pickleball Club",
+  location: "91Club Pickleball",
   venue: {
-    name: "NOI Pickleball Club",
-    address: "Noi Sports Arena & Pickleball Club",
-    googleMapsUrl: "https://maps.google.com/?q=Noi+Pickleball",
-    appleMapsUrl: "https://maps.apple.com/?q=Noi+Pickleball"
+    name: "91Club Pickleball",
+    address: "91Club Pickleball & Coffee",
+    image: "91club.png",
+    googleMapsUrl: "https://maps.app.goo.gl/8dorv6RPoKmyqaCt9",
+    appleMapsUrl: "https://maps.apple/p/3dUGmPID3WGoQ1"
   },
   timeRange: {
     startHour: 9,   // Timeline start: 09:00 AM (9:00)

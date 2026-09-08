@@ -338,11 +338,13 @@ window.openLocationModal = function() {
   const venue = (typeof TOURNAMENT_CONFIG !== 'undefined' && TOURNAMENT_CONFIG.venue) || {};
   const nameEl = document.getElementById('locationVenueName');
   const addrEl = document.getElementById('locationVenueAddress');
+  const imgEl = document.getElementById('locationVenueImage');
   const gmapsBtn = document.getElementById('googleMapsBtn');
   const appleBtn = document.getElementById('appleMapsBtn');
 
   if (nameEl && venue.name) nameEl.textContent = venue.name;
   if (addrEl && venue.address) addrEl.textContent = venue.address;
+  if (imgEl && venue.image) imgEl.src = venue.image;
   if (gmapsBtn && venue.googleMapsUrl) gmapsBtn.href = venue.googleMapsUrl;
   if (appleBtn && venue.appleMapsUrl) appleBtn.href = venue.appleMapsUrl;
 
