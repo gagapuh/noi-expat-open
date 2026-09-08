@@ -369,8 +369,8 @@ function renderTimelineMatrix() {
 
           <div class="my-auto flex flex-col items-center text-center gap-1.5 py-1.5">
             ${ev.logo ? `
-              <div class="p-1.5 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
-                <img src="${ev.logo}" alt="" class="h-8 sm:h-9 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
+              <div class="${effectiveSpan > 1 ? 'p-2 rounded-2xl mb-1' : 'p-1.5 rounded-xl'} bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
+                <img src="${ev.logo}" alt="" class="${effectiveSpan > 1 ? 'h-10 sm:h-12' : 'h-8 sm:h-9'} w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
               </div>
             ` : ''}
             <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-xs sm:text-[13px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight">
