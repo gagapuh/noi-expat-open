@@ -244,25 +244,25 @@ function renderTimelineMatrix() {
             ` : ''}
           </div>
 
-          <!-- Footer: Tournament Table (Left) + Reclub Link (Right) -->
-          <div class="pt-2.5 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-2">
+          <!-- Footer: Bracket (Left) + Reclub (Right) -->
+          <div class="pt-2.5 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
             ${ev.bracketId ? `
               <button 
                 type="button" 
                 onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
-                class="inline-flex items-center h-7 px-2.5 rounded-lg text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all duration-150 cursor-pointer whitespace-nowrap">
-                <span>Tournament Table</span>
+                class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all duration-150 cursor-pointer whitespace-nowrap">
+                <span>Bracket</span>
               </button>
             ` : `<div></div>`}
             <a 
               href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" 
               ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''}
-              class="inline-flex items-center h-7 px-2.5 rounded-lg text-[11px] font-semibold transition-all duration-150 ${
+              class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-semibold transition-all duration-150 ${
                 hasReclubUrl 
                   ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' 
                   : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'
               }">
-              <span>Reclub Link</span>
+              <span>Reclub</span>
             </a>
           </div>
         </div>
