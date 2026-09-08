@@ -195,12 +195,33 @@ function renderTimelineMatrix() {
 
       // Multi-court span handling
       const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
-      const spanStyle = effectiveSpan > 1
+      let spanStyle = effectiveSpan > 1
         ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
         : '';
 
+      // Unified tournament group handling (e.g. Picklehead with dashed divider lanes across courts)
+      const isUnifiedGroup = !isSingleCourtView && Boolean(ev.unifiedGroup);
+      let unifiedClasses = '';
+      if (isUnifiedGroup) {
+        if (court.id === 'c1') {
+          unifiedClasses = 'rounded-l-2xl rounded-r-none border-l border-y border-blue-300 border-r-2 border-dashed border-blue-400/70 rounded-bl-2xl';
+          spanStyle = 'left: 5px; right: -1px; z-index: 15;';
+        } else if (court.id === 'c2') {
+          unifiedClasses = 'rounded-none border-y border-blue-300 border-l-0 border-r-2 border-dashed border-blue-400/70 border-b rounded-b-2xl';
+          spanStyle = 'left: 0px; right: -1px; z-index: 15;';
+        } else if (court.id === 'c3') {
+          unifiedClasses = 'rounded-none border-y border-blue-300 border-l-0 border-r-2 border-dashed border-blue-400/70 border-b rounded-bl-2xl';
+          spanStyle = 'left: 0px; right: -1px; z-index: 15;';
+        } else if (court.id === 'c4') {
+          unifiedClasses = 'rounded-r-2xl rounded-l-none border-r border-y border-blue-300 border-l-0 border-b rounded-br-2xl';
+          spanStyle = 'left: 0px; right: 5px; z-index: 15;';
+        }
+      }
+
       // Card classes
-      const cardClasses = isPlanned
+      const cardClasses = isUnifiedGroup
+        ? `bg-gradient-to-br from-blue-100/90 via-blue-50/80 to-white/95 ${unifiedClasses} shadow-card hover:shadow-card-hover`
+        : isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
         : `bg-gradient-to-br ${catConfig.cardBg} border ${catConfig.cardBorder} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
 
@@ -233,32 +254,42 @@ function renderTimelineMatrix() {
               <button 
                 type="button" 
                 onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
-                class="w-full mt-0.5 py-1 px-2 rounded-md bg-stone-100 hover:bg-amber-50 hover:text-amber-900 border border-stone-200/80 hover:border-amber-200 text-[10px] font-bold text-stone-600 flex items-center justify-center gap-1 transition-all cursor-pointer shadow-2xs">
-                <i data-lucide="list-ordered" class="w-3 h-3 text-amber-600"></i>
-                <span>Order of Play</span>
+                class="w-full mt-1 py-1.5 px-2 rounded-lg bg-white/95 hover:bg-blue-600 hover:text-white border border-blue-200 hover:border-blue-600 text-[11px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs hover:shadow-xs group">
+                <i data-lucide="calendar-days" class="w-3.5 h-3.5 text-blue-600 group-hover:text-white transition-colors"></i>
+                <span>Scheduled Matches</span>
               </button>
             ` : ''}
           </div>
 
-          <!-- Content: Logo + Title + Host (vertically centered) -->
-          <div class="my-auto flex flex-col items-center text-center gap-2 py-2">
+          <!-- Content: Logo + Title + Stages + Host (vertically centered) -->
+          <div class="my-auto flex flex-col items-center text-center gap-1.5 py-1.5">
             ${ev.logo ? `
-              <div class="p-1.5 rounded-xl bg-white border border-stone-200 shadow-sm flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
-                <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
+              <div class="p-1 rounded-xl bg-white border border-blue-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
+                <img src="${ev.logo}" alt="" class="h-8 sm:h-9 w-auto max-w-full object-contain rounded-md" onerror="this.parentElement.style.display='none'" />
               </div>
             ` : ''}
-            <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-[13px] sm:text-sm font-extrabold'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-snug">
-              ${ev.title}
+            <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-xs sm:text-[13px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight">
+              ${ev.title.includes('Picklehead') ? 'Picklehead Main Stage' : ev.title}
             </div>
+            ${ev.title.includes('Picklehead') ? `
+              <div class="text-[11px] font-semibold text-stone-500 -mt-0.5">
+                Individual Doubles (2.5–3.0)
+              </div>
+            ` : ''}
+            ${ev.courtStages ? `
+              <div class="mt-0.5 px-2 py-0.5 rounded-md bg-blue-100/70 border border-blue-200/80 text-[10px] font-extrabold text-blue-900 tracking-tight leading-normal">
+                ${ev.courtStages}
+              </div>
+            ` : ''}
             ${ev.host !== undefined ? `
-              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl ${
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${
                 isPlanned 
                   ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' 
-                  : 'bg-white border-2 border-stone-200/90 shadow-xs text-stone-800'
-              } text-[12px] leading-none mt-1">
-                <span class="text-stone-400 font-bold uppercase tracking-wider text-[10px]">Host</span>
-                <span class="w-1 h-3 rounded-full bg-stone-300"></span>
-                <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950 text-[13px]' : 'text-stone-400 font-medium italic text-[12px]'}">${ev.host || 'TBA'}</span>
+                  : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
+              } text-[11px] leading-none mt-1">
+                <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Host</span>
+                <span class="w-1 h-2.5 rounded-full bg-stone-300"></span>
+                <span class="font-extrabold ${ev.host && ev.host !== 'TBA' ? 'text-stone-950' : 'text-stone-400 font-medium italic'}">${ev.host || 'TBA'}</span>
               </div>
             ` : ''}
           </div>

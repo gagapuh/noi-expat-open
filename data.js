@@ -228,7 +228,7 @@ const TOURNAMENT_CONFIG = {
       title: "Day 2 — Sunday, Oct 4",
       dateFormatted: "Sunday, Oct 4",
       schedule: [
-        // 11:00 - Picklehead Cup with staggered finish times
+        // 11:00 - Picklehead Cup with staggered finish times (Unified Tournament Group)
         {
           id: "d2-c1-picklehead",
           courtId: "c1",
@@ -237,6 +237,8 @@ const TOURNAMENT_CONFIG = {
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools A & E · QF1 · SF1 · Final",
           logo: "picklehead.webp",
           reclubUrl: "",
           category: "tournament",
@@ -250,6 +252,8 @@ const TOURNAMENT_CONFIG = {
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools B & F · QF2 · SF2",
           logo: "picklehead.webp",
           reclubUrl: "",
           category: "tournament",
@@ -263,6 +267,8 @@ const TOURNAMENT_CONFIG = {
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools C & G · QF3",
           logo: "picklehead.webp",
           reclubUrl: "",
           category: "tournament",
@@ -276,6 +282,8 @@ const TOURNAMENT_CONFIG = {
           title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
           host: "Ho",
           bracketId: "picklehead-individual-doubles",
+          unifiedGroup: "picklehead-main-stage",
+          courtStages: "Pools D & H · QF4",
           logo: "picklehead.webp",
           reclubUrl: "",
           category: "tournament",
