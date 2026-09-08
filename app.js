@@ -10,8 +10,9 @@ const state = {
   currentDayId: 'day1',
   selectedMobileCourt: 'all',
   activeBracketId: null,
-  bracketActiveTab: 'groups',
-  bracketGroupFilter: 'all'
+  bracketActiveTab: 'stage1',
+  bracketGroupFilter: 'all',
+  bracketStage2Filter: 'all'
 };
 
 // ─── Constants ───
@@ -307,8 +308,9 @@ function setupEventListeners() {
 /// ─── Tournament Draw / Bracket Modal Functions ───
 window.openBracketModal = function(bracketId) {
   state.activeBracketId = bracketId;
-  state.bracketActiveTab = 'groups';
+  state.bracketActiveTab = 'stage1';
   state.bracketGroupFilter = 'all';
+  state.bracketStage2Filter = 'all';
   renderBracketModal();
   const modal = document.getElementById('bracketModal');
   if (modal) {
@@ -347,6 +349,14 @@ window.setBracketGroupFilter = function(groupId) {
   }
 };
 
+window.setBracketStage2Filter = function(filter) {
+  state.bracketStage2Filter = filter;
+  renderBracketModal();
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
 function renderBracketModal() {
   const container = document.getElementById('bracketModalContent');
   if (!container || !state.activeBracketId) return;
@@ -360,6 +370,7 @@ function renderBracketModal() {
   }
 
   const groupsList = bracket.groups || bracket.pools || [];
+  const activeTab = (state.bracketActiveTab === 'groups') ? 'stage1' : (state.bracketActiveTab === 'rules' ? 'schedule' : state.bracketActiveTab);
 
   // Modal Header
   let html = `
@@ -367,21 +378,22 @@ function renderBracketModal() {
     <div class="px-5 sm:px-7 py-4 border-b border-stone-200/80 bg-stone-50/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
       <div class="min-w-0">
         <div class="flex flex-wrap items-center gap-2 mb-1.5">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-stone-900 text-white text-[11px] font-bold uppercase tracking-wide">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-stone-950 text-white text-xs font-bold uppercase tracking-wider shadow-2xs">
+            <i data-lucide="user-check" class="w-3.5 h-3.5 text-amber-400"></i>
             Host: ${bracket.host}
           </span>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-100 text-blue-800 text-[11px] font-bold">
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-100 text-blue-900 border border-blue-200 text-xs font-bold">
             ${bracket.format}
           </span>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-bold">
-            ${bracket.playersCount} Players · 8 Groups · Top ${bracket.advanceCount} Advance
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-bold">
+            ${bracket.totalMatches || 60} Matches · 15 Rounds · 32 Players
           </span>
         </div>
         <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
           ${bracket.title}
         </h2>
         <div class="text-xs text-stone-500 font-medium mt-0.5">
-          ${bracket.day} • ${bracket.time} • ${bracket.courts}
+          ${bracket.day} • ${bracket.time} • ${bracket.courts} (5 Hours = 300 Min)
         </div>
       </div>
 
@@ -397,39 +409,48 @@ function renderBracketModal() {
 
     <!-- Navigation Tabs Bar -->
     <div class="px-5 sm:px-7 py-2.5 bg-white border-b border-stone-200/70 flex items-center justify-between gap-3 shrink-0 overflow-x-auto">
-      <div class="inline-flex items-center p-1 rounded-xl bg-stone-100 border border-stone-200/60">
+      <div class="inline-flex items-center p-1 rounded-xl bg-stone-100 border border-stone-200/60 shrink-0">
         <button 
-          onclick="setBracketTab('groups')" 
-          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            state.bracketActiveTab === 'groups' 
+          onclick="setBracketTab('stage1')" 
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'stage1' 
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Group Stage (Groups A–H)
+          Stage 1: Groups A–H <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-md bg-stone-200/80 text-stone-700">24 M</span>
         </button>
         <button 
-          onclick="setBracketTab('playoffs')" 
-          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            state.bracketActiveTab === 'playoffs' 
+          onclick="setBracketTab('stage2')" 
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'stage2' 
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Playoffs (Top 16)
+          Stage 2: Semifinals <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-md bg-stone-200/80 text-stone-700">24 M</span>
         </button>
         <button 
-          onclick="setBracketTab('rules')" 
-          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            state.bracketActiveTab === 'rules' 
+          onclick="setBracketTab('stage3')" 
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'stage3' 
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Americano Rules
+          Stage 3: Finals & Medals <span class="ml-1 text-[10px] px-1.5 py-0.2 rounded-md bg-stone-200/80 text-stone-700">12 M</span>
+        </button>
+        <button 
+          onclick="setBracketTab('schedule')" 
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'schedule' 
+              ? 'bg-white text-stone-900 shadow-sm' 
+              : 'text-stone-500 hover:text-stone-800'
+          }">
+          60-Match Schedule & Rules
         </button>
       </div>
 
-      ${state.bracketActiveTab === 'groups' ? `
-        <!-- Group Quick Filter -->
-        <div class="hidden md:inline-flex items-center gap-1 overflow-x-auto">
+      ${activeTab === 'stage1' ? `
+        <!-- Stage 1 Group Quick Filter -->
+        <div class="hidden lg:inline-flex items-center gap-1 overflow-x-auto">
           <span class="text-[10px] font-bold text-stone-400 uppercase tracking-wider mr-1">Filter:</span>
           <button 
             onclick="setBracketGroupFilter('all')" 
@@ -437,7 +458,7 @@ function renderBracketModal() {
               state.bracketGroupFilter === 'all' 
                 ? 'bg-stone-900 text-white shadow-2xs' 
                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-            }">All</button>
+            }">All (8)</button>
           ${groupsList.map(g => `
             <button 
               onclick="setBracketGroupFilter('${g.id}')" 
@@ -445,8 +466,36 @@ function renderBracketModal() {
                 state.bracketGroupFilter === g.id 
                   ? 'bg-stone-900 text-white shadow-2xs' 
                   : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-              }">${g.name}</button>
+              }">${g.name.replace('Group ', '')}</button>
           `).join('')}
+        </div>
+      ` : ''}
+
+      ${activeTab === 'stage2' ? `
+        <!-- Stage 2 Division Filter -->
+        <div class="hidden sm:inline-flex items-center gap-1.5">
+          <span class="text-[10px] font-bold text-stone-400 uppercase tracking-wider mr-1">Division:</span>
+          <button 
+            onclick="setBracketStage2Filter('all')" 
+            class="px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+              state.bracketStage2Filter === 'all' 
+                ? 'bg-stone-900 text-white shadow-2xs' 
+                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+            }">All (8)</button>
+          <button 
+            onclick="setBracketStage2Filter('gold')" 
+            class="px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+              state.bracketStage2Filter === 'gold' 
+                ? 'bg-amber-500 text-stone-950 shadow-2xs' 
+                : 'bg-amber-50 text-amber-900 border border-amber-200/60 hover:bg-amber-100'
+            }">Gold (4)</button>
+          <button 
+            onclick="setBracketStage2Filter('silver')" 
+            class="px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+              state.bracketStage2Filter === 'silver' 
+                ? 'bg-slate-700 text-white shadow-2xs' 
+                : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
+            }">Silver (4)</button>
         </div>
       ` : ''}
     </div>
@@ -455,19 +504,23 @@ function renderBracketModal() {
     <div class="flex-1 overflow-y-auto p-4 sm:p-7 space-y-6 bg-surface-1">
   `;
 
-  // ── Tab 1: Groups (Group Stage) ──
-  if (state.bracketActiveTab === 'groups') {
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 1: STAGE 1 — PRELIM GROUPS (Groups A–H · 24 Matches)
+  // ══════════════════════════════════════════════════════════════════════════
+  if (activeTab === 'stage1') {
     const visibleGroups = state.bracketGroupFilter === 'all'
       ? groupsList
       : groupsList.filter(g => g.id === state.bracketGroupFilter);
 
     html += `
-      <div class="bg-blue-50/70 border border-blue-200/80 rounded-xl p-3.5 sm:p-4 text-xs text-blue-900 flex items-start gap-3">
+      <div class="bg-blue-50/80 border border-blue-200/90 rounded-xl p-3.5 sm:p-4 text-xs text-blue-950 flex items-start gap-3 shadow-2xs">
         <i data-lucide="info" class="w-4 h-4 text-blue-600 shrink-0 mt-0.5"></i>
-        <div>
-          <span class="font-bold">Americano / Individual Doubles Format:</span> 32 individual players are seeded into 8 groups of 4 players each (Group A to Group H). 
-          Each player plays <strong>3 matches</strong> (partnering with each of the other 3 players in their group once). 
-          The <strong>Top 2 players</strong> from each group advance to the 16-player Championship Playoff stage!
+        <div class="leading-relaxed">
+          <span class="font-bold">Stage 1 (24 Matches · Rounds 1–6):</span> 32 individual players are seeded into 8 groups of 4 players (Groups A to H). 
+          Each player plays <strong>3 Americano matches</strong> (partnering with each of the other 3 players in their group once). 
+          Matches are played to 11 points. 
+          The <span class="font-bold text-amber-900 bg-amber-100/90 px-1.5 py-0.5 rounded border border-amber-200">Top 2 players</span> advance to the <strong>Gold Division</strong>; 
+          the <span class="font-bold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-300">3rd & 4th players</span> advance to the <strong>Silver Division</strong>!
         </div>
       </div>
 
@@ -484,9 +537,10 @@ function renderBracketModal() {
               <span class="font-bold text-sm text-stone-900 font-display">${group.name}</span>
               <span class="text-[11px] text-stone-400 font-mono">(${group.court})</span>
             </div>
-            <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider">
-              Top 2 Advance
-            </span>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider">
+              <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">Top 2 → Gold</span>
+              <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">3–4 → Silver</span>
+            </div>
           </div>
 
           <!-- Standings Table -->
@@ -500,13 +554,13 @@ function renderBracketModal() {
                   <th class="py-2 px-2 text-center">W-L</th>
                   <th class="py-2 px-2 text-center">Diff</th>
                   <th class="py-2 px-2 text-center font-bold text-stone-700">Pts</th>
-                  <th class="py-2 px-2.5 text-right">Status</th>
+                  <th class="py-2 px-2.5 text-right">Stage 2 Destination</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-stone-100">
                 ${group.standings.map(row => `
-                  <tr class="${row.qualified ? 'bg-emerald-50/40 font-medium' : 'text-stone-600'} hover:bg-stone-50 transition-colors">
-                    <td class="py-2 px-2.5 text-center font-mono font-bold ${row.qualified ? 'text-emerald-700' : 'text-stone-400'}">
+                  <tr class="${row.qualified ? 'bg-amber-50/30 font-medium' : 'text-stone-600'} hover:bg-stone-50 transition-colors">
+                    <td class="py-2 px-2.5 text-center font-mono font-bold ${row.qualified ? 'text-amber-700' : 'text-stone-400'}">
                       ${row.rank}
                     </td>
                     <td class="py-2 px-2.5 font-bold ${row.qualified ? 'text-stone-900' : 'text-stone-700'}">
@@ -518,10 +572,12 @@ function renderBracketModal() {
                     <td class="py-2 px-2 text-center font-mono font-extrabold text-stone-900 tabular-nums">${row.points}</td>
                     <td class="py-2 px-2.5 text-right whitespace-nowrap">
                       ${row.qualified 
-                        ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                             <i data-lucide="check" class="w-2.5 h-2.5"></i> Advance
+                        ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                             <i data-lucide="award" class="w-2.5 h-2.5 text-amber-600"></i> Gold Division
                            </span>`
-                        : `<span class="text-[10px] text-stone-400 italic font-normal">Eliminated</span>`
+                        : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-300">
+                             <i data-lucide="shield" class="w-2.5 h-2.5 text-slate-500"></i> Silver Division
+                           </span>`
                       }
                     </td>
                   </tr>
@@ -533,7 +589,7 @@ function renderBracketModal() {
           <!-- Group Matches (3 Rounds: Each with Each) -->
           <div class="px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto">
             <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2 flex items-center justify-between">
-              <span>Group Matches (3 Rounds):</span>
+              <span>Americano Matches (3 Rounds):</span>
               <span class="text-[10px] font-normal text-stone-500 lowercase">each with each</span>
             </div>
             <div class="space-y-1.5 text-xs">
@@ -559,61 +615,329 @@ function renderBracketModal() {
     html += `</div>`;
   }
 
-  // ── Tab 2: Playoffs (Top 16 Bracket) ──
-  else if (state.bracketActiveTab === 'playoffs') {
-    const po = bracket.playoffs;
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 2: STAGE 2 — SEMIFINALS (Gold & Silver · 24 Matches)
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'stage2') {
+    const s2 = bracket.stage2;
+    const filter = state.bracketStage2Filter || 'all';
+
     html += `
-      <div class="bg-amber-50/80 border border-amber-200/80 rounded-xl p-3.5 sm:p-4 text-xs text-amber-900 flex items-start gap-3">
-        <i data-lucide="award" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
-        <div>
-          <span class="font-bold">${po.title}:</span> ${po.description}
+      <div class="bg-amber-50/80 border border-amber-200/90 rounded-xl p-3.5 sm:p-4 text-xs text-amber-950 flex items-start gap-3 shadow-2xs">
+        <i data-lucide="layers" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+        <div class="leading-relaxed">
+          <span class="font-bold">${s2.title} (${s2.badge}):</span> ${s2.description} 
+          In each 4-player group, every player plays <strong>3 matches</strong> ('each with each'). 
+          The <span class="font-bold text-amber-900 bg-amber-100 px-1 rounded border border-amber-300">#1 Winner</span> of each Gold group qualifies for the <strong>Gold Championship Final (1st–4th) 🥇🥈🥉</strong>, 
+          #2 qualifies for <strong>5th–8th Place Final</strong>. 
+          The #1 Winner of each Silver group qualifies for the <strong>Silver Cup Final 🏆</strong>!
+        </div>
+      </div>
+    `;
+
+    // Render Gold Division Groups
+    if (filter === 'all' || filter === 'gold') {
+      html += `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between border-b border-amber-200 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-500 ring-2 ring-amber-200"></span>
+              <h3 class="font-display font-extrabold text-base text-stone-900">Gold Division (Top 16 from Stage 1 · Groups G1–G4)</h3>
+            </div>
+            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+              12 Matches · Rounds 7–9 (13:00 – 14:00)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            ${s2.goldDivision.map(group => `
+              <div class="bg-white rounded-2xl border border-amber-200/90 shadow-card overflow-hidden flex flex-col">
+                <!-- Group Header -->
+                <div class="px-4 py-3 bg-gradient-to-r from-amber-50/80 to-stone-50 border-b border-amber-200/70 flex items-center justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-sm text-stone-900 font-display">${group.name}</span>
+                      <span class="text-[11px] text-amber-700 font-mono font-semibold">(${group.court})</span>
+                    </div>
+                    <div class="text-[10px] text-stone-500 font-mono mt-0.5">${group.seedInfo}</div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold uppercase tracking-wider">
+                    Winner → Final 🥇
+                  </span>
+                </div>
+
+                <!-- Standings Table -->
+                <div class="p-3 overflow-x-auto">
+                  <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
+                        <th class="py-2 px-2 w-7 text-center">#</th>
+                        <th class="py-2 px-2">Player</th>
+                        <th class="py-2 px-1.5 text-stone-400 font-mono text-[10px]">Seed</th>
+                        <th class="py-2 px-1.5 text-center">MP</th>
+                        <th class="py-2 px-1.5 text-center">W-L</th>
+                        <th class="py-2 px-1.5 text-center">Diff</th>
+                        <th class="py-2 px-1.5 text-center font-bold text-stone-700">Pts</th>
+                        <th class="py-2 px-2 text-right">Stage 3 Qual</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-stone-100">
+                      ${group.standings.map(row => `
+                        <tr class="${row.qualified ? 'bg-amber-50/60 font-medium' : 'text-stone-600'} hover:bg-stone-50 transition-colors">
+                          <td class="py-2 px-2 text-center font-mono font-bold ${row.qualified ? 'text-amber-700' : 'text-stone-400'}">
+                            ${row.rank}
+                          </td>
+                          <td class="py-2 px-2 font-bold ${row.qualified ? 'text-stone-900' : 'text-stone-700'}">
+                            ${row.name}
+                          </td>
+                          <td class="py-2 px-1.5 text-[10px] font-mono text-stone-400">${row.origin}</td>
+                          <td class="py-2 px-1.5 text-center tabular-nums text-stone-500">${row.played}</td>
+                          <td class="py-2 px-1.5 text-center tabular-nums text-stone-500">${row.wins}-${row.losses}</td>
+                          <td class="py-2 px-1.5 text-center tabular-nums ${row.diff.startsWith('+') ? 'text-emerald-600 font-semibold' : 'text-stone-500'}">${row.diff}</td>
+                          <td class="py-2 px-1.5 text-center font-mono font-extrabold text-stone-900 tabular-nums">${row.points}</td>
+                          <td class="py-2 px-2 text-right whitespace-nowrap">
+                            ${row.rank === 1
+                              ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                                   <i data-lucide="crown" class="w-2.5 h-2.5 text-amber-600"></i> ${row.nextStage}
+                                 </span>`
+                              : (row.rank === 2
+                                ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                                     5th–8th Final
+                                   </span>`
+                                : `<span class="text-[10px] text-stone-400 italic">${row.nextStage}</span>`)
+                            }
+                          </td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Matches -->
+                <div class="px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto">
+                  <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2 flex items-center justify-between">
+                    <span>Americano Matches (3 Rounds):</span>
+                    <span class="text-[10px] font-normal text-stone-500 lowercase">each with each</span>
+                  </div>
+                  <div class="space-y-1.5 text-xs">
+                    ${group.matches.map(m => `
+                      <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white border border-stone-200/60 text-stone-700 shadow-2xs">
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="text-[10px] font-mono font-bold text-stone-400 shrink-0">${m.round}</span>
+                          <span class="truncate ${m.winner === 1 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair1}</span>
+                          <span class="text-stone-300 font-semibold shrink-0">vs</span>
+                          <span class="truncate ${m.winner === 2 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair2}</span>
+                        </div>
+                        <span class="font-mono font-bold text-[11px] text-stone-800 px-2 py-0.5 rounded bg-stone-100 border border-stone-200 shrink-0">
+                          ${m.score}
+                        </span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Render Silver Division Groups
+    if (filter === 'all' || filter === 'silver') {
+      html += `
+        <div class="space-y-4 pt-4">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-slate-500 ring-2 ring-slate-200"></span>
+              <h3 class="font-display font-extrabold text-base text-stone-900">Silver Division (16 Players · Groups S1–S4)</h3>
+            </div>
+            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-300">
+              12 Matches · Rounds 10–12 (14:00 – 15:00)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            ${s2.silverDivision.map(group => `
+              <div class="bg-white rounded-2xl border border-slate-200/90 shadow-card overflow-hidden flex flex-col">
+                <!-- Group Header -->
+                <div class="px-4 py-3 bg-gradient-to-r from-slate-50 to-stone-50 border-b border-slate-200/70 flex items-center justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-sm text-stone-900 font-display">${group.name}</span>
+                      <span class="text-[11px] text-slate-600 font-mono font-semibold">(${group.court})</span>
+                    </div>
+                    <div class="text-[10px] text-stone-500 font-mono mt-0.5">${group.seedInfo}</div>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 border border-slate-300 text-[10px] font-bold uppercase tracking-wider">
+                    Winner → Silver Cup 🏆
+                  </span>
+                </div>
+
+                <!-- Standings Table -->
+                <div class="p-3 overflow-x-auto">
+                  <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
+                        <th class="py-2 px-2 w-7 text-center">#</th>
+                        <th class="py-2 px-2">Player</th>
+                        <th class="py-2 px-1.5 text-stone-400 font-mono text-[10px]">Seed</th>
+                        <th class="py-2 px-1.5 text-center">MP</th>
+                        <th class="py-2 px-1.5 text-center">W-L</th>
+                        <th class="py-2 px-1.5 text-center">Diff</th>
+                        <th class="py-2 px-1.5 text-center font-bold text-stone-700">Pts</th>
+                        <th class="py-2 px-2 text-right">Stage 3 Qual</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-stone-100">
+                      ${group.standings.map(row => `
+                        <tr class="${row.qualified ? 'bg-slate-50/70 font-medium' : 'text-stone-600'} hover:bg-stone-50 transition-colors">
+                          <td class="py-2 px-2 text-center font-mono font-bold ${row.qualified ? 'text-slate-800' : 'text-stone-400'}">
+                            ${row.rank}
+                          </td>
+                          <td class="py-2 px-2 font-bold ${row.qualified ? 'text-stone-900' : 'text-stone-700'}">
+                            ${row.name}
+                          </td>
+                          <td class="py-2 px-1.5 text-[10px] font-mono text-stone-400">${row.origin}</td>
+                          <td class="py-2 px-1.5 text-center tabular-nums text-stone-500">${row.played}</td>
+                          <td class="py-2 px-1.5 text-center tabular-nums text-stone-500">${row.wins}-${row.losses}</td>
+                          <td class="py-2 px-1.5 text-center tabular-nums ${row.diff.startsWith('+') ? 'text-emerald-600 font-semibold' : 'text-stone-500'}">${row.diff}</td>
+                          <td class="py-2 px-1.5 text-center font-mono font-extrabold text-stone-900 tabular-nums">${row.points}</td>
+                          <td class="py-2 px-2 text-right whitespace-nowrap">
+                            ${row.rank === 1
+                              ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-900 border border-slate-300">
+                                   <i data-lucide="trophy" class="w-2.5 h-2.5 text-amber-500"></i> ${row.nextStage}
+                                 </span>`
+                              : (row.rank === 2
+                                ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-700 border border-stone-200">
+                                     21st–24th Final
+                                   </span>`
+                                : `<span class="text-[10px] text-stone-400 italic">${row.nextStage}</span>`)
+                            }
+                          </td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Matches -->
+                <div class="px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto">
+                  <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2 flex items-center justify-between">
+                    <span>Americano Matches (3 Rounds):</span>
+                    <span class="text-[10px] font-normal text-stone-500 lowercase">each with each</span>
+                  </div>
+                  <div class="space-y-1.5 text-xs">
+                    ${group.matches.map(m => `
+                      <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white border border-stone-200/60 text-stone-700 shadow-2xs">
+                        <div class="flex items-center gap-2 min-w-0">
+                          <span class="text-[10px] font-mono font-bold text-stone-400 shrink-0">${m.round}</span>
+                          <span class="truncate ${m.winner === 1 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair1}</span>
+                          <span class="text-stone-300 font-semibold shrink-0">vs</span>
+                          <span class="truncate ${m.winner === 2 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair2}</span>
+                        </div>
+                        <span class="font-mono font-bold text-[11px] text-stone-800 px-2 py-0.5 rounded bg-stone-100 border border-stone-200 shrink-0">
+                          ${m.score}
+                        </span>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 3: STAGE 3 — FINALS & MEDALS (12 Matches)
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'stage3') {
+    const s3 = bracket.stage3;
+
+    html += `
+      <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border border-amber-300/80 rounded-xl p-4 text-xs text-amber-950 flex items-start gap-3 shadow-2xs">
+        <i data-lucide="trophy" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+        <div class="leading-relaxed">
+          <span class="font-bold text-sm">${s3.title} (${s3.badge}):</span><br/>
+          ${s3.description} 
+          All 4 groups compete simultaneously on Courts 1–4 in Rounds 13, 14, and 15 (15:00 – 16:00). 
+          Every player plays 3 Americano matches to decide the final podium ranking!
         </div>
       </div>
 
-      <div class="space-y-6">
-        ${po.rounds.map((round, rIdx) => `
-          <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
-            <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
-              <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full ${rIdx === po.rounds.length - 1 ? 'bg-amber-400 ring-2 ring-amber-400/20' : 'bg-blue-500'}"></span>
-                <h3 class="font-display font-extrabold text-base text-stone-900">${round.name}</h3>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        ${s3.finalGroups.map(fg => `
+          <div class="bg-white rounded-2xl border ${fg.id === 'gold-champ' ? 'border-amber-300 shadow-md ring-2 ring-amber-400/20' : 'border-stone-200/80 shadow-card'} overflow-hidden flex flex-col">
+            <!-- Header -->
+            <div class="px-5 py-3.5 bg-gradient-to-r ${fg.cardBg || 'from-stone-50 to-white'} border-b border-stone-200/70 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-display font-extrabold text-sm sm:text-base text-stone-900">${fg.name}</h3>
+                </div>
+                <div class="text-[11px] text-stone-500 font-medium mt-0.5">${fg.subName} • <span class="font-mono font-bold text-stone-700">${fg.court}</span></div>
               </div>
-              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">
-                ${round.badge}
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${fg.badgeColor} border shrink-0">
+                ${fg.badge}
               </span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-              ${round.matches.map(match => `
-                <div class="rounded-xl border ${match.title ? 'border-amber-300 bg-amber-50/20' : 'border-stone-200/80 bg-stone-50/40'} p-3.5 flex flex-col justify-between gap-2 shadow-2xs">
-                  ${match.title ? `
-                    <div class="text-[11px] font-bold text-amber-800 uppercase tracking-wide flex items-center justify-between">
-                      <span>${match.title}</span>
-                      <span class="text-stone-400 font-mono">${match.court}</span>
-                    </div>
-                  ` : `
-                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
-                      <span>${match.id}</span>
-                      <span class="text-stone-400 font-mono">${match.court}</span>
-                    </div>
-                  `}
+            <!-- Standings Table with Podium -->
+            <div class="p-3.5 overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
+                    <th class="py-2 px-2.5 text-center">Place</th>
+                    <th class="py-2 px-2.5">Player</th>
+                    <th class="py-2 px-2 text-stone-400 font-mono text-[10px]">Seed</th>
+                    <th class="py-2 px-2 text-center">MP</th>
+                    <th class="py-2 px-2 text-center">W-L</th>
+                    <th class="py-2 px-2 text-center">Diff</th>
+                    <th class="py-2 px-2 text-center font-bold text-stone-700">Pts</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-stone-100">
+                  ${fg.standings.map(row => `
+                    <tr class="${row.rank === 1 ? 'bg-amber-50/70 font-semibold' : (row.rank === 2 ? 'bg-stone-50 font-medium' : '')} hover:bg-stone-50/80 transition-colors">
+                      <td class="py-2.5 px-2.5 font-bold whitespace-nowrap">
+                        <span class="text-xs ${row.rank === 1 ? 'text-amber-800' : 'text-stone-700'}">${row.medal}</span>
+                      </td>
+                      <td class="py-2.5 px-2.5 font-extrabold text-stone-900">
+                        ${row.name}
+                      </td>
+                      <td class="py-2 px-2 text-[10px] font-mono text-stone-400">${row.origin}</td>
+                      <td class="py-2 px-2 text-center tabular-nums text-stone-500">${row.played}</td>
+                      <td class="py-2 px-2 text-center tabular-nums text-stone-500">${row.wins}-${row.losses}</td>
+                      <td class="py-2 px-2 text-center tabular-nums ${row.diff.startsWith('+') ? 'text-emerald-600 font-bold' : 'text-stone-500'}">${row.diff}</td>
+                      <td class="py-2 px-2 text-center font-mono font-black text-stone-950 text-sm tabular-nums">${row.points}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
 
-                  <div class="space-y-1.5 text-xs">
-                    <div class="flex items-center justify-between gap-2 p-2 rounded-lg ${match.winner === 1 ? 'bg-emerald-50 border border-emerald-200 font-bold text-emerald-950' : 'bg-white border border-stone-200/60 text-stone-600'}">
-                      <span class="truncate">${match.pair1}</span>
-                      ${match.winner === 1 ? '<i data-lucide="check" class="w-3 h-3 text-emerald-600 shrink-0"></i>' : ''}
+            <!-- Matches List -->
+            <div class="px-4 py-3 bg-stone-50/60 border-t border-stone-200/60 mt-auto">
+              <div class="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2 flex items-center justify-between">
+                <span>Finals Americano Matches (Rounds 13–15):</span>
+                <span class="text-[10px] font-normal text-stone-500 lowercase">each with each</span>
+              </div>
+              <div class="space-y-1.5 text-xs">
+                ${fg.matches.map(m => `
+                  <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white border border-stone-200/60 text-stone-700 shadow-2xs">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="text-[10px] font-mono font-bold text-stone-400 shrink-0">${m.round}</span>
+                      <span class="truncate ${m.winner === 1 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair1}</span>
+                      <span class="text-stone-300 font-semibold shrink-0">vs</span>
+                      <span class="truncate ${m.winner === 2 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair2}</span>
                     </div>
-                    <div class="flex items-center justify-between gap-2 p-2 rounded-lg ${match.winner === 2 ? 'bg-emerald-50 border border-emerald-200 font-bold text-emerald-950' : 'bg-white border border-stone-200/60 text-stone-600'}">
-                      <span class="truncate">${match.pair2}</span>
-                      ${match.winner === 2 ? '<i data-lucide="check" class="w-3 h-3 text-emerald-600 shrink-0"></i>' : ''}
-                    </div>
+                    <span class="font-mono font-bold text-[11px] text-stone-800 px-2.5 py-0.5 rounded bg-stone-100 border border-stone-200 shrink-0">
+                      ${m.score}
+                    </span>
                   </div>
-
-                  <div class="text-right text-[11px] font-mono font-bold text-stone-700 pt-1 border-t border-stone-200/50">
-                    Result: <span class="text-stone-900">${match.score}</span>
-                  </div>
-                </div>
-              `).join('')}
+                `).join('')}
+              </div>
             </div>
           </div>
         `).join('')}
@@ -621,58 +945,145 @@ function renderBracketModal() {
     `;
   }
 
-  // ── Tab 3: Format & Scoring Rules ──
-  else if (state.bracketActiveTab === 'rules') {
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 4: 60-MATCH SCHEDULE & RULES (15 Rounds Grid + System)
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'schedule') {
+    const sGrid = bracket.schedule15Rounds || [];
+
     html += `
-      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-5 sm:p-7 space-y-6">
-        <div>
-          <h3 class="text-base font-display font-extrabold text-stone-900 mb-1">
-            Tournament Structure: Individual Doubles (Americano)
-          </h3>
-          <p class="text-xs sm:text-sm text-stone-600 leading-relaxed">
-            ${bracket.description}
-          </p>
+      <!-- Tournament Math & Efficiency Banner -->
+      <div class="bg-stone-900 text-white rounded-2xl p-5 sm:p-6 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-950 text-[11px] font-extrabold uppercase tracking-wide mb-2">
+              <i data-lucide="zap" class="w-3 h-3"></i> 60 Matches · 100% Court Utilization
+            </div>
+            <h3 class="text-lg sm:text-xl font-display font-extrabold tracking-tight">
+              3-Stage Americano Tournament Architecture
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-300 mt-1 max-w-2xl leading-relaxed">
+              Designed for 5 hours (11:00 – 16:00) across 4 courts. 15 rounds of 20 minutes each. 
+              In every group, players rotate partners so everyone plays with everyone ("each with each"). 
+              Every player plays at least 6 matches, with finalists playing 9 matches!
+            </p>
+          </div>
+          <div class="grid grid-cols-3 gap-2 shrink-0">
+            <div class="p-2.5 rounded-xl bg-stone-800/80 border border-stone-700 text-center">
+              <div class="text-lg font-black text-amber-400 font-mono">24</div>
+              <div class="text-[10px] text-stone-400 uppercase font-semibold">Stage 1</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-stone-800/80 border border-stone-700 text-center">
+              <div class="text-lg font-black text-amber-400 font-mono">24</div>
+              <div class="text-[10px] text-stone-400 uppercase font-semibold">Stage 2</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-stone-800/80 border border-stone-700 text-center">
+              <div class="text-lg font-black text-emerald-400 font-mono">12</div>
+              <div class="text-[10px] text-stone-400 uppercase font-semibold">Stage 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15-Round Court Matrix Table -->
+      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
+          <div class="flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
+            <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
+              15-Round Master Court Schedule (11:00 – 16:00)
+            </h4>
+          </div>
+          <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">
+            4 Courts Active Simultaneously
+          </span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          ${bracket.rules.map((rule, idx) => `
-            <div class="p-4 rounded-xl bg-surface-1 border border-stone-200/70 flex gap-3">
-              <div class="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">
-                0${idx + 1}
-              </div>
-              <div>
-                <h4 class="text-xs font-bold text-stone-900 mb-1">${rule.title}</h4>
-                <p class="text-[11px] sm:text-xs text-stone-600 leading-normal">${rule.desc}</p>
-              </div>
-            </div>
-          `).join('')}
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/80">
+                <th class="py-2.5 px-3 w-16 text-center">Round</th>
+                <th class="py-2.5 px-3 w-28">Time</th>
+                <th class="py-2.5 px-3 w-40">Phase</th>
+                <th class="py-2.5 px-3 text-stone-700 font-bold">Court 1</th>
+                <th class="py-2.5 px-3 text-stone-700 font-bold">Court 2</th>
+                <th class="py-2.5 px-3 text-stone-700 font-bold">Court 3</th>
+                <th class="py-2.5 px-3 text-stone-700 font-bold">Court 4</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-100">
+              ${sGrid.map(r => `
+                <tr class="hover:bg-stone-50/80 transition-colors ${r.roundNum >= 13 ? 'bg-amber-50/20' : (r.roundNum >= 7 ? 'bg-stone-50/30' : '')}">
+                  <td class="py-2.5 px-3 text-center font-mono font-bold text-stone-900">
+                    R${r.roundNum}
+                  </td>
+                  <td class="py-2.5 px-3 font-mono text-[11px] font-semibold text-stone-600 whitespace-nowrap">
+                    ${r.time}
+                  </td>
+                  <td class="py-2.5 px-3 whitespace-nowrap">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+                      r.roundNum >= 13 
+                        ? 'bg-amber-100 text-amber-900 border border-amber-300' 
+                        : (r.roundNum >= 10
+                          ? 'bg-slate-100 text-slate-800 border border-slate-200'
+                          : (r.roundNum >= 7
+                            ? 'bg-blue-100 text-blue-900 border border-blue-200'
+                            : 'bg-stone-100 text-stone-700 border border-stone-200'))
+                    }">
+                      ${r.label}
+                    </span>
+                  </td>
+                  <td class="py-2.5 px-3 font-medium text-stone-800 text-[11px]">${r.c1}</td>
+                  <td class="py-2.5 px-3 font-medium text-stone-800 text-[11px]">${r.c2}</td>
+                  <td class="py-2.5 px-3 font-medium text-stone-800 text-[11px]">${r.c3}</td>
+                  <td class="py-2.5 px-3 font-medium text-stone-800 text-[11px]">${r.c4}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        <!-- Americano Rotation Matrix -->
-        <div class="p-4 sm:p-5 rounded-xl bg-stone-50 border border-stone-200">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-stone-700 mb-3 flex items-center gap-2">
-            <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-blue-600"></i>
-            <span>4-Player Americano Rotation Matrix per Group</span>
-          </h4>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-            <div class="p-3.5 rounded-xl bg-white border border-stone-200 shadow-2xs">
-              <div class="font-bold text-blue-600 text-[11px] mb-1 uppercase tracking-wide">Round 1</div>
-              <div class="font-bold text-stone-900">Player A & Player B</div>
-              <div class="text-stone-400 text-[10px] my-1 uppercase font-semibold">vs</div>
-              <div class="font-bold text-stone-900">Player C & Player D</div>
+      <!-- Rules Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${bracket.rules.map((rule, idx) => `
+          <div class="p-4 rounded-xl bg-white border border-stone-200/80 shadow-card flex gap-3">
+            <div class="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">
+              0${idx + 1}
             </div>
-            <div class="p-3.5 rounded-xl bg-white border border-stone-200 shadow-2xs">
-              <div class="font-bold text-blue-600 text-[11px] mb-1 uppercase tracking-wide">Round 2</div>
-              <div class="font-bold text-stone-900">Player A & Player C</div>
-              <div class="text-stone-400 text-[10px] my-1 uppercase font-semibold">vs</div>
-              <div class="font-bold text-stone-900">Player B & Player D</div>
+            <div>
+              <h4 class="text-xs font-bold text-stone-900 mb-1">${rule.title}</h4>
+              <p class="text-[11px] sm:text-xs text-stone-600 leading-normal">${rule.desc}</p>
             </div>
-            <div class="p-3.5 rounded-xl bg-white border border-stone-200 shadow-2xs">
-              <div class="font-bold text-blue-600 text-[11px] mb-1 uppercase tracking-wide">Round 3</div>
-              <div class="font-bold text-stone-900">Player A & Player D</div>
-              <div class="text-stone-400 text-[10px] my-1 uppercase font-semibold">vs</div>
-              <div class="font-bold text-stone-900">Player B & Player C</div>
-            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Americano Rotation Matrix Visualizer -->
+      <div class="p-5 rounded-2xl bg-white border border-stone-200/80 shadow-card">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-stone-700 mb-3 flex items-center gap-2">
+          <i data-lucide="rotate-cw" class="w-4 h-4 text-blue-600"></i>
+          <span>Americano Rotation Formula (Every Group of 4 Players)</span>
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200 shadow-2xs">
+            <div class="font-bold text-blue-600 text-[11px] mb-1 uppercase tracking-wide">Match 1</div>
+            <div class="font-bold text-stone-900">Player A & Player B</div>
+            <div class="text-stone-400 text-[10px] my-1 uppercase font-semibold">vs</div>
+            <div class="font-bold text-stone-900">Player C & Player D</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200 shadow-2xs">
+            <div class="font-bold text-blue-600 text-[11px] mb-1 uppercase tracking-wide">Match 2</div>
+            <div class="font-bold text-stone-900">Player A & Player C</div>
+            <div class="text-stone-400 text-[10px] my-1 uppercase font-semibold">vs</div>
+            <div class="font-bold text-stone-900">Player B & Player D</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200 shadow-2xs">
+            <div class="font-bold text-blue-600 text-[11px] mb-1 uppercase tracking-wide">Match 3</div>
+            <div class="font-bold text-stone-900">Player A & Player D</div>
+            <div class="text-stone-400 text-[10px] my-1 uppercase font-semibold">vs</div>
+            <div class="font-bold text-stone-900">Player B & Player C</div>
           </div>
         </div>
       </div>
