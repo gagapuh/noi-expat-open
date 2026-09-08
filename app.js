@@ -571,9 +571,6 @@ function renderBracketModal() {
         <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
           ${bracket.title}
         </h2>
-        <div class="text-xs text-stone-500 font-medium mt-0.5">
-          ${bracket.day} • ${bracket.time} • ${bracket.courts} (11:00 – 16:00 · 300 Min)
-        </div>
       </div>
 
       <div class="flex items-center gap-2 self-end sm:self-center">
@@ -626,29 +623,6 @@ function renderBracketModal() {
           32-Player Pathway
         </button>
       </div>
-
-      ${activeTab === 'groups' ? `
-        <!-- Group Quick Filter -->
-        <div class="hidden lg:inline-flex items-center gap-1 overflow-x-auto">
-          <span class="text-[10px] font-bold text-stone-400 uppercase tracking-wider mr-1">Filter:</span>
-          <button 
-            onclick="setBracketGroupFilter('all')" 
-            class="px-2 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer ${
-              state.bracketGroupFilter === 'all' 
-                ? 'bg-stone-900 text-white shadow-2xs' 
-                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-            }">All (8)</button>
-          ${groupsList.map(g => `
-            <button 
-              onclick="setBracketGroupFilter('${g.id}')" 
-              class="px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all cursor-pointer ${
-                state.bracketGroupFilter === g.id 
-                  ? 'bg-stone-900 text-white shadow-2xs' 
-                  : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-              }">${g.name.replace('Group ', '')}</button>
-          `).join('')}
-        </div>
-      ` : ''}
     </div>
 
     <!-- Body Content Area (Scrollable) -->
@@ -659,22 +633,17 @@ function renderBracketModal() {
   // TAB 1: GROUP STAGE (Groups A–H) — Clean Empty Tables
   // ══════════════════════════════════════════════════════════════════════════
   if (activeTab === 'groups') {
-    const visibleGroups = state.bracketGroupFilter === 'all'
-      ? groupsList
-      : groupsList.filter(g => g.id === state.bracketGroupFilter);
-
     html += `
       <!-- Groups Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
     `;
 
-    visibleGroups.forEach(group => {
+    groupsList.forEach(group => {
       html += `
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card overflow-hidden flex flex-col">
           <!-- Group Header -->
           <div class="px-4 py-3 bg-stone-50 border-b border-stone-200/70 flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
               <span class="font-bold text-sm text-stone-900 font-display">${group.name}</span>
               <span class="text-[11px] text-stone-400 font-mono">(${group.court})</span>
             </div>
@@ -1116,98 +1085,12 @@ function renderBracketModal() {
 
   // ══════════════════════════════════════════════════════════════════════════
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB 4: PLAYERS ROSTER (32) & RANDOM DRAW 🎲
+  // TAB 4: PLAYERS ROSTER (32)
   // ══════════════════════════════════════════════════════════════════════════
   else if (activeTab === 'players') {
     const isDrawn = !!(state.isDrawCompleted && roster.some(p => p.group));
 
     html += `
-      <!-- Notification banner (hidden by default) -->
-      <div id="drawNotification" class="hidden bg-emerald-500 text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center justify-between shadow-md">
-        <span class="flex items-center gap-2">
-          <i data-lucide="check-circle" class="w-4 h-4"></i>
-          32 Players randomly drawn into Groups A through H!
-        </span>
-        <button onclick="document.getElementById('drawNotification').classList.add('hidden')" class="text-white/80 hover:text-white">✕</button>
-      </div>
-
-      <!-- Action Panel -->
-      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-5 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-4">
-          <div>
-            <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-display font-extrabold text-base text-stone-900">
-                Tournament Roster: 32 Participants
-              </h3>
-              ${isDrawn ? `
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-[10px] font-bold">
-                  <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> Groups Drawn (A–H)
-                </span>
-              ` : `
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200 text-[10px] font-bold">
-                  <i data-lucide="list" class="w-3 h-3 text-stone-500"></i> Open List (No Groups)
-                </span>
-              `}
-            </div>
-            <p class="text-xs text-stone-500">
-              ${isDrawn 
-                ? 'Random draw completed! Players are distributed across Groups A–H. Click "Re-Draw" to shuffle again, or "Clear Groups" to return to an ungrouped list.' 
-                : 'Initial list of 32 participants without groups. Add or paste real player names below, then click "Random Draw into Groups 🎲" to distribute them into Groups A–H!'}
-            </p>
-          </div>
-          <div class="flex items-center gap-2 shrink-0 flex-wrap">
-            <button 
-              onclick="randomizeGroupsDraw()" 
-              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
-              <i data-lucide="shuffle" class="w-4 h-4 text-amber-400"></i>
-              <span>${isDrawn ? 'Re-Shuffle / Re-Draw 🎲' : 'Random Draw into Groups 🎲'}</span>
-            </button>
-            ${isDrawn ? `
-              <button 
-                onclick="resetDrawOnly()" 
-                class="px-3 py-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-600 font-semibold text-xs shadow-2xs transition-all cursor-pointer"
-                title="Clear group assignments and return to plain list">
-                Clear Groups
-              </button>
-            ` : ''}
-            <button 
-              onclick="resetRosterDefault()" 
-              class="px-3 py-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-600 font-semibold text-xs shadow-2xs transition-all cursor-pointer"
-              title="Reset all names to Player 1..32">
-              Reset Names
-            </button>
-          </div>
-        </div>
-
-        <!-- Quick Paste Names Area (Collapsible) -->
-        <details class="group rounded-xl border border-stone-200 bg-stone-50/50 p-3.5">
-          <summary class="text-xs font-bold text-stone-800 flex items-center justify-between cursor-pointer list-none">
-            <span class="flex items-center gap-2">
-              <i data-lucide="edit-3" class="w-4 h-4 text-blue-600"></i>
-              <span>Bulk Paste Real Player Names (Up to 32 Names)</span>
-            </span>
-            <span class="text-[11px] text-blue-600 group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <div class="mt-3 space-y-2 text-xs">
-            <p class="text-stone-500 text-[11px]">
-              Paste one name per line. If fewer than 32 names are provided, remaining slots keep "Player N".
-            </p>
-            <textarea 
-              id="bulkPlayersInput" 
-              rows="6" 
-              class="w-full p-2.5 rounded-lg border border-stone-300 bg-white font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Ho&#10;Alex Johnson&#10;David Lee&#10;Michael Smith...">${roster.map(p => p.name).join('\n')}</textarea>
-            <div class="flex justify-end">
-              <button 
-                onclick="saveRosterFromText()" 
-                class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-2xs transition-all cursor-pointer">
-                Save Player Names
-              </button>
-            </div>
-          </div>
-        </details>
-      </div>
-
       <!-- 32 Players Grid / List -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         ${roster.map(p => `
