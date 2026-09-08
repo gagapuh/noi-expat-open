@@ -10,10 +10,10 @@ const state = {
   currentDayId: 'day1',
   selectedMobileCourt: 'all',
   activeBracketId: null,
-  bracketActiveTab: 'groups', // 'groups', 'playoffs', 'seeding'
-  bracketGroupFilter: 'all'
+  bracketActiveTab: 'groups', // 'groups', 'playoffs', 'pathway', 'players'
+  bracketGroupFilter: 'all',
+  playersRoster: null // loaded from bracket or localStorage
 };
-
 // ─── Constants ───
 const PIXELS_PER_MINUTE = 1.8;
 
@@ -309,6 +309,7 @@ window.openBracketModal = function(bracketId) {
   state.activeBracketId = bracketId;
   state.bracketActiveTab = 'groups';
   state.bracketGroupFilter = 'all';
+  initBracketRoster();
   renderBracketModal();
   const modal = document.getElementById('bracketModal');
   if (modal) {
@@ -347,13 +348,155 @@ window.setBracketGroupFilter = function(groupId) {
   }
 };
 
+// ─── Player Roster & Randomizer Helpers ───
+function initBracketRoster() {
+  const bracket = getActiveBracket();
+  if (!bracket) return;
+
+  // Try to load saved custom roster from localStorage
+  try {
+    const saved = localStorage.getItem('noi_players_roster');
+    if (saved) {
+      state.playersRoster = JSON.parse(saved);
+      applyRosterToBracket(state.playersRoster, bracket);
+      return;
+    }
+  } catch (e) {}
+
+  // Otherwise initialize from bracket default players
+  if (bracket.players && bracket.players.length === 32) {
+    state.playersRoster = bracket.players.map(p => ({ ...p }));
+  } else {
+    const defaultRoster = [];
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    for (let i = 1; i <= 32; i++) {
+      defaultRoster.push({
+        id: i,
+        name: `Player ${i}`,
+        group: `Group ${letters[Math.floor((i - 1) / 4)]}`
+      });
+    }
+    state.playersRoster = defaultRoster;
+  }
+}
+
+function getActiveBracket() {
+  if (!state.activeBracketId) return null;
+  return (TOURNAMENT_CONFIG.brackets && TOURNAMENT_CONFIG.brackets[state.activeBracketId])
+    || (typeof TOURNAMENT_BRACKETS !== 'undefined' && TOURNAMENT_BRACKETS[state.activeBracketId]);
+}
+
+function applyRosterToBracket(roster, bracket) {
+  if (!roster || !bracket || !bracket.groups) return;
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  letters.forEach((letter, gIdx) => {
+    const group = bracket.groups[gIdx];
+    if (!group) return;
+    const groupPlayers = roster.filter(p => p.group === `Group ${letter}`);
+    if (groupPlayers.length === 4) {
+      group.players = groupPlayers.map(p => p.name);
+      const [p1, p2, p3, p4] = group.players;
+      group.matches = [
+        { round: "Round 1", pair1: `${p1} & ${p2}`, pair2: `${p3} & ${p4}`, score: "—", winner: null, played: false },
+        { round: "Round 2", pair1: `${p1} & ${p3}`, pair2: `${p2} & ${p4}`, score: "—", winner: null, played: false },
+        { round: "Round 3", pair1: `${p1} & ${p4}`, pair2: `${p2} & ${p3}`, score: "—", winner: null, played: false }
+      ];
+      group.standings.forEach((s, idx) => {
+        s.name = group.players[idx] || s.name;
+      });
+    }
+  });
+}
+
+window.randomizeGroupsDraw = function() {
+  const bracket = getActiveBracket();
+  if (!bracket || !state.playersRoster || state.playersRoster.length !== 32) return;
+
+  // Fisher-Yates shuffle of the 32 players
+  const shuffled = [...state.playersRoster];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  shuffled.forEach((p, idx) => {
+    const groupIndex = Math.floor(idx / 4);
+    p.group = `Group ${letters[groupIndex]}`;
+  });
+
+  state.playersRoster = shuffled;
+  try {
+    localStorage.setItem('noi_players_roster', JSON.stringify(state.playersRoster));
+  } catch (e) {}
+
+  applyRosterToBracket(state.playersRoster, bracket);
+  renderBracketModal();
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+
+  // Visual notification
+  const notifyEl = document.getElementById('drawNotification');
+  if (notifyEl) {
+    notifyEl.classList.remove('hidden');
+    setTimeout(() => notifyEl.classList.add('hidden'), 3500);
+  }
+};
+
+window.saveRosterFromText = function() {
+  const textarea = document.getElementById('bulkPlayersInput');
+  if (!textarea) return;
+  const lines = textarea.value.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  if (lines.length === 0) return;
+
+  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const newRoster = [];
+  for (let i = 1; i <= 32; i++) {
+    const name = lines[i - 1] || `Player ${i}`;
+    const group = (state.playersRoster && state.playersRoster[i - 1]) 
+      ? state.playersRoster[i - 1].group 
+      : `Group ${letters[Math.floor((i - 1) / 4)]}`;
+    newRoster.push({ id: i, name, group });
+  }
+
+  state.playersRoster = newRoster;
+  try {
+    localStorage.setItem('noi_players_roster', JSON.stringify(state.playersRoster));
+  } catch (e) {}
+
+  const bracket = getActiveBracket();
+  if (bracket) {
+    applyRosterToBracket(state.playersRoster, bracket);
+  }
+
+  renderBracketModal();
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
+window.resetRosterDefault = function() {
+  try {
+    localStorage.removeItem('noi_players_roster');
+  } catch (e) {}
+  state.playersRoster = null;
+  initBracketRoster();
+  const bracket = getActiveBracket();
+  if (bracket) {
+    applyRosterToBracket(state.playersRoster, bracket);
+  }
+  renderBracketModal();
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
 function renderBracketModal() {
   const container = document.getElementById('bracketModalContent');
   if (!container || !state.activeBracketId) return;
 
-  const bracket = (TOURNAMENT_CONFIG.brackets && TOURNAMENT_CONFIG.brackets[state.activeBracketId])
-    || (typeof TOURNAMENT_BRACKETS !== 'undefined' && TOURNAMENT_BRACKETS[state.activeBracketId]);
-
+  const bracket = getActiveBracket();
   if (!bracket) {
     container.innerHTML = `<div class="p-8 text-center text-stone-500">Tournament table data not found.</div>`;
     return;
@@ -361,10 +504,8 @@ function renderBracketModal() {
 
   const groupsList = bracket.groups || [];
   const po = bracket.playoffs || {};
-  const teamsList = bracket.teams || [];
-  const winnersRanking = bracket.winnersRanking || [];
-  const runnersUpRanking = bracket.runnersUpRanking || [];
-  const activeTab = (state.bracketActiveTab === 'rules') ? 'seeding' : (state.bracketActiveTab || 'groups');
+  const activeTab = state.bracketActiveTab || 'groups';
+  const roster = state.playersRoster || [];
 
   // Modal Header
   let html = `
@@ -380,7 +521,7 @@ function renderBracketModal() {
             ${bracket.format}
           </span>
           <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold">
-            QF & SF: BO3 · Final: BO5
+            32 Players · 8 Groups · BO3 / BO5
           </span>
         </div>
         <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
@@ -423,13 +564,22 @@ function renderBracketModal() {
           Playoffs Bracket (BO3 / BO5) 🥇
         </button>
         <button 
-          onclick="setBracketTab('seeding')" 
+          onclick="setBracketTab('pathway')" 
           class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'seeding' 
+            activeTab === 'pathway' 
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Seeding & Rules (#1 with #8)
+          32-Player Pathway (Корзина прохода)
+        </button>
+        <button 
+          onclick="setBracketTab('players')" 
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'players' 
+              ? 'bg-white text-stone-900 shadow-sm' 
+              : 'text-stone-500 hover:text-stone-800'
+          }">
+          Players (32) & Random Draw 🎲
         </button>
       </div>
 
@@ -462,7 +612,7 @@ function renderBracketModal() {
   `;
 
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB 1: GROUP STAGE (Groups A–H)
+  // TAB 1: GROUP STAGE (Groups A–H) — Clean Empty Tables
   // ══════════════════════════════════════════════════════════════════════════
   if (activeTab === 'groups') {
     const visibleGroups = state.bracketGroupFilter === 'all'
@@ -471,25 +621,24 @@ function renderBracketModal() {
 
     html += `
       <!-- Banner -->
-      <div class="bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 border border-blue-200/90 rounded-2xl p-4 sm:p-5 text-xs text-blue-950 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xs">
+      <div class="bg-blue-50/80 border border-blue-200/90 rounded-2xl p-4 sm:p-5 text-xs text-blue-950 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xs">
         <div class="flex items-start gap-3">
           <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
-            <i data-lucide="users" class="w-4 h-4"></i>
+            <i data-lucide="layers" class="w-4 h-4"></i>
           </div>
           <div>
-            <div class="font-bold text-sm text-blue-950">Stage 1: Americano Groups → Merit-Based Seeding (#1 with #8)</div>
+            <div class="font-bold text-sm text-blue-950">Stage 1: Americano Groups (Groups A to H) · 11:00 – 13:00</div>
             <p class="text-blue-800 text-xs mt-0.5 max-w-2xl leading-relaxed">
               32 individual players play 3 matches rotating partners ("each with each"). 
-              The <strong>Top 2</strong> from each group advance and are ranked by points. 
-              Teams are formed by pairing: <strong>Winner #1 with Runner-up #8</strong>, <strong>Winner #2 with Runner-up #7</strong>, etc., ensuring maximum competitive balance!
+              Matches played to 11 points. Top 2 players from each group advance to the playoffs and pair up based on merit seed!
             </p>
           </div>
         </div>
         <button 
-          onclick="setBracketTab('seeding')" 
+          onclick="setBracketTab('players')" 
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-blue-100 border border-blue-300 text-blue-900 font-bold text-xs shadow-2xs transition-all shrink-0 cursor-pointer">
-          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-blue-600"></i>
-          <span>View Seeding Table</span>
+          <i data-lucide="shuffle" class="w-3.5 h-3.5 text-blue-600"></i>
+          <span>Randomize Players 🎲</span>
         </button>
       </div>
 
@@ -508,11 +657,11 @@ function renderBracketModal() {
               <span class="text-[11px] text-stone-400 font-mono">(${group.court})</span>
             </div>
             <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider">
-              Top 2 Advance to Playoffs
+              Top 2 Advance
             </span>
           </div>
 
-          <!-- Standings Table -->
+          <!-- Standings Table (Empty / Ready for input) -->
           <div class="p-3 overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
@@ -523,29 +672,24 @@ function renderBracketModal() {
                   <th class="py-2 px-2 text-center">W-L</th>
                   <th class="py-2 px-2 text-center">Diff</th>
                   <th class="py-2 px-2 text-center font-bold text-stone-700">Pts</th>
-                  <th class="py-2 px-2.5 text-right">Playoff Destination</th>
+                  <th class="py-2 px-2.5 text-right">Status</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-stone-100">
                 ${group.standings.map(row => `
-                  <tr class="${row.qualified ? 'bg-amber-50/40 font-medium' : 'text-stone-600'} hover:bg-stone-50 transition-colors">
-                    <td class="py-2 px-2.5 text-center font-mono font-bold ${row.qualified ? 'text-amber-700' : 'text-stone-400'}">
+                  <tr class="hover:bg-stone-50 transition-colors">
+                    <td class="py-2 px-2.5 text-center font-mono font-bold text-stone-400">
                       ${row.rank}
                     </td>
-                    <td class="py-2 px-2.5 font-bold ${row.qualified ? 'text-stone-900' : 'text-stone-700'}">
+                    <td class="py-2 px-2.5 font-bold text-stone-900">
                       ${row.name}
                     </td>
-                    <td class="py-2 px-2 text-center tabular-nums text-stone-500">${row.played}</td>
-                    <td class="py-2 px-2 text-center tabular-nums text-stone-500">${row.wins}-${row.losses}</td>
-                    <td class="py-2 px-2 text-center tabular-nums ${row.diff.startsWith('+') ? 'text-emerald-600 font-semibold' : 'text-stone-500'}">${row.diff}</td>
-                    <td class="py-2 px-2 text-center font-mono font-extrabold text-stone-900 tabular-nums">${row.points}</td>
+                    <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.played}</td>
+                    <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.wins}-${row.losses}</td>
+                    <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.diff}</td>
+                    <td class="py-2 px-2 text-center font-mono font-bold text-stone-700 tabular-nums">${row.points}</td>
                     <td class="py-2 px-2.5 text-right whitespace-nowrap">
-                      ${row.qualified 
-                        ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                             <i data-lucide="check" class="w-2.5 h-2.5 text-amber-600"></i> ${row.advanceTo}
-                           </span>`
-                        : `<span class="text-[10px] text-stone-400 italic">Eliminated</span>`
-                      }
+                      <span class="text-[10px] text-stone-400 italic">Upcoming</span>
                     </td>
                   </tr>
                 `).join('')}
@@ -564,11 +708,11 @@ function renderBracketModal() {
                 <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-white border border-stone-200/60 text-stone-700 shadow-2xs">
                   <div class="flex items-center gap-2 min-w-0">
                     <span class="text-[10px] font-mono font-bold text-stone-400 uppercase shrink-0">${m.round}</span>
-                    <span class="truncate ${m.winner === 1 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair1}</span>
+                    <span class="truncate font-semibold text-stone-800">${m.pair1}</span>
                     <span class="text-stone-300 font-semibold shrink-0">vs</span>
-                    <span class="truncate ${m.winner === 2 ? 'font-bold text-stone-900' : 'text-stone-600'}">${m.pair2}</span>
+                    <span class="truncate font-semibold text-stone-800">${m.pair2}</span>
                   </div>
-                  <span class="font-mono font-bold text-[11px] text-stone-800 px-2 py-0.5 rounded bg-stone-100 border border-stone-200 shrink-0">
+                  <span class="font-mono font-bold text-[11px] text-stone-400 px-2.5 py-0.5 rounded bg-stone-50 border border-stone-200 shrink-0">
                     ${m.score}
                   </span>
                 </div>
@@ -583,7 +727,7 @@ function renderBracketModal() {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB 2: CHAMPIONSHIP PLAYOFFS (BO3 / BO5) — Pure Knockout
+  // TAB 2: PLAYOFFS BRACKET (BO3 / BO5) — Clean Empty Knockout
   // ══════════════════════════════════════════════════════════════════════════
   else if (activeTab === 'playoffs') {
     const qf = po.quarterfinals || [];
@@ -602,8 +746,8 @@ function renderBracketModal() {
             </h3>
           </div>
           <p class="text-xs text-stone-600 mt-1 max-w-2xl leading-relaxed">
-            Pure single-elimination tournament: <strong>Quarterfinals</strong> and <strong>Semifinals</strong> are Best of 3 sets to 11. 
-            The <strong>Grand Championship Final</strong> on Court 1 is a Best of 5 battle!
+            Quarterfinals and Semifinals are played as <strong>Best of 3 (BO3)</strong> sets to 11. 
+            The <strong>Grand Championship Final</strong> on Court 1 is a <strong>Best of 5 (BO5)</strong> championship decider!
           </p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
@@ -643,27 +787,27 @@ function renderBracketModal() {
 
                 <div class="space-y-1.5 text-xs">
                   <!-- Team 1 -->
-                  <div class="p-2.5 rounded-lg border ${m.winner === 1 ? 'bg-amber-50 border-amber-300 text-stone-950 font-bold shadow-2xs' : 'bg-white border-stone-200/70 text-stone-600'} flex items-center justify-between gap-2">
+                  <div class="p-2.5 rounded-lg border bg-white border-stone-200/70 text-stone-700 flex items-center justify-between gap-2">
                     <div class="min-w-0">
-                      <div class="truncate">${m.team1.duo}</div>
-                      <div class="text-[10px] text-stone-400 font-mono font-normal">${m.team1.name} (${m.team1.seed})</div>
+                      <div class="truncate font-bold">${m.team1.duo}</div>
+                      <div class="text-[10px] text-stone-400 font-mono">${m.team1.name} (${m.team1.seed})</div>
                     </div>
-                    ${m.winner === 1 ? '<span class="px-1.5 py-0.5 rounded bg-amber-200/70 text-amber-900 text-[10px] font-bold">Advance</span>' : ''}
+                    <span class="text-[10px] text-stone-400 font-mono">TBD</span>
                   </div>
 
                   <!-- Team 2 -->
-                  <div class="p-2.5 rounded-lg border ${m.winner === 2 ? 'bg-amber-50 border-amber-300 text-stone-950 font-bold shadow-2xs' : 'bg-white border-stone-200/70 text-stone-600'} flex items-center justify-between gap-2">
+                  <div class="p-2.5 rounded-lg border bg-white border-stone-200/70 text-stone-700 flex items-center justify-between gap-2">
                     <div class="min-w-0">
-                      <div class="truncate">${m.team2.duo}</div>
-                      <div class="text-[10px] text-stone-400 font-mono font-normal">${m.team2.name} (${m.team2.seed})</div>
+                      <div class="truncate font-bold">${m.team2.duo}</div>
+                      <div class="text-[10px] text-stone-400 font-mono">${m.team2.name} (${m.team2.seed})</div>
                     </div>
-                    ${m.winner === 2 ? '<span class="px-1.5 py-0.5 rounded bg-amber-200/70 text-amber-900 text-[10px] font-bold">Advance</span>' : ''}
+                    <span class="text-[10px] text-stone-400 font-mono">TBD</span>
                   </div>
                 </div>
 
                 <div class="pt-2 border-t border-stone-200/60 flex items-center justify-between text-xs">
-                  <span class="text-[11px] text-stone-500 font-mono">Sets: ${m.games.join(', ')}</span>
-                  <span class="font-mono font-black text-stone-900 text-sm px-2 py-0.5 rounded bg-stone-100 border border-stone-200">${m.score}</span>
+                  <span class="text-[11px] text-stone-400 font-mono">First to 2 sets to 11</span>
+                  <span class="font-mono font-bold text-stone-400 text-sm px-2 py-0.5 rounded bg-stone-100 border border-stone-200">${m.score}</span>
                 </div>
               </div>
             `).join('')}
@@ -695,27 +839,27 @@ function renderBracketModal() {
 
                 <div class="space-y-1.5 text-xs">
                   <!-- Team 1 -->
-                  <div class="p-2.5 rounded-lg border ${m.winner === 1 ? 'bg-amber-50 border-amber-300 text-stone-950 font-bold shadow-2xs' : 'bg-white border-stone-200/70 text-stone-600'} flex items-center justify-between gap-2">
+                  <div class="p-2.5 rounded-lg border bg-white border-stone-200/70 text-stone-700 flex items-center justify-between gap-2">
                     <div class="min-w-0">
-                      <div class="truncate">${m.team1.duo}</div>
-                      <div class="text-[10px] text-stone-400 font-mono font-normal">${m.team1.name} (${m.team1.seed})</div>
+                      <div class="truncate font-bold">${m.team1.name}</div>
+                      <div class="text-[10px] text-stone-400 font-mono">${m.team1.seed}</div>
                     </div>
-                    ${m.winner === 1 ? '<span class="px-1.5 py-0.5 rounded bg-amber-200/70 text-amber-900 text-[10px] font-bold">To Grand Final 🥇</span>' : ''}
+                    <span class="text-[10px] text-stone-400 font-mono">TBD</span>
                   </div>
 
                   <!-- Team 2 -->
-                  <div class="p-2.5 rounded-lg border ${m.winner === 2 ? 'bg-amber-50 border-amber-300 text-stone-950 font-bold shadow-2xs' : 'bg-white border-stone-200/70 text-stone-600'} flex items-center justify-between gap-2">
+                  <div class="p-2.5 rounded-lg border bg-white border-stone-200/70 text-stone-700 flex items-center justify-between gap-2">
                     <div class="min-w-0">
-                      <div class="truncate">${m.team2.duo}</div>
-                      <div class="text-[10px] text-stone-400 font-mono font-normal">${m.team2.name} (${m.team2.seed})</div>
+                      <div class="truncate font-bold">${m.team2.name}</div>
+                      <div class="text-[10px] text-stone-400 font-mono">${m.team2.seed}</div>
                     </div>
-                    ${m.winner === 2 ? '<span class="px-1.5 py-0.5 rounded bg-amber-200/70 text-amber-900 text-[10px] font-bold">To Grand Final 🥇</span>' : ''}
+                    <span class="text-[10px] text-stone-400 font-mono">TBD</span>
                   </div>
                 </div>
 
                 <div class="pt-2 border-t border-stone-200/60 flex items-center justify-between text-xs">
-                  <span class="text-[11px] text-stone-500 font-mono">Sets: ${m.games.join(', ')}</span>
-                  <span class="font-mono font-black text-stone-900 text-sm px-2 py-0.5 rounded bg-stone-100 border border-stone-200">${m.score}</span>
+                  <span class="text-[11px] text-stone-400 font-mono">Winner to Grand Final</span>
+                  <span class="font-mono font-bold text-stone-400 text-sm px-2 py-0.5 rounded bg-stone-100 border border-stone-200">${m.score}</span>
                 </div>
               </div>
             `).join('')}
@@ -739,67 +883,29 @@ function renderBracketModal() {
             </div>
 
             <div class="space-y-3 text-xs sm:text-sm">
-              <!-- Champions (1st) -->
-              <div class="p-3.5 rounded-xl bg-amber-100/80 border border-amber-300 text-stone-950 font-bold flex items-center justify-between shadow-2xs">
+              <div class="p-3.5 rounded-xl bg-white border border-stone-200/80 text-stone-800 font-bold flex items-center justify-between">
                 <div>
-                  <div class="text-base font-black">${gf.team1.duo}</div>
-                  <div class="text-xs text-amber-900 font-mono font-medium">${gf.team1.name} (${gf.team1.seed})</div>
+                  <div class="text-base font-black">${gf.team1.name}</div>
+                  <div class="text-xs text-stone-400 font-mono">${gf.team1.seed}</div>
                 </div>
-                <span class="px-3 py-1 rounded-lg bg-amber-400 text-stone-950 text-xs font-black shadow-2xs">
-                  🥇 CHAMPIONS
-                </span>
+                <span class="text-xs text-stone-400 font-mono">Finalist 1</span>
               </div>
 
-              <!-- Runners-up (2nd) -->
-              <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-700 font-semibold flex items-center justify-between">
+              <div class="p-3.5 rounded-xl bg-white border border-stone-200/80 text-stone-800 font-bold flex items-center justify-between">
                 <div>
-                  <div class="text-sm font-bold text-stone-900">${gf.team2.duo}</div>
-                  <div class="text-xs text-stone-400 font-mono font-normal">${gf.team2.name} (${gf.team2.seed})</div>
+                  <div class="text-base font-black">${gf.team2.name}</div>
+                  <div class="text-xs text-stone-400 font-mono">${gf.team2.seed}</div>
                 </div>
-                <span class="px-2.5 py-1 rounded-lg bg-stone-200 text-stone-800 text-xs font-bold">
-                  🥈 Runners-up
-                </span>
+                <span class="text-xs text-stone-400 font-mono">Finalist 2</span>
               </div>
             </div>
           </div>
 
           <div class="pt-3 border-t border-amber-200 flex items-center justify-between">
-            <span class="text-xs text-stone-600 font-mono">Sets: ${gf.games.join(', ')}</span>
-            <span class="font-mono font-black text-stone-950 text-base px-3 py-1 rounded-lg bg-amber-200 border border-amber-300">
+            <span class="text-xs text-stone-400 font-mono">Grand Final Score</span>
+            <span class="font-mono font-bold text-stone-400 text-base px-3 py-1 rounded-lg bg-stone-100 border border-stone-200">
               ${gf.score}
             </span>
-          </div>
-        </div>
-
-        <!-- Master Podium Table -->
-        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
-          <h4 class="font-display font-bold text-sm text-stone-900 mb-3 flex items-center gap-2">
-            <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
-            <span>Official Tournament Podium & Results</span>
-          </h4>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
-                  <th class="py-2.5 px-3 w-16 text-center">Place</th>
-                  <th class="py-2.5 px-3">Team Duo</th>
-                  <th class="py-2.5 px-3">Team</th>
-                  <th class="py-2.5 px-3">Seeding Origin</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-stone-100">
-                ${podium.map(row => `
-                  <tr class="hover:bg-stone-50/80 transition-colors ${row.place === 1 ? 'bg-amber-50/50 font-bold' : (row.place === 2 ? 'bg-stone-50/60 font-semibold' : '')}">
-                    <td class="py-2.5 px-3 text-center font-bold">
-                      <span class="${row.place === 1 ? 'text-amber-800 text-sm font-black' : (row.place === 2 ? 'text-stone-900 font-bold' : 'text-stone-500 font-medium')}">${row.medal}</span>
-                    </td>
-                    <td class="py-2.5 px-3 font-extrabold text-stone-950">${row.players}</td>
-                    <td class="py-2.5 px-3 font-mono text-stone-600">${row.team}</td>
-                    <td class="py-2.5 px-3 text-stone-500 font-mono text-[11px]">${row.seeds}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
@@ -807,203 +913,313 @@ function renderBracketModal() {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB 3: SEEDING & RULES (#1 with #8 Merit Pairing)
+  // TAB 3: 32-PLAYER PATHWAY (Корзина прохода всех 32 игроков)
   // ══════════════════════════════════════════════════════════════════════════
-  else if (activeTab === 'seeding') {
-    const timeline = po.scheduleTimeline || [];
-
+  else if (activeTab === 'pathway') {
     html += `
-      <!-- Philosophy Banner -->
+      <!-- Header Banner -->
       <div class="bg-stone-900 text-white rounded-2xl p-5 sm:p-6 shadow-md">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-950 text-[11px] font-extrabold uppercase tracking-wide mb-2">
-              <i data-lucide="zap" class="w-3 h-3"></i> Merit-Based Seed Pairing (1st with 8th)
+              <i data-lucide="git-merge" class="w-3 h-3"></i> 32-Player Tournament Funnel
             </div>
             <h3 class="text-lg sm:text-xl font-display font-extrabold tracking-tight">
-              Option 3: Mathematical Parity Seeding
+              Visual Pathway: How 32 Players Advance to 1 Champion Pair
             </h3>
             <p class="text-xs sm:text-sm text-stone-300 mt-1 max-w-2xl leading-relaxed">
-              All 8 group winners are ranked 1 to 8 by their Stage 1 points tally. All 8 runners-up are likewise ranked 1 to 8. 
-              <strong>Winner #1</strong> is paired with <strong>Runner-up #8</strong>, <strong>Winner #2</strong> with <strong>Runner-up #7</strong>, etc. 
-              Every team has an equal sum of strength!
+              Step-by-step progression of all 32 players: from Stage 1 Americano Groups into the merit-based seeding pots, forming 8 balanced teams, and advancing through the single-elimination knockout ladder!
             </p>
           </div>
           <div class="p-3.5 rounded-xl bg-stone-800/80 border border-stone-700 text-center shrink-0">
-            <div class="text-xl font-black text-amber-400 font-mono">BO3 / BO5</div>
-            <div class="text-[10px] text-stone-400 uppercase font-semibold mt-0.5">Playoffs Series</div>
+            <div class="text-xl font-black text-amber-400 font-mono">32 → 16 → 8 → 2 → 1</div>
+            <div class="text-[10px] text-stone-400 uppercase font-semibold mt-0.5">Progression Funnel</div>
           </div>
         </div>
       </div>
 
-      <!-- Seeding Rankings Side-by-Side -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- Pot 1: Group Winners Ranked 1 to 8 -->
-        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-              <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-                Group Winners (#1 Seeds Ranked 1 to 8)
-              </h4>
-            </div>
-            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-              Ranked by Pts & Diff
-            </span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
-                  <th class="py-2 px-2.5 w-10 text-center">Rank</th>
-                  <th class="py-2 px-2.5">Player</th>
-                  <th class="py-2 px-2">Group</th>
-                  <th class="py-2 px-2 text-center">Record</th>
-                  <th class="py-2 px-2 text-center">Diff</th>
-                  <th class="py-2 px-2 text-center font-bold text-stone-700">Pts</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-stone-100">
-                ${winnersRanking.map(r => `
-                  <tr class="hover:bg-stone-50 transition-colors">
-                    <td class="py-2 px-2.5 text-center font-mono font-bold text-amber-700">W${r.rank}</td>
-                    <td class="py-2 px-2.5 font-bold text-stone-900">${r.player}</td>
-                    <td class="py-2 px-2 text-stone-500 font-mono text-[11px]">${r.group}</td>
-                    <td class="py-2 px-2 text-center tabular-nums text-stone-500">${r.record}</td>
-                    <td class="py-2 px-2 text-center tabular-nums text-emerald-600 font-semibold">${r.diff}</td>
-                    <td class="py-2 px-2 text-center font-mono font-extrabold text-stone-900 tabular-nums">${r.pts}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Pot 2: Group Runners-Up Ranked 1 to 8 -->
-        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-              <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-                Group Runners-Up (#2 Seeds Ranked 1 to 8)
-              </h4>
-            </div>
-            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-              Ranked by Pts & Diff
-            </span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
-                  <th class="py-2 px-2.5 w-10 text-center">Rank</th>
-                  <th class="py-2 px-2.5">Player</th>
-                  <th class="py-2 px-2">Group</th>
-                  <th class="py-2 px-2 text-center">Record</th>
-                  <th class="py-2 px-2 text-center">Diff</th>
-                  <th class="py-2 px-2 text-center font-bold text-stone-700">Pts</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-stone-100">
-                ${runnersUpRanking.map(r => `
-                  <tr class="hover:bg-stone-50 transition-colors">
-                    <td class="py-2 px-2.5 text-center font-mono font-bold text-blue-700">R${r.rank}</td>
-                    <td class="py-2 px-2.5 font-bold text-stone-900">${r.player}</td>
-                    <td class="py-2 px-2 text-stone-500 font-mono text-[11px]">${r.group}</td>
-                    <td class="py-2 px-2 text-center tabular-nums text-stone-500">${r.record}</td>
-                    <td class="py-2 px-2 text-center tabular-nums text-emerald-600 font-semibold">${r.diff}</td>
-                    <td class="py-2 px-2 text-center font-mono font-extrabold text-stone-900 tabular-nums">${r.pts}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 8 Formed Teams Grid (Option 3 Result) -->
-      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
-        <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
-          <div class="flex items-center gap-2">
-            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
-            <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-              The 8 Formed Playoff Teams (W1+R8, W2+R7, W3+R6...)
-            </h4>
-          </div>
-          <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-            Perfect Parity Formula
-          </span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          ${teamsList.map(t => `
-            <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200/80 shadow-2xs hover:border-blue-300 transition-colors flex flex-col justify-between gap-2">
-              <div class="flex items-center justify-between">
-                <span class="font-mono font-extrabold text-xs text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200/80">${t.name}</span>
-                <span class="text-[10px] text-stone-500 font-mono font-bold">${t.formula}</span>
-              </div>
-              <div>
-                <div class="font-bold text-stone-950 text-xs">${t.duo}</div>
-                <div class="text-[10px] text-stone-500 font-mono mt-1 space-y-0.5">
-                  <div class="text-amber-800 font-medium">★ ${t.p1} (${t.p1Seed})</div>
-                  <div class="text-blue-800 font-medium">✦ ${t.p2} (${t.p2Seed})</div>
-                </div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- 4-Stage Master Schedule Timeline -->
-      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
-        <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
-          <div class="flex items-center gap-2">
-            <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i>
-            <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-              Tournament Time Schedule (11:00 – 16:00 · Courts 1–4)
-            </h4>
-          </div>
-          <span class="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">
-            5 Hours · 11:00 – 16:00
-          </span>
-        </div>
-
-        <div class="space-y-3 text-xs">
-          ${timeline.map((item, idx) => `
-            <div class="p-3.5 rounded-xl bg-stone-50/60 border border-stone-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div class="flex items-start sm:items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-stone-900 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">
-                  0${idx + 1}
-                </div>
-                <div>
-                  <div class="font-bold text-stone-900 text-sm">${item.title}</div>
-                  <div class="text-stone-600 text-xs mt-0.5">${item.desc}</div>
-                </div>
-              </div>
-              <div class="flex sm:flex-col items-end gap-1 shrink-0 self-start sm:self-auto">
-                <span class="px-2.5 py-1 rounded-md bg-white border border-stone-200 font-mono font-bold text-xs text-stone-900 shadow-2xs">
-                  ${item.time}
-                </span>
-                <span class="text-[10px] text-stone-500 font-mono font-medium">${item.courts}</span>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- Rules Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        ${bracket.rules.map((rule, idx) => `
-          <div class="p-4 rounded-xl bg-white border border-stone-200/80 shadow-card flex gap-3">
-            <div class="w-7 h-7 rounded-lg bg-stone-900 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">
-              0${idx + 1}
-            </div>
+      <!-- Stepper 1: Stage 1 Groups (32 Players in 8 Groups) -->
+      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">01</div>
             <div>
-              <h4 class="text-xs font-bold text-stone-900 mb-1">${rule.title}</h4>
-              <p class="text-[11px] sm:text-xs text-stone-600 leading-normal">${rule.desc}</p>
+              <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 1: 32 Players in 8 Groups of 4 (Groups A to H)</h4>
+              <p class="text-xs text-stone-500">Every player plays 3 Americano matches rotating partners to 11 points</p>
             </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">11:00 – 13:00</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+          ${groupsList.map(g => `
+            <div class="p-3 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between gap-2">
+              <div class="font-bold text-xs text-stone-900 text-center font-display border-b border-stone-200 pb-1.5">${g.name}</div>
+              <div class="space-y-1 text-[11px]">
+                <div class="p-1 rounded bg-emerald-50 text-emerald-900 border border-emerald-200 font-semibold text-center truncate">★ #1 Adv</div>
+                <div class="p-1 rounded bg-emerald-50 text-emerald-900 border border-emerald-200 font-semibold text-center truncate">✦ #2 Adv</div>
+                <div class="p-1 rounded bg-stone-100 text-stone-400 font-normal text-center truncate">#3 Out</div>
+                <div class="p-1 rounded bg-stone-100 text-stone-400 font-normal text-center truncate">#4 Out</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="mt-4 p-3 rounded-xl bg-emerald-50/70 border border-emerald-200/80 flex items-center justify-between text-xs text-emerald-950">
+          <span class="font-bold flex items-center gap-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+            16 Players Qualify (8 Winners + 8 Runners-Up)
+          </span>
+          <span class="text-stone-500">16 Players Complete Group Stage</span>
+        </div>
+      </div>
+
+      <!-- Stepper 2: The Merit Pairing Funnel (#1 with #8) -->
+      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-xs flex items-center justify-center shrink-0">02</div>
+            <div>
+              <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 2: Merit Seeding Pots & Balanced Team Formation</h4>
+              <p class="text-xs text-stone-500">Formula: Winner #k is paired with Runner-Up #(9 - k)</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">13:00 Seeding</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Pot 1 -->
+          <div class="p-4 rounded-xl bg-amber-50/50 border border-amber-200/80">
+            <div class="font-bold text-xs text-amber-950 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+              <span>Pot W: 8 Group Winners</span>
+              <span class="font-mono text-[10px] text-amber-700">Ranked W1 to W8</span>
+            </div>
+            <div class="grid grid-cols-4 gap-1.5 text-xs text-center font-mono font-bold text-amber-900">
+              <div class="p-2 rounded bg-white border border-amber-200">W1</div>
+              <div class="p-2 rounded bg-white border border-amber-200">W2</div>
+              <div class="p-2 rounded bg-white border border-amber-200">W3</div>
+              <div class="p-2 rounded bg-white border border-amber-200">W4</div>
+              <div class="p-2 rounded bg-white border border-amber-200">W5</div>
+              <div class="p-2 rounded bg-white border border-amber-200">W6</div>
+              <div class="p-2 rounded bg-white border border-amber-200">W7</div>
+              <div class="p-2 rounded bg-white border border-amber-200">W8</div>
+            </div>
+          </div>
+
+          <!-- Pot 2 -->
+          <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200/80">
+            <div class="font-bold text-xs text-blue-950 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+              <span>Pot R: 8 Group Runners-Up</span>
+              <span class="font-mono text-[10px] text-blue-700">Ranked R1 to R8</span>
+            </div>
+            <div class="grid grid-cols-4 gap-1.5 text-xs text-center font-mono font-bold text-blue-900">
+              <div class="p-2 rounded bg-white border border-blue-200">R8</div>
+              <div class="p-2 rounded bg-white border border-blue-200">R7</div>
+              <div class="p-2 rounded bg-white border border-blue-200">R6</div>
+              <div class="p-2 rounded bg-white border border-blue-200">R5</div>
+              <div class="p-2 rounded bg-white border border-blue-200">R4</div>
+              <div class="p-2 rounded bg-white border border-blue-200">R3</div>
+              <div class="p-2 rounded bg-white border border-blue-200">R2</div>
+              <div class="p-2 rounded bg-white border border-blue-200">R1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 Formed Balanced Teams -->
+        <div class="mt-4 pt-3 border-t border-stone-200">
+          <div class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-2.5">
+            8 Balanced Playoff Pairs Formed:
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 1</div>
+              <div class="font-mono text-[11px] text-stone-500">W1 + R8</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 2</div>
+              <div class="font-mono text-[11px] text-stone-500">W2 + R7</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 3</div>
+              <div class="font-mono text-[11px] text-stone-500">W3 + R6</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 4</div>
+              <div class="font-mono text-[11px] text-stone-500">W4 + R5</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 5</div>
+              <div class="font-mono text-[11px] text-stone-500">W5 + R4</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 6</div>
+              <div class="font-mono text-[11px] text-stone-500">W6 + R3</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 7</div>
+              <div class="font-mono text-[11px] text-stone-500">W7 + R2</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-surface-1 border border-stone-200 text-center">
+              <div class="font-bold text-stone-900">Team 8</div>
+              <div class="font-mono text-[11px] text-stone-500">W8 + R1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stepper 3: The Knockout Ladder (Quarterfinals → Semifinals → Grand Final) -->
+      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+        <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">03</div>
+            <div>
+              <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 3: Single-Elimination Knockout Ladder</h4>
+              <p class="text-xs text-stone-500">Quarterfinals (BO3) → Semifinals (BO3) → Grand Championship Final (BO5)</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">13:00 – 16:00</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <!-- 8 Teams in QF -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between gap-3">
+            <div>
+              <div class="font-bold text-stone-900 flex items-center justify-between">
+                <span>Quarterfinals (8 Teams)</span>
+                <span class="px-2 py-0.5 rounded bg-white text-stone-700 font-mono text-[10px] border">BO3</span>
+              </div>
+              <div class="text-[11px] text-stone-500 mt-1">4 matches across Courts 1–4</div>
+              <div class="space-y-1.5 mt-3">
+                <div class="p-2 rounded bg-white border border-stone-200/80 font-mono">QF1: Team 1 vs Team 8</div>
+                <div class="p-2 rounded bg-white border border-stone-200/80 font-mono">QF2: Team 4 vs Team 5</div>
+                <div class="p-2 rounded bg-white border border-stone-200/80 font-mono">QF3: Team 2 vs Team 7</div>
+                <div class="p-2 rounded bg-white border border-stone-200/80 font-mono">QF4: Team 3 vs Team 6</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-emerald-700 font-bold">4 Winners advance to SF</div>
+          </div>
+
+          <!-- 4 Teams in SF -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between gap-3">
+            <div>
+              <div class="font-bold text-stone-900 flex items-center justify-between">
+                <span>Semifinals (4 Teams)</span>
+                <span class="px-2 py-0.5 rounded bg-white text-stone-700 font-mono text-[10px] border">BO3</span>
+              </div>
+              <div class="text-[11px] text-stone-500 mt-1">2 matches on Courts 1 & 2</div>
+              <div class="space-y-1.5 mt-3">
+                <div class="p-2 rounded bg-white border border-stone-200/80 font-mono">SF1: Winner QF1 vs Winner QF2</div>
+                <div class="p-2 rounded bg-white border border-stone-200/80 font-mono">SF2: Winner QF3 vs Winner QF4</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-emerald-700 font-bold">2 Winners advance to Grand Final</div>
+          </div>
+
+          <!-- Grand Final (BO5) -->
+          <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-300 flex flex-col justify-between gap-3">
+            <div>
+              <div class="font-bold text-stone-950 flex items-center justify-between">
+                <span class="flex items-center gap-1.5"><i data-lucide="crown" class="w-4 h-4 text-amber-500"></i> Grand Final</span>
+                <span class="px-2 py-0.5 rounded bg-amber-200 text-amber-950 font-mono font-bold text-[10px] border border-amber-300">BO5</span>
+              </div>
+              <div class="text-[11px] text-stone-600 mt-1">Court 1 (Picklehead Main Stage)</div>
+              <div class="p-3 rounded-lg bg-white border border-amber-200 text-center font-bold text-stone-950 mt-3 shadow-2xs">
+                Winner SF1 vs Winner SF2
+                <div class="text-[10px] text-amber-800 font-normal mt-0.5">First to 3 sets to 11</div>
+              </div>
+            </div>
+            <div class="p-2 rounded bg-amber-400 text-stone-950 font-black text-center text-xs">
+              🥇 NOI EXPAT OPEN CHAMPIONS
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 4: PLAYERS ROSTER (32) & RANDOM DRAW 🎲
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'players') {
+    html += `
+      <!-- Notification banner (hidden by default) -->
+      <div id="drawNotification" class="hidden bg-emerald-500 text-white px-4 py-3 rounded-xl text-xs font-bold flex items-center justify-between shadow-md">
+        <span class="flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          32 Players randomly drawn into Groups A through H!
+        </span>
+        <button onclick="document.getElementById('drawNotification').classList.add('hidden')" class="text-white/80 hover:text-white">✕</button>
+      </div>
+
+      <!-- Action Panel -->
+      <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-4">
+          <div>
+            <h3 class="font-display font-extrabold text-base text-stone-900">
+              Tournament Roster: 32 Participants
+            </h3>
+            <p class="text-xs text-stone-500 mt-0.5">
+              Add real participant names, then click "Random Draw" to shuffle and distribute players into Groups A–H!
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button 
+              onclick="randomizeGroupsDraw()" 
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs shadow-md transition-all cursor-pointer">
+              <i data-lucide="shuffle" class="w-4 h-4 text-amber-400"></i>
+              <span>Random Draw into Groups 🎲</span>
+            </button>
+            <button 
+              onclick="resetRosterDefault()" 
+              class="px-3 py-2 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-600 font-semibold text-xs shadow-2xs transition-all cursor-pointer"
+              title="Reset to default Player 1..32">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Paste Names Area (Collapsible) -->
+        <details class="group rounded-xl border border-stone-200 bg-stone-50/50 p-3.5">
+          <summary class="text-xs font-bold text-stone-800 flex items-center justify-between cursor-pointer list-none">
+            <span class="flex items-center gap-2">
+              <i data-lucide="edit-3" class="w-4 h-4 text-blue-600"></i>
+              <span>Bulk Paste Real Player Names (Up to 32 Names)</span>
+            </span>
+            <span class="text-[11px] text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <div class="mt-3 space-y-2 text-xs">
+            <p class="text-stone-500 text-[11px]">
+              Paste one name per line (or comma-separated). Missing names will remain as "Player N".
+            </p>
+            <textarea 
+              id="bulkPlayersInput" 
+              rows="6" 
+              class="w-full p-2.5 rounded-lg border border-stone-300 bg-white font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Ho&#10;Alex Johnson&#10;David Lee&#10;Michael Smith...">${roster.map(p => p.name).join('\n')}</textarea>
+            <div class="flex justify-end">
+              <button 
+                onclick="saveRosterFromText()" 
+                class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-2xs transition-all cursor-pointer">
+                Save Player Names
+              </button>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- 32 Players Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        ${roster.map(p => `
+          <div class="p-3 rounded-xl bg-white border border-stone-200/80 shadow-card flex items-center justify-between gap-2 hover:border-blue-300 transition-colors">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-7 h-7 rounded-lg bg-stone-100 text-stone-700 font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                ${p.id}
+              </span>
+              <span class="font-bold text-stone-900 text-xs truncate">${p.name}</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200 shrink-0">
+              ${p.group}
+            </span>
           </div>
         `).join('')}
       </div>
