@@ -299,10 +299,13 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 19:00 - 22:00 The Grand Kitchen Party (Social)
+        // 19:00 - 22:00 The Grand Kitchen Party (Courts 1 & 2 combined)
         {
-          id: "d2-c1-kitchen",
+          id: "d2-c1c2-kitchen",
           courtId: "c1",
+          courtIds: ["c1", "c2"],
+          courtSpan: 2,
+          courtLabel: "Courts 1 & 2",
           start: "19:00",
           end: "22:00",
           title: "The Grand Kitchen Party",
@@ -312,41 +315,22 @@ const TOURNAMENT_CONFIG = {
           category: "social",
           status: "occupied"
         },
+
+        // 19:00 - 22:00 The Grand Kitchen Party (Courts 3 & 4 combined)
         {
-          id: "d2-c2-kitchen",
-          courtId: "c2",
-          start: "19:00",
-          end: "22:00",
-          title: "The Grand Kitchen Party",
-          host: "TBA",
-          logo: "002.svg",
-          reclubUrl: "",
-          category: "social",
-          status: "occupied"
-        },
-        {
-          id: "d2-c4-kitchen",
-          courtId: "c4",
-          start: "19:00",
-          end: "22:00",
-          title: "The Grand Kitchen Party",
-          host: "TBA",
-          logo: "picklehead.webp",
-          reclubUrl: "",
-          category: "social",
-          status: "occupied"
-        },
-        {
-          id: "d2-c3-kitchen",
+          id: "d2-c3c4-kitchen",
           courtId: "c3",
+          courtIds: ["c3", "c4"],
+          courtSpan: 2,
+          courtLabel: "Courts 3 & 4",
           start: "19:00",
           end: "22:00",
           title: "The Grand Kitchen Party",
           host: "TBA",
-          logo: "placeholder.svg",
+          logo: "002.svg",
           reclubUrl: "",
           category: "social",
-          status: "planned"
+          status: "occupied"
         }
       ]
     }
