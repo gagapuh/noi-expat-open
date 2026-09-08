@@ -102,16 +102,19 @@ body {
 
 /* ─── Staggered Multi-Court Card (Native single object hover) ─── */
 .staggered-tournament-card {
-  transition: transform 0.2s var(--ease-out);
+  transition: transform 0.2s var(--ease-out), filter 0.2s var(--ease-out) !important;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.04)) drop-shadow(0 4px 12px rgba(0,0,0,0.03));
 }
 .staggered-tournament-card:hover {
   transform: translateY(-1px);
+  box-shadow: none !important;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.08)) drop-shadow(0 1px 4px rgba(0,0,0,0.04));
 }
 .staggered-tournament-card .staggered-lane {
-  transition: box-shadow 0.2s var(--ease-out);
+  box-shadow: none !important;
 }
 .staggered-tournament-card:hover .staggered-lane {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  box-shadow: none !important;
 }
 
 /* ─── Free Court Badge ─── */

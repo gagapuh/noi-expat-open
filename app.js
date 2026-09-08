@@ -218,22 +218,22 @@ function renderTimelineMatrix() {
           <div class="timeline-event-card staggered-tournament-card"
                style="top: ${topPx}px; height: ${cardHeightPx}px; width: calc(400% - 10px); left: 5px; right: auto; z-index: 20; padding: 0; background: transparent; border: none; box-shadow: none; overflow: visible;">
             
-            <!-- 4 Court Background & Border Lanes (Guaranteed crisp dashed dividers) -->
+            <!-- 4 Court Background & Border Lanes (Guaranteed crisp dashed dividers, zero interior shadows) -->
             <div class="absolute inset-0 grid grid-cols-4 pointer-events-none">
               <!-- Court 1 Lane (11:00-17:00, 100%) -->
-              <div class="staggered-lane relative border-t border-b border-l border-r border-dashed border-blue-300/80 rounded-tl-2xl rounded-bl-2xl rounded-br-2xl shadow-card"
+              <div class="staggered-lane relative border-t border-b border-l border-r border-dashed border-blue-300/80 rounded-tl-2xl rounded-bl-2xl rounded-br-2xl"
                    style="height: 100%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 0% 0%; background-repeat: no-repeat;">
               </div>
               <!-- Court 2 Lane (11:00-16:00, 5/6 = 83.333%) -->
-              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-b-2xl shadow-card"
+              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-b-2xl"
                    style="height: calc(5 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 33.333% 0%; background-repeat: no-repeat;">
               </div>
               <!-- Court 3 Lane (11:00-15:00, 4/6 = 66.667%) -->
-              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-bl-2xl rounded-br-none shadow-card"
+              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-bl-2xl rounded-br-none"
                    style="height: calc(4 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 66.667% 0%; background-repeat: no-repeat;">
               </div>
               <!-- Court 4 Lane (11:00-15:00, 4/6 = 66.667%) -->
-              <div class="staggered-lane relative border-t border-b border-r border-blue-300/80 border-l-0 rounded-tr-2xl rounded-br-2xl rounded-bl-none shadow-card"
+              <div class="staggered-lane relative border-t border-b border-r border-blue-300/80 border-l-0 rounded-tr-2xl rounded-br-2xl rounded-bl-none"
                    style="height: calc(4 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 100% 0%; background-repeat: no-repeat;">
               </div>
             </div>
