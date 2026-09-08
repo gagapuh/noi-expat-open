@@ -316,18 +316,15 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 19:00 - 22:00 The Grand Kitchen Party (Courts 3 & 4 combined)
+        // 19:00 - 22:00 The Grand Kitchen Party (Court 4 - Picklehead)
         {
-          id: "d2-c3c4-kitchen",
-          courtId: "c3",
-          courtIds: ["c3", "c4"],
-          courtSpan: 2,
-          courtLabel: "Courts 3 & 4",
+          id: "d2-c4-kitchen",
+          courtId: "c4",
           start: "19:00",
           end: "22:00",
           title: "The Grand Kitchen Party",
           host: "TBA",
-          logo: "002.svg",
+          logo: "picklehead.webp",
           reclubUrl: "",
           category: "social",
           status: "occupied"
