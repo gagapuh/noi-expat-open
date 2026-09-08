@@ -100,6 +100,19 @@ body {
   transform: translateY(-1px);
 }
 
+/* ─── Unified Multi-Court Group Hover (hovers all cards together) ─── */
+.timeline-event-card.unified-court-card {
+  transition: box-shadow 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+.timeline-event-card.unified-court-card:hover {
+  box-shadow: none;
+  transform: none;
+}
+body.hovering-picklehead .timeline-event-card.unified-court-card {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  transform: translateY(-1px);
+}
+
 /* ─── Free Court Badge ─── */
 .status-pill-free {
   background: #d1fae5;

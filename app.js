@@ -245,7 +245,9 @@ function renderTimelineMatrix() {
         }
 
         bodyHtml += `
-          <div class="timeline-event-card ${laneBorderClass} ${laneRoundedClass} shadow-card hover:shadow-card-hover"
+          <div class="timeline-event-card unified-court-card ${laneBorderClass} ${laneRoundedClass} shadow-card"
+               onmouseenter="document.body.classList.add('hovering-picklehead')"
+               onmouseleave="document.body.classList.remove('hovering-picklehead')"
                style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle} ${unifiedBgStyle}">
             <div class="flex items-center ${court.id === 'c1' ? 'justify-between' : 'justify-end'} gap-1">
               ${court.id === 'c1' ? `
