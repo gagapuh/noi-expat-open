@@ -10,6 +10,7 @@ const state = {
   currentDayId: 'day1',
   selectedMobileCourt: 'all',
   activeBracketId: null,
+  activeCourtModalId: null,
   bracketActiveTab: 'groups', // 'groups', 'playoffs', 'pathway', 'players'
   bracketGroupFilter: 'all',
   playersRoster: null // loaded from bracket or localStorage
@@ -198,15 +199,26 @@ function renderTimelineMatrix() {
           title="${ev.title}">
           
           <!-- Header: Badge + Time -->
-          <div class="flex flex-wrap items-center justify-between gap-1">
-            <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
-              isFree ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : catConfig.badge
-            }">
-              ${isFree ? 'Free Court' : catConfig.short}
-            </span>
-            <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
-              ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
-            </span>
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-wrap items-center justify-between gap-1">
+              <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
+                isFree ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : catConfig.badge
+              }">
+                ${isFree ? 'Free Court' : catConfig.short}
+              </span>
+              <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
+                ${ev.start}–${ev.end}<span class="text-stone-400 font-normal ml-1 hidden sm:inline">${formatDuration(durationMinutes)}</span>
+              </span>
+            </div>
+            ${!isFree ? `
+              <button 
+                type="button" 
+                onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
+                class="w-full mt-0.5 py-1 px-2 rounded-md bg-stone-100 hover:bg-amber-50 hover:text-amber-900 border border-stone-200/80 hover:border-amber-200 text-[10px] font-bold text-stone-600 flex items-center justify-center gap-1 transition-all cursor-pointer shadow-2xs">
+                <i data-lucide="list-ordered" class="w-3 h-3 text-amber-600"></i>
+                <span>Order of Play (Очередность игр)</span>
+              </button>
+            ` : ''}
           </div>
 
           <!-- Content: Logo + Title + Host (vertically centered) -->
@@ -296,10 +308,22 @@ function setupEventListeners() {
     });
   }
 
-  // Keyboard Escape key to close modal
+  // Court matches modal backdrop click to close
+  const courtBackdrop = document.getElementById('courtMatchesModalBackdrop');
+  if (courtBackdrop) {
+    courtBackdrop.addEventListener('click', () => {
+      window.closeCourtMatchesModal();
+    });
+  }
+
+  // Keyboard Escape key to close modals
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && state.activeBracketId) {
-      window.closeBracketModal();
+    if (e.key === 'Escape') {
+      if (state.activeCourtModalId) {
+        window.closeCourtMatchesModal();
+      } else if (state.activeBracketId) {
+        window.closeBracketModal();
+      }
     }
   });
 }
@@ -1117,3 +1141,287 @@ function renderBracketModal() {
 
   container.innerHTML = html;
 }
+
+/// ─── Court Matches / Order of Play Modal Functions ───
+window.openCourtMatchesModal = function(eventId) {
+  state.activeCourtModalId = eventId;
+  renderCourtMatchesModal();
+  const modal = document.getElementById('courtMatchesModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeCourtMatchesModal = function() {
+  state.activeCourtModalId = null;
+  const modal = document.getElementById('courtMatchesModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+};
+
+function renderCourtMatchesModal() {
+  const container = document.getElementById('courtMatchesModalContent');
+  if (!container) return;
+
+  const eventId = state.activeCourtModalId;
+  let targetEvent = null;
+  let eventDay = null;
+
+  for (const d of TOURNAMENT_CONFIG.days) {
+    const found = (d.schedule || []).find(ev => ev.id === eventId);
+    if (found) {
+      targetEvent = found;
+      eventDay = d;
+      break;
+    }
+  }
+
+  if (!targetEvent) {
+    container.innerHTML = `<div class="p-8 text-center text-stone-500">Court schedule information not found.</div>`;
+    return;
+  }
+
+  const courtObj = TOURNAMENT_CONFIG.courts.find(c => c.id === targetEvent.courtId) || { name: targetEvent.courtId };
+  const matches = getCourtMatchesList(targetEvent);
+
+  let html = `
+    <!-- Header -->
+    <div class="px-5 sm:px-6 py-4 border-b border-stone-200/80 bg-stone-50 flex items-center justify-between gap-3 shrink-0">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-stone-900 text-white font-display font-bold text-xs">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+            ${courtObj.name}
+          </span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-stone-200/80 text-stone-700 text-[11px] font-mono font-semibold">
+            ${targetEvent.start} – ${targetEvent.end}
+          </span>
+        </div>
+        <h3 class="text-base sm:text-lg font-display font-extrabold text-stone-900 truncate">
+          ${targetEvent.title}
+        </h3>
+        <p class="text-xs text-stone-500 mt-0.5">
+          ${eventDay ? eventDay.dateFormatted : ''} • Court Order of Play (Очередность матчей)
+        </p>
+      </div>
+
+      <button 
+        onclick="closeCourtMatchesModal()" 
+        class="w-9 h-9 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-500 hover:text-stone-800 flex items-center justify-center transition-all cursor-pointer shadow-2xs shrink-0"
+        title="Close (Esc)">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Body: Order of Play List -->
+    <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-surface-1">
+      <div class="flex items-center justify-between text-xs text-stone-500 pb-1 border-b border-stone-200">
+        <span class="font-bold text-stone-700 uppercase tracking-wider text-[11px]">
+          Scheduled Matches (${matches.length})
+        </span>
+        <span>Court Order of Play</span>
+      </div>
+
+      <div class="space-y-3">
+        ${matches.map((m, idx) => `
+          <div class="bg-white rounded-xl border border-stone-200/80 p-3.5 sm:p-4 shadow-card hover:border-amber-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start sm:items-center gap-3 min-w-0">
+              <span class="w-7 h-7 rounded-lg bg-stone-900 text-amber-400 font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                #${idx + 1}
+              </span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${m.badgeClass || 'bg-blue-50 text-blue-900 border border-blue-200'}">
+                    ${m.stage}
+                  </span>
+                  <span class="text-xs font-extrabold text-stone-900">${m.title}</span>
+                </div>
+                <div class="text-xs text-stone-600 mt-1 flex items-center gap-2 flex-wrap font-medium">
+                  <span class="text-stone-900 font-bold">${m.pair1}</span>
+                  <span class="text-stone-400 font-normal italic">vs</span>
+                  <span class="text-stone-900 font-bold">${m.pair2}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+              <span class="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 font-mono text-[11px] font-semibold border border-stone-200/70">
+                ${m.format}
+              </span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+function getCourtMatchesList(ev) {
+  const courtObj = TOURNAMENT_CONFIG.courts.find(c => c.id === ev.courtId) || { name: ev.courtId };
+  const courtName = courtObj.name; // e.g. "Court 1", "Court 2", "Court 3", "Court 4"
+
+  // 1. If it links to a bracket (Picklehead Individual Doubles)
+  if (ev.bracketId && TOURNAMENT_BRACKETS[ev.bracketId]) {
+    const bracket = TOURNAMENT_BRACKETS[ev.bracketId];
+    const courtMatches = [];
+
+    // Stage 1 Americano Groups assigned to this court
+    const groupsOnCourt = (bracket.groups || []).filter(g => g.court && g.court.includes(courtName));
+    groupsOnCourt.forEach(group => {
+      (group.matches || []).forEach((m, mIdx) => {
+        courtMatches.push({
+          stage: group.name,
+          title: `${group.name} · ${m.round || `Match ${mIdx + 1}`}`,
+          pair1: m.pair1 || 'Team A',
+          pair2: m.pair2 || 'Team B',
+          format: '1 Set to 11',
+          badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+        });
+      });
+    });
+
+    // Playoffs: Quarterfinals on this court
+    const qfOnCourt = (bracket.playoffs?.quarterfinals || []).filter(q => q.court && q.court.includes(courtName));
+    qfOnCourt.forEach(q => {
+      courtMatches.push({
+        stage: 'Playoffs',
+        title: q.name,
+        pair1: q.team1?.name || 'TBD',
+        pair2: q.team2?.name || 'TBD',
+        format: q.format || 'BO3 to 11',
+        badgeClass: 'bg-indigo-50 text-indigo-900 border border-indigo-200'
+      });
+    });
+
+    // Playoffs: Semifinals on this court
+    const sfOnCourt = (bracket.playoffs?.semifinals || []).filter(s => s.court && s.court.includes(courtName));
+    sfOnCourt.forEach(s => {
+      courtMatches.push({
+        stage: 'Playoffs',
+        title: s.name,
+        pair1: s.team1?.name || 'Winner QF',
+        pair2: s.team2?.name || 'Winner QF',
+        format: s.format || 'BO3 to 11',
+        badgeClass: 'bg-purple-50 text-purple-900 border border-purple-200'
+      });
+    });
+
+    // Playoffs: Grand Final on this court
+    if (bracket.playoffs?.grandFinal && bracket.playoffs.grandFinal.court && bracket.playoffs.grandFinal.court.includes(courtName)) {
+      const gf = bracket.playoffs.grandFinal;
+      courtMatches.push({
+        stage: 'Championship',
+        title: '🥇 Grand Championship Final',
+        pair1: gf.team1?.name || 'Winner SF1',
+        pair2: gf.team2?.name || 'Winner SF2',
+        format: 'BO5 to 11',
+        badgeClass: 'bg-amber-100 text-amber-950 border border-amber-300 font-bold'
+      });
+    }
+
+    if (courtMatches.length > 0) {
+      return courtMatches;
+    }
+  }
+
+  // 2. Generic / Other categories (e.g. Mixed Doubles, DUPR, Socials)
+  if (ev.category === 'tournament' || ev.category === 'round_robin') {
+    return [
+      {
+        stage: 'Round 1',
+        title: `${ev.title} · Match 1`,
+        pair1: 'Pair 1',
+        pair2: 'Pair 2',
+        format: '1 Set to 11',
+        badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+      },
+      {
+        stage: 'Round 2',
+        title: `${ev.title} · Match 2`,
+        pair1: 'Pair 3',
+        pair2: 'Pair 4',
+        format: '1 Set to 11',
+        badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+      },
+      {
+        stage: 'Round 3',
+        title: `${ev.title} · Match 3`,
+        pair1: 'Pair 1',
+        pair2: 'Pair 3',
+        format: '1 Set to 11',
+        badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+      },
+      {
+        stage: 'Round 4',
+        title: `${ev.title} · Match 4`,
+        pair1: 'Pair 2',
+        pair2: 'Pair 4',
+        format: '1 Set to 11',
+        badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+      },
+      {
+        stage: 'Round 5',
+        title: `${ev.title} · Match 5`,
+        pair1: 'Pair 1',
+        pair2: 'Pair 4',
+        format: '1 Set to 11',
+        badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+      },
+      {
+        stage: 'Round 6',
+        title: `${ev.title} · Match 6`,
+        pair1: 'Pair 2',
+        pair2: 'Pair 3',
+        format: '1 Set to 11',
+        badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+      }
+    ];
+  }
+
+  // 3. Social / Open Play
+  return [
+    {
+      stage: 'Rotation 1',
+      title: `${ev.title} · Game 1`,
+      pair1: 'Open Rotation A',
+      pair2: 'Open Rotation B',
+      format: 'Social Play to 11',
+      badgeClass: 'bg-stone-100 text-stone-800 border border-stone-200'
+    },
+    {
+      stage: 'Rotation 2',
+      title: `${ev.title} · Game 2`,
+      pair1: 'Open Rotation C',
+      pair2: 'Open Rotation D',
+      format: 'Social Play to 11',
+      badgeClass: 'bg-stone-100 text-stone-800 border border-stone-200'
+    },
+    {
+      stage: 'Rotation 3',
+      title: `${ev.title} · Game 3`,
+      pair1: 'Open Rotation E',
+      pair2: 'Open Rotation F',
+      format: 'Social Play to 11',
+      badgeClass: 'bg-stone-100 text-stone-800 border border-stone-200'
+    },
+    {
+      stage: 'Rotation 4',
+      title: `${ev.title} · Game 4`,
+      pair1: 'King of the Court',
+      pair2: 'Challengers',
+      format: 'Social Play to 11',
+      badgeClass: 'bg-stone-100 text-stone-800 border border-stone-200'
+    }
+  ];
+}
+
