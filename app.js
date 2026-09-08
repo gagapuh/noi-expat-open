@@ -261,11 +261,27 @@ function renderTimelineMatrix() {
         // Floating title — once only, on Court 1, spans all 4 courts
         if (court.id === 'c1') {
           bodyHtml += `
-            <div style="position:absolute;top:${topPx}px;left:5px;width:calc(400% - 10px);height:${heightPx}px;z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:8px;">
-              ${ev.logo ? `<div style="padding:8px;border-radius:14px;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.08);box-shadow:0 2px 12px rgba(0,0,0,0.08);"><img src="${ev.logo}" alt="" style="height:44px;width:auto;object-fit:contain;border-radius:8px;display:block;" onerror="this.parentElement.style.display='none'" /></div>` : ''}
-              <div style="font-size:14px;font-weight:900;color:#0f172a;line-height:1.25;max-width:320px;text-shadow:0 0 16px rgba(255,255,255,1),0 0 32px rgba(255,255,255,0.9);">${ev.title}</div>
-              ${ev.subtitle ? `<div style="font-size:10px;color:#475569;font-weight:500;max-width:300px;line-height:1.4;text-shadow:0 0 8px rgba(255,255,255,1);">${ev.subtitle}</div>` : ''}
-              ${ev.host && ev.host !== 'TBA' ? `<div style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.07);font-size:9px;color:#1e293b;box-shadow:0 1px 4px rgba(0,0,0,0.06);"><span style="color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;font-size:8px;">Host</span><span style="font-weight:900;">${ev.host}</span></div>` : ''}
+            <div style="position:absolute;top:${topPx}px;left:5px;width:calc(400% - 10px);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 16px 0;">
+              ${ev.logo ? `
+                <div class="p-1.5 rounded-xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-1.5">
+                  <img src="${ev.logo}" alt="" class="h-8 sm:h-9 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
+                </div>
+              ` : ''}
+              <div class="text-[14px] sm:text-base font-black text-stone-900 leading-tight">
+                ${ev.title}
+              </div>
+              ${ev.subtitle ? `
+                <div class="text-[11px] sm:text-xs text-stone-600 font-semibold mt-0.5 leading-snug">
+                  ${ev.subtitle}
+                </div>
+              ` : ''}
+              ${ev.host && ev.host !== 'TBA' ? `
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[10px] leading-none mt-1.5">
+                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Host</span>
+                  <span class="w-px h-2 rounded-full bg-stone-300"></span>
+                  <span class="font-extrabold text-stone-950">${ev.host}</span>
+                </div>
+              ` : ''}
             </div>
           `;
         }
