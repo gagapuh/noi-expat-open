@@ -288,6 +288,12 @@ function renderTimelineMatrix() {
                 </div>
               ` : ''}
               <div class="flex items-center gap-1.5 flex-wrap justify-center mt-2">
+                ${ev.isDupr ? `
+                  <div class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none" title="DUPR Rated Match - Results recorded to DUPR rating">
+                    <img src="dupr.png" alt="DUPR" class="h-3 w-auto object-contain" />
+                    <span class="font-bold text-stone-900 uppercase tracking-wide text-[9px]">Rated</span>
+                  </div>
+                ` : ''}
                 ${ev.playersCount ? `
                   <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-stone-200/90 shadow-2xs text-stone-800 text-[11px] leading-none">
                     <span class="text-stone-400 font-bold uppercase tracking-wider text-[9px]">Players</span>
@@ -350,6 +356,14 @@ function renderTimelineMatrix() {
               ${ev.title}
             </div>
             <div class="flex items-center gap-1.5 flex-wrap justify-center">
+              ${ev.isDupr ? `
+                <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
+                  isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
+                } text-[10px] leading-none" title="DUPR Rated Match - Results recorded to DUPR rating">
+                  <img src="dupr.png" alt="DUPR" class="h-2.5 w-auto object-contain" />
+                  <span class="font-bold text-stone-900 uppercase tracking-wide text-[8px]">Rated</span>
+                </div>
+              ` : ''}
               ${ev.playersCount ? `
                 <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg ${
                   isPlanned ? 'bg-stone-100/80 border border-stone-200/80 text-stone-500' : 'bg-white border border-stone-200/90 shadow-2xs text-stone-800'
