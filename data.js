@@ -256,16 +256,15 @@ const TOURNAMENT_CONFIG = {
           ]
         },
 
-        // 15:30 - 19:00 Prime Division (4.0+) (Courts 3 & 4 combined)
+        // 15:30 - 19:00 Prime Division (Courts 3 & 4 combined)
         {
           id: "d2-c3c4-prime",
           courtId: "c3",
           courtIds: ["c3", "c4"],
           courtSpan: 2,
-          courtLabel: "Courts 3 & 4",
           start: "15:30",
           end: "19:00",
-          title: "Prime Division (4.0+)",
+          title: "Prime Division",
           subtitle: "Individual Doubles (4.0+)",
           host: "Ho",
           playersCount: "0/12",

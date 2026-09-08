@@ -332,23 +332,31 @@ function renderTimelineMatrix() {
           title="${ev.title}">
           
           <div class="flex flex-col gap-1">
-            <div class="flex flex-wrap items-center justify-between gap-1">
-              <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
-                  isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
-                }">
-                  ${isFree ? 'Free Court' : catConfig.short}
-                </span>
-                ${(ev.courtSpan > 1 || (ev.courtIds && ev.courtIds.length > 1) || ev.courtLabel) ? `
-                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-black tracking-wider bg-stone-900 text-white shadow-2xs leading-none whitespace-nowrap">
-                    ${ev.courtLabel || 'Courts 3 & 4'}
+            <div class="flex items-start justify-between gap-1">
+              <div class="flex flex-col items-start gap-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
+                    isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
+                  }">
+                    ${isFree ? 'Free Court' : catConfig.short}
                   </span>
-                ` : ''}
+                  ${(ev.courtLabel && !ev.isDupr) ? `
+                    <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-black tracking-wider bg-stone-900 text-white shadow-2xs leading-none whitespace-nowrap">
+                      ${ev.courtLabel}
+                    </span>
+                  ` : ''}
+                </div>
                 ${ev.isDupr ? `
-                  <div class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs ml-1" title="DUPR Rated - To Be Confirmed">
+                  <div class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs" title="DUPR Rated - To Be Confirmed">
                     <img src="dupr.png?v=3" alt="DUPR" class="h-6 sm:h-7 w-auto object-contain rounded-md" />
                     <span class="text-[9px] sm:text-[10px] text-stone-600 font-bold tracking-tight pr-1">${ev.duprStatus || 'To Be Confirmed'}</span>
                   </div>
+                  <${hasReclubUrl ? 'a' : 'div'} ${hasReclubUrl ? `href="${ev.reclubUrl}" target="_blank" rel="noopener noreferrer"` : ''}
+                    class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs ${hasReclubUrl ? 'cursor-pointer' : 'cursor-default'}"
+                    title="${hasReclubUrl ? 'Open Reclub Activity' : 'Reclub Activity'}">
+                    <img src="reclub.png?v=2" alt="Reclub" class="h-6 sm:h-7 w-auto object-contain rounded-md" />
+                    <span class="text-[9px] sm:text-[10px] text-stone-600 font-bold tracking-tight pr-1">Activity</span>
+                  </${hasReclubUrl ? 'a' : 'div'}>
                 ` : ''}
               </div>
               <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
@@ -385,21 +393,23 @@ function renderTimelineMatrix() {
             ` : ''}
           </div>
 
-          <div class="pt-2 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
-            ${ev.bracketId ? `
-              <button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
-                class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap">
-                <span>Bracket</span>
-              </button>
-            ` : `<div></div>`}
-            <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" 
-               ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''}
-               class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-semibold transition-all ${
-                 hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'
-               }">
-              <span>Reclub</span>
-            </a>
-          </div>
+          ${(ev.bracketId || (hasReclubUrl && !ev.isDupr)) ? `
+            <div class="pt-2 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
+              ${ev.bracketId ? `
+                <button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
+                  class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap">
+                  <span>Bracket</span>
+                </button>
+              ` : `<div></div>`}
+              ${(hasReclubUrl && !ev.isDupr) ? `
+                <a href="${ev.reclubUrl}" 
+                   target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-semibold transition-all text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer">
+                  <span>Reclub</span>
+                </a>
+              ` : ''}
+            </div>
+          ` : ''}
         </div>
       `;
 
