@@ -878,8 +878,7 @@ function renderBracketModal() {
                   <th class="py-2 px-2.5">Player</th>
                   <th class="py-2 px-2 text-center">MP</th>
                   <th class="py-2 px-2 text-center">W-L</th>
-                  <th class="py-2 px-2 text-center">Diff</th>
-                  <th class="py-2 px-2 text-center font-bold text-stone-700">Pts</th>
+                  <th class="py-2 px-2 text-center font-bold text-stone-700">Diff</th>
                   <th class="py-2 px-2.5 text-right">Status</th>
                 </tr>
               </thead>
@@ -894,8 +893,7 @@ function renderBracketModal() {
                     </td>
                     <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.played}</td>
                     <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.wins}-${row.losses}</td>
-                    <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.diff}</td>
-                    <td class="py-2 px-2 text-center font-mono font-bold text-stone-700 tabular-nums">${row.points}</td>
+                    <td class="py-2 px-2 text-center font-mono font-bold text-stone-700 tabular-nums">${row.diff > 0 ? '+' + row.diff : row.diff}</td>
                     <td class="py-2 px-2.5 text-right whitespace-nowrap">
                       <span class="text-[10px] text-stone-400 italic">Upcoming</span>
                     </td>
