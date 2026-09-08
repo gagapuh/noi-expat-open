@@ -100,35 +100,18 @@ body {
   transform: translateY(-1px);
 }
 
-/* ─── Unified Multi-Court Group Hover (hovers all cards together, NO shadow between columns) ─── */
-.timeline-event-card.unified-court-card {
-  box-shadow: none !important;
-  transition: box-shadow 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+/* ─── Staggered Multi-Court Card (Native single object hover) ─── */
+.staggered-tournament-card {
+  transition: transform 0.2s var(--ease-out);
 }
-.timeline-event-card.unified-court-card:hover {
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-/* Outer-edge shadows only during hover so no shadows fall between the courts */
-body.hovering-picklehead .timeline-event-card.unified-court-card {
+.staggered-tournament-card:hover {
   transform: translateY(-1px);
 }
-body.hovering-picklehead .timeline-court-c1 {
-  /* top, left, bottom shadow only (no right shadow) */
-  box-shadow: -4px 4px 16px rgba(0,0,0,0.06), 0 -2px 12px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06) !important;
+.staggered-tournament-card .staggered-lane {
+  transition: box-shadow 0.2s var(--ease-out);
 }
-body.hovering-picklehead .timeline-court-c2 {
-  /* top and bottom shadow only (no left/right shadow) */
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06) !important;
-}
-body.hovering-picklehead .timeline-court-c3 {
-  /* top and bottom shadow only (no left/right shadow) */
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06) !important;
-}
-body.hovering-picklehead .timeline-court-c4 {
-  /* top, right, bottom shadow only (no left shadow) */
-  box-shadow: 4px 4px 16px rgba(0,0,0,0.06), 0 -2px 12px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06) !important;
+.staggered-tournament-card:hover .staggered-lane {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
 }
 
 /* ─── Free Court Badge ─── */

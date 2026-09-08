@@ -194,119 +194,118 @@ function renderTimelineMatrix() {
       const hasReclubUrl = Boolean(ev.reclubUrl && ev.reclubUrl.trim() !== '');
 
 
-      // Unified group: 4 cards, each at real height, dashed borders between courts, centered content
-      const isUnifiedGroup = !isSingleCourtView && Boolean(ev.unifiedGroup);
-
-      let spanStyle = '';
-      if (isUnifiedGroup) {
-        if (court.id === 'c1') spanStyle = 'left: 5px; right: -1px; z-index: 15;';
-        else if (court.id === 'c2' || court.id === 'c3') spanStyle = 'left: 0px; right: -1px; z-index: 15;';
-        else if (court.id === 'c4') spanStyle = 'left: 0px; right: 5px; z-index: 15;';
+      let evStart = ev.start;
+      let evEnd = ev.end;
+      if (isSingleCourtView && ev.staggeredCourts) {
+        const scInfo = ev.staggeredCourts.find(sc => sc.courtId === court.id);
+        if (scInfo) {
+          evEnd = scInfo.end;
+        }
       }
 
-      // Multi-court span handling (non-unified)
+      // Multi-court span handling
       const effectiveSpan = (!isSingleCourtView && ev.courtSpan) ? ev.courtSpan : 1;
-      if (!isUnifiedGroup && effectiveSpan > 1) {
-        spanStyle = `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`;
-      }
-
-      const unifiedBorderClass = isUnifiedGroup
-        ? (court.id === 'c4'
-            ? 'border border-blue-300/70 border-l-0'
-            : 'border border-blue-300/70 border-l-0 border-r border-dashed')
+      let spanStyle = effectiveSpan > 1
+        ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
         : '';
 
-      // ── Unified group: per-court cards + one floating title centered across all 4 ──
-      if (isUnifiedGroup) {
-        const unifiedBgPos = {
-          c1: '0% 0%',
-          c2: '33.333% 0%',
-          c3: '66.667% 0%',
-          c4: '100% 0%'
-        }[court.id] || '0% 0%';
-
-        const unifiedBgStyle = `background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: ${unifiedBgPos}; background-repeat: no-repeat;`;
-
-        const laneBorderClass = court.id === 'c1'
-          ? 'border border-blue-300/60 border-r border-dashed'
-          : (court.id === 'c4'
-              ? 'border-t border-b border-r border-blue-300/60 border-l-0'
-              : 'border-t border-b border-r border-dashed border-blue-300/60 border-l-0');
-
-        let laneRoundedClass = '';
-        if (court.id === 'c1') {
-          laneRoundedClass = 'rounded-tl-2xl rounded-tr-none rounded-b-2xl';
-        } else if (court.id === 'c2') {
-          laneRoundedClass = 'rounded-t-none rounded-b-2xl';
-        } else if (court.id === 'c3') {
-          laneRoundedClass = 'rounded-t-none rounded-bl-2xl rounded-br-none';
-        } else if (court.id === 'c4') {
-          laneRoundedClass = 'rounded-tr-2xl rounded-tl-none rounded-br-2xl rounded-bl-none';
-        }
+      // ── Staggered 4-court card: single unified native DOM object ──
+      if (!isSingleCourtView && ev.staggeredCourts && effectiveSpan === 4) {
+        const maxDurationMinutes = getDurationMinutes(ev.start, ev.end);
+        const cardHeightPx = Math.max(48, maxDurationMinutes * PIXELS_PER_MINUTE - 4);
 
         bodyHtml += `
-          <div class="timeline-event-card unified-court-card timeline-court-${court.id} ${laneBorderClass} ${laneRoundedClass}"
-               onmouseenter="document.body.classList.add('hovering-picklehead')"
-               onmouseleave="document.body.classList.remove('hovering-picklehead')"
-               style="top: ${topPx}px; height: ${heightPx}px; ${spanStyle} ${unifiedBgStyle}">
-            <div class="flex items-center ${court.id === 'c1' ? 'justify-between' : 'justify-end'} gap-1">
-              ${court.id === 'c1' ? `
-                <div class="flex flex-col items-start gap-1">
-                  <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${catConfig.badge}">
-                    ${catConfig.short}
-                  </span>
-                  ${ev.isDupr ? `
-                    <img src="dupr.png?v=3" alt="DUPR" class="h-4 sm:h-5 w-auto object-contain mt-1" title="DUPR Rated" />
-                  ` : ''}
-                </div>
-              ` : ''}
-              <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap self-start">${ev.start}–${ev.end}</span>
-            </div>
-            <div class="mt-auto flex flex-col gap-1.5 pt-1">
-              <button type="button" onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}')"
-                class="w-full py-1.5 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[10px] sm:text-[11px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group">
-                <i data-lucide="calendar-days" class="w-3 h-3 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
-              </button>
-              <div class="flex items-center justify-between gap-1">
-                ${ev.bracketId ? `<button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')" class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 shadow-2xs transition-all cursor-pointer whitespace-nowrap"><i data-lucide="trophy" class="w-3 h-3 text-amber-500 mr-1"></i>Bracket</button>` : '<div></div>'}
-                <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-semibold transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
+          <div class="timeline-event-card staggered-tournament-card"
+               style="top: ${topPx}px; height: ${cardHeightPx}px; width: calc(400% - 10px); left: 5px; right: auto; z-index: 20; padding: 0; background: transparent; border: none; box-shadow: none; overflow: visible;">
+            
+            <!-- 4 Court Background & Border Lanes (Guaranteed crisp dashed dividers) -->
+            <div class="absolute inset-0 grid grid-cols-4 pointer-events-none">
+              <!-- Court 1 Lane (11:00-17:00, 100%) -->
+              <div class="staggered-lane relative border-t border-b border-l border-r border-dashed border-blue-300/80 rounded-tl-2xl rounded-bl-2xl rounded-br-2xl shadow-card"
+                   style="height: 100%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 0% 0%; background-repeat: no-repeat;">
+              </div>
+              <!-- Court 2 Lane (11:00-16:00, 5/6 = 83.333%) -->
+              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-b-2xl shadow-card"
+                   style="height: calc(5 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 33.333% 0%; background-repeat: no-repeat;">
+              </div>
+              <!-- Court 3 Lane (11:00-15:00, 4/6 = 66.667%) -->
+              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-bl-2xl rounded-br-none shadow-card"
+                   style="height: calc(4 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 66.667% 0%; background-repeat: no-repeat;">
+              </div>
+              <!-- Court 4 Lane (11:00-15:00, 4/6 = 66.667%) -->
+              <div class="staggered-lane relative border-t border-b border-r border-blue-300/80 border-l-0 rounded-tr-2xl rounded-br-2xl rounded-bl-none shadow-card"
+                   style="height: calc(4 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 100% 0%; background-repeat: no-repeat;">
               </div>
             </div>
-          </div>
-        `;
 
-        // Floating title — once only, on Court 1, spans all 4 courts
-        if (court.id === 'c1') {
-          bodyHtml += `
-            <div style="position:absolute;top:${topPx}px;left:5px;width:calc(400% - 10px);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 16px 0;">
+            <!-- Header Content (Logo + Title + Subtitle + Host + Players) Centered across all 4 courts (Selectable & Copyable) -->
+            <div class="absolute top-0 left-0 right-0 pt-10 px-4 flex flex-col items-center text-center z-10 select-text">
               ${ev.logo ? `
                 <div class="p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-2">
                   <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
                 </div>
               ` : ''}
-              <div class="text-base sm:text-lg font-black text-stone-900 leading-tight">
+              <div class="text-base sm:text-lg font-black text-stone-900 leading-tight select-text">
                 ${ev.title}
               </div>
               ${ev.subtitle ? `
-                <div class="text-xs sm:text-[13px] text-stone-600 font-semibold mt-1 leading-snug">
+                <div class="text-xs sm:text-[13px] text-stone-600 font-semibold mt-1 leading-snug select-text">
                   ${ev.subtitle}
                 </div>
               ` : ''}
               ${ev.host && ev.host !== 'TBA' ? `
-                <div class="text-[11px] sm:text-xs text-stone-500 font-medium mt-1">
+                <div class="text-[11px] sm:text-xs text-stone-500 font-medium mt-1 select-text">
                   Host: <span class="font-bold text-stone-800">${ev.host}</span>
                 </div>
               ` : ''}
               ${ev.playersCount ? `
-                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-stone-200 shadow-2xs text-stone-800 text-[10px] leading-none mt-2">
+                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-stone-200 shadow-2xs text-stone-800 text-[10px] leading-none mt-2 select-text">
                   <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px]">Players</span>
                   <span class="w-px h-2 rounded-full bg-stone-300"></span>
                   <span class="font-black text-blue-700">${ev.playersCount}</span>
                 </div>
               ` : ''}
             </div>
-          `;
-        }
+
+            <!-- Court 1 Top-Left Header: Category Badge + DUPR with To Be Confirmed -->
+            <div class="absolute top-3 left-3 flex flex-col items-start gap-1 z-10">
+              <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${catConfig.badge}">
+                ${catConfig.short}
+              </span>
+              ${ev.isDupr ? `
+                <div class="flex items-center gap-1.5 mt-1 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs" title="DUPR Rated - To Be Confirmed">
+                  <img src="dupr.png?v=3" alt="DUPR" class="h-6 sm:h-7 w-auto object-contain rounded-md" />
+                  <span class="text-[9px] sm:text-[10px] text-stone-600 font-bold tracking-tight pr-1">${ev.duprStatus || 'To Be Confirmed'}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- 4 Interactive Columns: Times at top, Buttons at bottom -->
+            <div class="absolute inset-0 grid grid-cols-4 z-10 pointer-events-none">
+              ${(ev.staggeredCourts || []).map(sc => {
+                const laneHeightStyle = sc.courtId === 'c1' ? '100%' : (sc.courtId === 'c2' ? 'calc(5 / 6 * 100%)' : 'calc(4 / 6 * 100%)');
+                return `
+                  <div class="relative flex flex-col justify-between p-3 pointer-events-auto" style="height: ${laneHeightStyle};">
+                    <div class="flex justify-end">
+                      <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">${sc.start || ev.start}–${sc.end}</span>
+                    </div>
+                    <div class="mt-auto flex flex-col gap-1.5 pt-1">
+                      <button type="button" onclick="window.openCourtMatchesModal && window.openCourtMatchesModal('${ev.id}', '${sc.courtId}')"
+                        class="w-full py-1.5 rounded-lg bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-[10px] sm:text-[11px] font-extrabold text-blue-700 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs group">
+                        <i data-lucide="calendar-days" class="w-3 h-3 text-blue-600 group-hover:text-white transition-colors"></i><span>Matches</span>
+                      </button>
+                      <div class="flex items-center justify-between gap-1">
+                        ${ev.bracketId ? `<button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')" class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 shadow-2xs transition-all cursor-pointer whitespace-nowrap"><i data-lucide="trophy" class="w-3 h-3 text-amber-500 mr-1"></i>Bracket</button>` : '<div></div>'}
+                        <a href="${hasReclubUrl ? ev.reclubUrl : 'javascript:void(0)'}" ${hasReclubUrl ? 'target="_blank" rel="noopener noreferrer"' : ''} class="inline-flex items-center h-6 px-2 rounded-md text-[9px] sm:text-[10px] font-semibold transition-all ${hasReclubUrl ? 'text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 cursor-pointer' : 'text-stone-400 bg-stone-100 border border-stone-200 cursor-default'}">Reclub</a>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+          </div>
+        `;
 
         return;
       }
@@ -335,7 +334,10 @@ function renderTimelineMatrix() {
                   </span>
                 ` : ''}
                 ${ev.isDupr ? `
-                  <img src="dupr.png?v=3" alt="DUPR" class="h-4 sm:h-5 w-auto object-contain ml-1" title="DUPR Rated" />
+                  <div class="flex items-center gap-1.5 bg-white/95 border border-stone-200/90 rounded-lg p-1 shadow-2xs ml-1" title="DUPR Rated - To Be Confirmed">
+                    <img src="dupr.png?v=3" alt="DUPR" class="h-6 sm:h-7 w-auto object-contain rounded-md" />
+                    <span class="text-[9px] sm:text-[10px] text-stone-600 font-bold tracking-tight pr-1">${ev.duprStatus || 'To Be Confirmed'}</span>
+                  </div>
                 ` : ''}
               </div>
               <span class="inline-flex items-center h-[20px] px-1.5 sm:px-2 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold tabular-nums bg-white/90 text-stone-600 border border-stone-200 leading-none whitespace-nowrap">
