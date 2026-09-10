@@ -6,6 +6,7 @@
 
 const TOURNAMENT_CONFIG = {
   title: "NOI EXPAT OPEN",
+  date: "4 октября 2026",
   location: "91Club Pickleball",
   venue: {
     name: "91Club Pickleball",
@@ -68,7 +69,7 @@ const TOURNAMENT_CONFIG = {
       id: "finals",
       name: "Finals & Medals",
       short: "Finals",
-      badge: "bg-amber-500 text-stone-950 font-black tracking-wider shadow-2xs",
+      badge: "bg-amber-500 text-stone-900 font-black tracking-wider shadow-2xs",
       cardBg: "from-amber-100 via-amber-50 to-white",
       cardBorder: "border-amber-300 hover:border-amber-400",
       cardBorderDashed: "border-amber-300/60",
@@ -117,108 +118,9 @@ const TOURNAMENT_CONFIG = {
   ],
   days: [
     {
-      id: "day1",
-      name: "Day 1",
-      title: "Day 1 · Oct 3",
-      dateFormatted: "Saturday, Oct 3",
-      schedule: [
-        // 11:30 - 15:30 Mixed Doubles: Max 5.2 Cap (Courts 1, 2, 3, 4)
-        {
-          id: "d1-c1-mixed-52",
-          courtId: "c1",
-          start: "11:30",
-          end: "15:30",
-          title: "Mixed Doubles: Max 5.2 Cap",
-          host: "TBA",
-          logo: "placeholder.svg",
-          reclubUrl: "",
-          category: "tournament",
-          status: "planned"
-        },
-        {
-          id: "d1-c2-mixed-52",
-          courtId: "c2",
-          start: "11:30",
-          end: "15:30",
-          title: "Mixed Doubles: Max 5.2 Cap",
-          host: "TBA",
-          logo: "placeholder.svg",
-          reclubUrl: "",
-          category: "tournament",
-          status: "planned"
-        },
-        {
-          id: "d1-c3-mixed-52",
-          courtId: "c3",
-          start: "11:30",
-          end: "15:30",
-          title: "Mixed Doubles: Max 5.2 Cap",
-          host: "TBA",
-          logo: "placeholder.svg",
-          reclubUrl: "",
-          category: "tournament",
-          status: "planned"
-        },
-        {
-          id: "d1-c4-mixed-52",
-          courtId: "c4",
-          start: "11:30",
-          end: "15:30",
-          title: "Mixed Doubles: Max 5.2 Cap",
-          host: "TBA",
-          logo: "placeholder.svg",
-          reclubUrl: "",
-          category: "tournament",
-          status: "planned"
-        },
-        // 19:00 - 22:00 Noi Sunset Social (Courts 1 & 2 combined)
-        {
-          id: "d1-c1c2-sunset-social",
-          courtId: "c1",
-          courtIds: ["c1", "c2"],
-          courtSpan: 2,
-          start: "19:00",
-          end: "22:00",
-          title: "Noi Sunset Social",
-          subtitle: "All levels",
-          host: "Eugen",
-          playersCount: "0/16",
-          logo: "002.svg",
-          showReclubBadge: true,
-          reclubUrl: "",
-          category: "social",
-          status: "occupied"
-        },
-        {
-          id: "d1-c3-sunset-social",
-          courtId: "c3",
-          start: "19:00",
-          end: "22:00",
-          title: "Noi Sunset Social",
-          host: "TBA",
-          logo: "placeholder.svg",
-          reclubUrl: "",
-          category: "social",
-          status: "planned"
-        },
-        {
-          id: "d1-c4-sunset-social",
-          courtId: "c4",
-          start: "19:00",
-          end: "22:00",
-          title: "Noi Sunset Social",
-          host: "TBA",
-          logo: "placeholder.svg",
-          reclubUrl: "",
-          category: "social",
-          status: "planned"
-        }
-      ]
-    },
-    {
       id: "day2",
-      name: "Day 2",
-      title: "Day 2 · Oct 4",
+      name: "Sunday",
+      title: "Sunday · Oct 4",
       dateFormatted: "Sunday, Oct 4",
       schedule: [
         // 11:00–17:00 Picklehead Main Stage (Courts 1–4, staggered finish)
@@ -321,7 +223,7 @@ const TOURNAMENT_BRACKETS = {
     title: "Picklehead Main Stage: Individual Doubles (2.5–3.0)",
     shortTitle: "Picklehead Individual Doubles",
     host: "Ho",
-    day: "Day 2 — Sunday, Oct 4",
+    day: "Sunday, Oct 4",
     time: "11:00 – 17:00",
     courts: "Courts 1, 2, 3, 4",
     format: "Americano Groups → Merit-Seeded Duo Playoffs (BO3 / BO5)",

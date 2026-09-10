@@ -7,7 +7,7 @@
 
 // ─── State ───
 const state = {
-  currentDayId: 'day1',
+  currentDayId: 'day2',
   activeBracketId: null,
   activeCourtModalId: null,
   bracketActiveTab: 'groups', // 'groups', 'playoffs', 'pathway', 'players'
@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderHeaderAndMeta() {
   const titleEl = document.getElementById('tournamentTitle');
   if (titleEl) titleEl.textContent = TOURNAMENT_CONFIG.title;
+  const dateEl = document.getElementById('tournamentDate');
+  if (dateEl && TOURNAMENT_CONFIG.date) dateEl.textContent = TOURNAMENT_CONFIG.date;
 }
 
 // ─── Timeline Matrix ───
