@@ -6,7 +6,7 @@
 
 const TOURNAMENT_CONFIG = {
   title: "NOI EXPAT OPEN",
-  date: "4 октября 2026",
+  date: "October 4, 2026",
   location: "91Club Pickleball",
   venue: {
     name: "91Club Pickleball",
