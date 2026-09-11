@@ -123,15 +123,15 @@ const TOURNAMENT_CONFIG = {
       title: "Sunday · Oct 4",
       dateFormatted: "Sunday, Oct 4",
       schedule: [
-        // 11:00–17:00 Picklehead Main Stage (Courts 1–4, staggered finish)
+        // 10:00–16:00 Picklehead Main Stage (Courts 1–4, staggered finish)
         {
           id: "d2-c1c4-picklehead",
           courtId: "c1",
           courtIds: ["c1", "c2", "c3", "c4"],
           courtSpan: 4,
           courtLabel: "Courts 1–4",
-          start: "11:00",
-          end: "17:00",
+          start: "10:00",
+          end: "16:00",
           title: "Picklehead Main Stage",
           subtitle: "Individual Doubles (2.5–3.0)",
           host: "Ho",
@@ -144,21 +144,21 @@ const TOURNAMENT_CONFIG = {
           category: "tournament",
           status: "occupied",
           staggeredCourts: [
-            { courtId: "c1", courtName: "Court 1", start: "11:00", end: "17:00" },
-            { courtId: "c2", courtName: "Court 2", start: "11:00", end: "16:00" },
-            { courtId: "c3", courtName: "Court 3", start: "11:00", end: "15:00" },
-            { courtId: "c4", courtName: "Court 4", start: "11:00", end: "15:00" }
+            { courtId: "c1", courtName: "Court 1", start: "10:00", end: "16:00" },
+            { courtId: "c2", courtName: "Court 2", start: "10:00", end: "15:00" },
+            { courtId: "c3", courtName: "Court 3", start: "10:00", end: "14:00" },
+            { courtId: "c4", courtName: "Court 4", start: "10:00", end: "14:00" }
           ]
         },
 
-        // 15:30 - 19:00 Prime Division (Courts 3 & 4 combined)
+        // 14:00 - 18:00 Prime Division (Courts 3 & 4 combined)
         {
           id: "d2-c3c4-prime",
           courtId: "c3",
           courtIds: ["c3", "c4"],
           courtSpan: 2,
-          start: "15:30",
-          end: "19:00",
+          start: "14:00",
+          end: "18:00",
           title: "Prime Division",
           subtitle: "Individual Doubles (4.0+)",
           host: "Ho",
@@ -171,15 +171,15 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 19:00 - 22:00 Team Games (Courts 1–4 combined)
+        // 18:00 - 21:00 Team Games (Courts 1–4 combined)
         {
           id: "d2-c1c4-team-games",
           courtId: "c1",
           courtIds: ["c1", "c2", "c3", "c4"],
           courtSpan: 4,
           courtLabel: "Courts 1–4",
-          start: "19:00",
-          end: "22:00",
+          start: "18:00",
+          end: "21:00",
           title: "Team Games",
           subtitle: "8 Teams · 2 Groups · MLP Format (2M + 2W)",
           host: "Ho & Eugen",
@@ -192,10 +192,10 @@ const TOURNAMENT_CONFIG = {
           category: "tournament",
           status: "occupied",
           staggeredCourts: [
-            { courtId: "c1", courtName: "Court 1", start: "19:00", end: "22:00" },
-            { courtId: "c2", courtName: "Court 2", start: "19:00", end: "22:00" },
-            { courtId: "c3", courtName: "Court 3", start: "19:00", end: "22:00" },
-            { courtId: "c4", courtName: "Court 4", start: "19:00", end: "22:00" }
+            { courtId: "c1", courtName: "Court 1", start: "18:00", end: "21:00" },
+            { courtId: "c2", courtName: "Court 2", start: "18:00", end: "21:00" },
+            { courtId: "c3", courtName: "Court 3", start: "18:00", end: "21:00" },
+            { courtId: "c4", courtName: "Court 4", start: "18:00", end: "21:00" }
           ]
         }
       ]
@@ -216,7 +216,7 @@ const TOURNAMENT_BRACKETS = {
     shortTitle: "Picklehead Individual Doubles",
     host: "Ho",
     day: "Sunday, Oct 4",
-    time: "11:00 – 17:00",
+    time: "10:00 – 16:00",
     courts: "Courts 1, 2, 3, 4",
     format: "Americano Groups → Merit-Seeded Duo Playoffs (BO3 / BO5)",
     playersCount: 32,
@@ -1308,7 +1308,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-1",
           name: "Quarterfinal 1",
           court: "Court 1",
-          time: "14:00 – 15:00",
+          time: "13:00 – 14:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 1", duo: "Winner #1 + Runner-up #8", seed: "W1 + R8" },
           team2: { name: "Team 8", duo: "Winner #8 + Runner-up #1", seed: "W8 + R1" },
@@ -1321,7 +1321,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-2",
           name: "Quarterfinal 2",
           court: "Court 2",
-          time: "14:00 – 15:00",
+          time: "13:00 – 14:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 4", duo: "Winner #4 + Runner-up #5", seed: "W4 + R5" },
           team2: { name: "Team 5", duo: "Winner #5 + Runner-up #4", seed: "W5 + R4" },
@@ -1334,7 +1334,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-3",
           name: "Quarterfinal 3",
           court: "Court 3",
-          time: "14:00 – 15:00",
+          time: "13:00 – 14:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 2", duo: "Winner #2 + Runner-up #7", seed: "W2 + R7" },
           team2: { name: "Team 7", duo: "Winner #7 + Runner-up #2", seed: "W7 + R2" },
@@ -1347,7 +1347,7 @@ const TOURNAMENT_BRACKETS = {
           id: "QF-4",
           name: "Quarterfinal 4",
           court: "Court 4",
-          time: "14:00 – 15:00",
+          time: "13:00 – 14:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Team 3", duo: "Winner #3 + Runner-up #6", seed: "W3 + R6" },
           team2: { name: "Team 6", duo: "Winner #6 + Runner-up #3", seed: "W6 + R3" },
@@ -1362,7 +1362,7 @@ const TOURNAMENT_BRACKETS = {
           id: "SF-1",
           name: "Championship Semifinal 1",
           court: "Court 1",
-          time: "15:00 – 16:00",
+          time: "14:00 – 15:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Winner QF1", duo: "TBD", seed: "Winner QF1" },
           team2: { name: "Winner QF2", duo: "TBD", seed: "Winner QF2" },
@@ -1375,7 +1375,7 @@ const TOURNAMENT_BRACKETS = {
           id: "SF-2",
           name: "Championship Semifinal 2",
           court: "Court 2",
-          time: "15:00 – 16:00",
+          time: "14:00 – 15:00",
           format: "Best of 3 (BO3)",
           team1: { name: "Winner QF3", duo: "TBD", seed: "Winner QF3" },
           team2: { name: "Winner QF4", duo: "TBD", seed: "Winner QF4" },
@@ -1391,7 +1391,7 @@ const TOURNAMENT_BRACKETS = {
         badge: "Championship Trophy & Gold Medal",
         badgeColor: "bg-amber-100 text-amber-950 border-amber-300",
         court: "Court 1 (Main Stage)",
-        time: "16:00 – 17:00",
+        time: "15:00 – 16:00",
         format: "Best of 5 (BO5) · First to 3 sets to 11",
         team1: { name: "Winner SF1", duo: "TBD", seed: "Winner SF1" },
         team2: { name: "Winner SF2", duo: "TBD", seed: "Winner SF2" },
@@ -1414,7 +1414,7 @@ const TOURNAMENT_BRACKETS = {
     shortTitle: "Team Games",
     host: "Ho & Eugen",
     day: "Sunday, Oct 4",
-    time: "19:00 – 22:00",
+    time: "18:00 – 21:00",
     courts: "Courts 1, 2, 3, 4",
     format: "MLP Format: 2 Groups (Round-Robin) → Semifinals → Grand Final",
     playersCount: 32,
@@ -1571,11 +1571,11 @@ const TOURNAMENT_BRACKETS = {
           { rank: 4, name: "Team 7", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Group Stage", qualified: false }
         ],
         encounters: [
-          // Round 1 (19:00 - 19:40)
+          // Round 1 (18:00 - 18:40)
           {
             id: "GA-R1-E1",
             round: "Round 1",
-            time: "19:00 – 19:40",
+            time: "18:00 – 18:40",
             court: "Court 1",
             team1: "Team 1",
             team2: "Team 3",
@@ -1591,7 +1591,7 @@ const TOURNAMENT_BRACKETS = {
           {
             id: "GA-R1-E2",
             round: "Round 1",
-            time: "19:00 – 19:40",
+            time: "18:00 – 18:40",
             court: "Court 2",
             team1: "Team 5",
             team2: "Team 7",
@@ -1604,11 +1604,11 @@ const TOURNAMENT_BRACKETS = {
               { id: "GA-R1-E2-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 5 Mix 2", pair2: "Team 7 Mix 2", format: "1 Set to 11", score: "—", winner: null }
             ]
           },
-          // Round 2 (19:40 - 20:20)
+          // Round 2 (18:40 - 19:20)
           {
             id: "GA-R2-E3",
             round: "Round 2",
-            time: "19:40 – 20:20",
+            time: "18:40 – 19:20",
             court: "Court 1",
             team1: "Team 1",
             team2: "Team 5",
@@ -1624,7 +1624,7 @@ const TOURNAMENT_BRACKETS = {
           {
             id: "GA-R2-E4",
             round: "Round 2",
-            time: "19:40 – 20:20",
+            time: "18:40 – 19:20",
             court: "Court 2",
             team1: "Team 3",
             team2: "Team 7",
@@ -1637,11 +1637,11 @@ const TOURNAMENT_BRACKETS = {
               { id: "GA-R2-E4-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 3 Mix 2", pair2: "Team 7 Mix 2", format: "1 Set to 11", score: "—", winner: null }
             ]
           },
-          // Round 3 (20:20 - 21:00)
+          // Round 3 (19:20 - 20:00)
           {
             id: "GA-R3-E5",
             round: "Round 3",
-            time: "20:20 – 21:00",
+            time: "19:20 – 20:00",
             court: "Court 1",
             team1: "Team 1",
             team2: "Team 7",
@@ -1657,7 +1657,7 @@ const TOURNAMENT_BRACKETS = {
           {
             id: "GA-R3-E6",
             round: "Round 3",
-            time: "20:20 – 21:00",
+            time: "19:20 – 20:00",
             court: "Court 2",
             team1: "Team 3",
             team2: "Team 5",
@@ -1685,11 +1685,11 @@ const TOURNAMENT_BRACKETS = {
           { rank: 4, name: "Team 8", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Group Stage", qualified: false }
         ],
         encounters: [
-          // Round 1 (19:00 - 19:40)
+          // Round 1 (18:00 - 18:40)
           {
             id: "GB-R1-E1",
             round: "Round 1",
-            time: "19:00 – 19:40",
+            time: "18:00 – 18:40",
             court: "Court 3",
             team1: "Team 2",
             team2: "Team 4",
@@ -1705,7 +1705,7 @@ const TOURNAMENT_BRACKETS = {
           {
             id: "GB-R1-E2",
             round: "Round 1",
-            time: "19:00 – 19:40",
+            time: "18:00 – 18:40",
             court: "Court 4",
             team1: "Team 6",
             team2: "Team 8",
@@ -1718,11 +1718,11 @@ const TOURNAMENT_BRACKETS = {
               { id: "GB-R1-E2-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 6 Mix 2", pair2: "Team 8 Mix 2", format: "1 Set to 11", score: "—", winner: null }
             ]
           },
-          // Round 2 (19:40 - 20:20)
+          // Round 2 (18:40 - 19:20)
           {
             id: "GB-R2-E3",
             round: "Round 2",
-            time: "19:40 – 20:20",
+            time: "18:40 – 19:20",
             court: "Court 3",
             team1: "Team 2",
             team2: "Team 6",
@@ -1738,7 +1738,7 @@ const TOURNAMENT_BRACKETS = {
           {
             id: "GB-R2-E4",
             round: "Round 2",
-            time: "19:40 – 20:20",
+            time: "18:40 – 19:20",
             court: "Court 4",
             team1: "Team 4",
             team2: "Team 8",
@@ -1751,11 +1751,11 @@ const TOURNAMENT_BRACKETS = {
               { id: "GB-R2-E4-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 4 Mix 2", pair2: "Team 8 Mix 2", format: "1 Set to 11", score: "—", winner: null }
             ]
           },
-          // Round 3 (20:20 - 21:00)
+          // Round 3 (19:20 - 20:00)
           {
             id: "GB-R3-E5",
             round: "Round 3",
-            time: "20:20 – 21:00",
+            time: "19:20 – 20:00",
             court: "Court 3",
             team1: "Team 2",
             team2: "Team 8",
@@ -1771,7 +1771,7 @@ const TOURNAMENT_BRACKETS = {
           {
             id: "GB-R3-E6",
             round: "Round 3",
-            time: "20:20 – 21:00",
+            time: "19:20 – 20:00",
             court: "Court 4",
             team1: "Team 4",
             team2: "Team 6",
@@ -1792,7 +1792,7 @@ const TOURNAMENT_BRACKETS = {
         {
           id: "TG-SF-1",
           name: "Championship Semifinal 1",
-          time: "21:00 – 21:30",
+          time: "20:00 – 20:30",
           court: "Courts 1 & 2",
           team1: { name: "Group A Winner (A1)", seed: "1st in Group A" },
           team2: { name: "Group B Runner-up (B2)", seed: "2nd in Group B" },
@@ -1807,7 +1807,7 @@ const TOURNAMENT_BRACKETS = {
         {
           id: "TG-SF-2",
           name: "Championship Semifinal 2",
-          time: "21:00 – 21:30",
+          time: "20:00 – 20:30",
           court: "Courts 3 & 4",
           team1: { name: "Group B Winner (B1)", seed: "1st in Group B" },
           team2: { name: "Group A Runner-up (A2)", seed: "2nd in Group A" },
@@ -1824,7 +1824,7 @@ const TOURNAMENT_BRACKETS = {
         id: "TG-FINAL",
         title: "🥇 Grand Championship Final",
         badge: "Team Trophy & Gold Medals",
-        time: "21:30 – 22:00",
+        time: "20:30 – 21:00",
         court: "Courts 1 & 2",
         team1: { name: "Winner Semifinal 1", seed: "Winner SF1" },
         team2: { name: "Winner Semifinal 2", seed: "Winner SF2" },
@@ -1840,7 +1840,7 @@ const TOURNAMENT_BRACKETS = {
         id: "TG-BRONZE",
         title: "🥉 Bronze Medal Match",
         badge: "Bronze Medals",
-        time: "21:30 – 22:00",
+        time: "20:30 – 21:00",
         court: "Courts 3 & 4",
         team1: { name: "Runner-up Semifinal 1", seed: "Runner-up SF1" },
         team2: { name: "Runner-up Semifinal 2", seed: "Runner-up SF2" },

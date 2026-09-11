@@ -759,7 +759,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
       <div class="min-w-0">
         <div class="flex items-center gap-2 mb-1">
           <span class="px-2.5 py-0.5 rounded-md bg-blue-600 text-white font-bold text-[10px] tracking-wider uppercase">Team Tournament</span>
-          <span class="text-xs text-stone-500 font-mono">19:00 – 22:00 • Courts 1, 2, 3, 4</span>
+          <span class="text-xs text-stone-500 font-mono">18:00 – 21:00 • Courts 1, 2, 3, 4</span>
         </div>
         <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
           ${bracket.title}
@@ -1343,7 +1343,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                 <p class="text-xs text-stone-500">В каждой дуэли обязательно играются 4 сета до 11 очков (победа с разницей в 2 очка)</p>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">19:00 – 21:00</span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">18:00 – 20:00</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
@@ -1391,12 +1391,12 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                 <p class="text-xs text-stone-500">Топ-2 из каждой группы выходят в Полуфинал. Каждое противостояние также состоит из 1 состязания (4 игры).</p>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200 text-xs font-bold">21:00 – 22:00</span>
+            <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200 text-xs font-bold">20:00 – 21:00</span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
             <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
-              <div class="font-bold text-stone-900">Полуфиналы (21:00 – 21:30)</div>
+              <div class="font-bold text-stone-900">Полуфиналы (20:00 – 20:30)</div>
               <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 1–4 · 2 состязания</div>
               <div class="space-y-1.5 font-mono">
                 <div class="p-2 rounded bg-white border border-stone-200">SF1: 1-е место A vs 2-е место B</div>
@@ -1407,7 +1407,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
             <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-300">
               <div class="font-bold text-stone-950 flex items-center gap-1.5">
                 <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
-                Гранд-Финал (21:30 – 22:00)
+                Гранд-Финал (20:30 – 21:00)
               </div>
               <div class="text-stone-600 text-[11px] mt-1 mb-2">Courts 1 & 2 · 1 состязание</div>
               <div class="p-2.5 rounded-lg bg-white border border-amber-200 font-mono font-bold text-stone-900 text-center">
@@ -1418,7 +1418,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
             <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
               <div class="font-bold text-stone-900 flex items-center gap-1.5">
                 <i data-lucide="award" class="w-4 h-4 text-amber-700"></i>
-                Матч за 3-е место (21:30 – 22:00)
+                Матч за 3-е место (20:30 – 21:00)
               </div>
               <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 3 & 4 · 1 состязание</div>
               <div class="p-2.5 rounded-lg bg-white border border-stone-200 font-mono text-stone-800 text-center">
@@ -1798,7 +1798,7 @@ function renderBracketModal() {
               <p class="text-xs text-stone-500">Every player plays 6 Americano matches rotating partners to 11 points (2 rounds)</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">11:00 – 14:00</span>
+          <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">10:00 – 13:00</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
@@ -1834,7 +1834,7 @@ function renderBracketModal() {
               <p class="text-xs text-stone-500">Formula: Winner #k is paired with Runner-Up #(9 - k)</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">14:00 Seeding</span>
+          <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">13:00 Seeding</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1927,7 +1927,7 @@ function renderBracketModal() {
               <p class="text-xs text-stone-500">Quarterfinals (BO3) → Semifinals (BO3) → Grand Championship Final (BO5)</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">14:00 – 17:00</span>
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">13:00 – 16:00</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">

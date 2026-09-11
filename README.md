@@ -73,31 +73,31 @@ Example entry:
     - Team 7: Winner #7 + Runner-up #2
     - Team 8: Winner #8 + Runner-up #1
   - This guarantees perfect parity: every playoff duo has one top group leader and one solid finalist!
-- **Playoffs (14:00 – 17:00) — Pure Knockout (BO3 / BO5)**:
-  - **Quarterfinals (14:00 – 15:00)**: 8 teams · 4 matches across Courts 1–4 · **Best of 3 (BO3)** to 11 (win by 2). Courts 3 & 4 finish after QF.
-  - **Semifinals (15:00 – 16:00)**: 4 teams · 2 matches on Courts 1 & 2 · **Best of 3 (BO3)** to 11. Court 2 finishes after SF.
-  - **Grand Championship Final (16:00 – 17:00)**: Court 1 · **Best of 5 (BO5)** to 11 · First to 3 sets wins the trophy!
+- **Playoffs (13:00 – 16:00) — Pure Knockout (BO3 / BO5)**:
+  - **Quarterfinals (13:00 – 14:00)**: 8 teams · 4 matches across Courts 1–4 · **Best of 3 (BO3)** to 11 (win by 2). Courts 3 & 4 finish after QF.
+  - **Semifinals (14:00 – 15:00)**: 4 teams · 2 matches on Courts 1 & 2 · **Best of 3 (BO3)** to 11. Court 2 finishes after SF.
+  - **Grand Championship Final (15:00 – 16:00)**: Court 1 · **Best of 5 (BO5)** to 11 · First to 3 sets wins the trophy!
   - *No Bronze match and no consolation bracket* — pure high-stakes championship drama!
 
 ### 2. Day 2 Court Allocation & Staggered Schedule
-- **Court 1**: 11:00 – 17:00 (Picklehead: Groups A & E, QF1, SF1, Grand Final) → 19:00 – 22:00 (**Team Games**: Group A + SF1 + Grand Final)
-- **Court 2**: 11:00 – 16:00 (Picklehead: Groups B & F, QF2, SF2) → 19:00 – 22:00 (**Team Games**: Group A + SF1 + Grand Final)
-- **Court 3**: 11:00 – 15:00 (Picklehead: Groups C & G, QF3) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
-- **Court 4**: 11:00 – 15:00 (Picklehead: Groups D & H, QF4) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
+- **Court 1**: 10:00 – 16:00 (Picklehead: Groups A & E, QF1, SF1, Grand Final) → 18:00 – 21:00 (**Team Games**: Group A + SF1 + Grand Final)
+- **Court 2**: 10:00 – 15:00 (Picklehead: Groups B & F, QF2, SF2) → 18:00 – 21:00 (**Team Games**: Group A + SF1 + Grand Final)
+- **Court 3**: 10:00 – 14:00 (Picklehead: Groups C & G, QF3) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 21:00 (**Team Games**: Group B + SF2 + Bronze Match)
+- **Court 4**: 10:00 – 14:00 (Picklehead: Groups D & H, QF4) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 21:00 (**Team Games**: Group B + SF2 + Bronze Match)
 
-### 3. Team Games (Воскресенье 19:00 – 22:00, Корты 1–4)
+### 3. Team Games (Воскресенье 18:00 – 21:00, Корты 1–4)
 - **Формат командного турнира (MLP / Team Games)**: 8 фиксированных команд (участники заявляются готовым составом: 2 парня, 2 девушки).
 - **Корзины посева команд (Team Seeding Pots)**: 4 корзины посева по 2 команды (Pot 1 Сеяные, Pot 2 Претенденты, Pot 3 Квалификация, Pot 4 Андердоги). Из каждой корзины слепой жеребьевкой 1 команда отправляется в Группу A, 1 команда в Группу B. Индивидуального драфта нет.
-- **Групповой этап (19:00 – 21:00)**: 2 группы по 4 команды (Группа A на кортах 1–2, Группа B на кортах 3–4).
-  - Каждая команда играет со всеми соперниками в своей группе (3 раунда по 40 мин).
+- **Групповой этап (18:00 – 20:00)**: 2 группы по 4 команды (Группа A на кортах 1–2, Группа B на кортах 3–4).
+  - Каждая команда играет со всеми соперниками в своей группе (3 раунда по 40 мин: 18:00–18:40, 18:40–19:20, 19:20–20:00).
   - Каждое состязание состоит из **4 обязательных матчей**:
     1. **Мужская пара (MD)**: парни играют между собой (1 сет до 11 очков)
     2. **Женская пара (WD)**: девушки играют между собой (1 сет до 11 очков)
     3. **1-й Микс (MXD1)**: парень 1 + девушка 1 (1 сет до 11 очков)
     4. **2-й Микс (MXD2)**: парень 2 + девушка 2 (1 сет до 11 очков)
-- **Плей-офф (21:00 – 22:00)**:
-  - **Полуфиналы (21:00 – 21:30)**: SF1 (A1 vs B2, Корты 1 & 2) и SF2 (B1 vs A2, Корты 3 & 4) — каждое по 4 матча.
-  - **Финал и матч за 3 место (21:30 – 22:00)**: Grand Championship Final (Корты 1 & 2) и Bronze Match (Корты 3 & 4) — каждое по 4 матча.
+- **Плей-офф (20:00 – 21:00)**:
+  - **Полуфиналы (20:00 – 20:30)**: SF1 (A1 vs B2, Корты 1 & 2) и SF2 (B1 vs A2, Корты 3 & 4) — каждое по 4 матча.
+  - **Финал и матч за 3 место (20:30 – 21:00)**: Grand Championship Final (Корты 1 & 2) и Bronze Match (Корты 3 & 4) — каждое по 4 матча.
 
 
 ---
