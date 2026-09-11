@@ -171,40 +171,32 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 19:00 - 22:00 The Grand Kitchen Party (Courts 1 & 2 combined)
+        // 19:00 - 22:00 Team Games (Courts 1–4 combined)
         {
-          id: "d2-c1c2-kitchen",
+          id: "d2-c1c4-team-games",
           courtId: "c1",
-          courtIds: ["c1", "c2"],
-          courtSpan: 2,
+          courtIds: ["c1", "c2", "c3", "c4"],
+          courtSpan: 4,
+          courtLabel: "Courts 1–4",
           start: "19:00",
           end: "22:00",
-          title: "The Grand Kitchen Party",
-          subtitle: "All levels",
-          host: "Eugen",
-          playersCount: "0/16",
-          logo: "002.svg",
-          showReclubBadge: true,
-          reclubUrl: "",
-          category: "social",
-          status: "occupied"
-        },
-
-        // 19:00 - 22:00 The Grand Kitchen Party (Court 4 - Picklehead)
-        {
-          id: "d2-c4-kitchen",
-          courtId: "c4",
-          start: "19:00",
-          end: "22:00",
-          title: "The Grand Kitchen Party",
-          subtitle: "All levels",
-          host: "Eugen",
-          playersCount: "0/8",
+          title: "Team Games",
+          subtitle: "8 Teams · 2 Groups · MLP Format (2M + 2W)",
+          host: "Ho & Eugen",
+          playersCount: "8 Teams (32)",
+          isDupr: true,
+          duprStatus: "To Be Confirmed",
+          bracketId: "team-games",
           logo: "picklehead.webp",
-          showReclubBadge: true,
           reclubUrl: "",
-          category: "social",
-          status: "occupied"
+          category: "tournament",
+          status: "occupied",
+          staggeredCourts: [
+            { courtId: "c1", courtName: "Court 1", start: "19:00", end: "22:00" },
+            { courtId: "c2", courtName: "Court 2", start: "19:00", end: "22:00" },
+            { courtId: "c3", courtName: "Court 3", start: "19:00", end: "22:00" },
+            { courtId: "c4", courtName: "Court 4", start: "19:00", end: "22:00" }
+          ]
         }
       ]
     }
@@ -234,6 +226,18 @@ const TOURNAMENT_BRACKETS = {
     isDrawCompleted: false,
     description: "32 players start as an open roster. Once drawn into 8 Americano groups (Groups A to H), each player plays 6 matches rotating partners ('each with each' × 2 rounds). Top 2 from each group advance and pair up using merit ranking (1st with 8th, 2nd with 7th...) into 8 balanced playoff teams competing in Best-of-3 Quarterfinals, Semifinals, and a Best-of-5 Grand Final!",
     pairingFormula: "Merit-Based Seed: Winner Rank #k + Runner-up Rank #(9 - k) (1st with 8th, 2nd with 7th...)",
+    pots: {
+      drawPots: [
+        { id: "pot-1", name: "Pot 1: Seeds 1–8 (Top Players)", badge: "bg-amber-100 text-amber-900 border-amber-300", players: ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5", "Player 6", "Player 7", "Player 8"] },
+        { id: "pot-2", name: "Pot 2: Seeds 9–16", badge: "bg-blue-100 text-blue-900 border-blue-300", players: ["Player 9", "Player 10", "Player 11", "Player 12", "Player 13", "Player 14", "Player 15", "Player 16"] },
+        { id: "pot-3", name: "Pot 3: Seeds 17–24", badge: "bg-emerald-100 text-emerald-900 border-emerald-300", players: ["Player 17", "Player 18", "Player 19", "Player 20", "Player 21", "Player 22", "Player 23", "Player 24"] },
+        { id: "pot-4", name: "Pot 4: Seeds 25–32", badge: "bg-purple-100 text-purple-900 border-purple-300", players: ["Player 25", "Player 26", "Player 27", "Player 28", "Player 29", "Player 30", "Player 31", "Player 32"] }
+      ],
+      meritPots: [
+        { id: "pot-w", name: "Pot W: 8 Group Winners (W1 to W8)", badge: "bg-amber-100 text-amber-900 border-amber-300" },
+        { id: "pot-r", name: "Pot R: 8 Group Runners-Up (R1 to R8)", badge: "bg-blue-100 text-blue-900 border-blue-300" }
+      ]
+    },
     players: [
       {
             "id": 1,
@@ -1400,6 +1404,458 @@ const TOURNAMENT_BRACKETS = {
         { place: 1, medal: "🥇 Champions", team: "TBD", players: "To be determined" },
         { place: 2, medal: "🥈 Runners-up", team: "TBD", players: "To be determined" },
         { place: 3, medal: "Semifinalists", team: "TBD", players: "To be determined" }
+      ]
+    }
+  },
+
+  "team-games": {
+    id: "team-games",
+    title: "Team Games: 8 Teams (2 Men + 2 Women)",
+    shortTitle: "Team Games",
+    host: "Ho & Eugen",
+    day: "Sunday, Oct 4",
+    time: "19:00 – 22:00",
+    courts: "Courts 1, 2, 3, 4",
+    format: "MLP Format: 2 Groups (Round-Robin) → Semifinals → Grand Final",
+    playersCount: 32,
+    teamsCount: 8,
+    groupsCount: 2,
+    advanceCount: 2,
+    isDrawCompleted: false,
+    description: "8 фиксированных команд: участники заявляются готовыми командами по 4 человека (2 парня и 2 девушки). 2 группы по 4 команды. Корзины посева команд (Pots 1–4) используются исключительно для равномерной жеребьевки команд по Группам A и B (из каждой корзины 1 команда в Группу A, 1 в Группу B). Каждая команда проводит состязание со всеми соперниками в своей группе. Каждое состязание состоит из 4 обязательных матчей: 1) Мужская пара (парни играют между собой), 2) Женская пара (девушки играют между собой), 3) 1-й микс, 4) 2-й микс. Топ-2 команды из каждой группы выходят в Полуфинал (SF1 и SF2). Полуфинал и Финал — также по 1 состязанию (4 матча).",
+    pots: {
+      teamPots: [
+        {
+          id: "pot-1",
+          name: "Корзина 1: Сеяные лидеры (Top Seeds)",
+          badge: "bg-amber-100 text-amber-900 border-amber-300",
+          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          teams: [
+            { id: "team-1", name: "Team 1", seed: 1, label: "Top Seed #1" },
+            { id: "team-2", name: "Team 2", seed: 2, label: "Top Seed #2" }
+          ]
+        },
+        {
+          id: "pot-2",
+          name: "Корзина 2: Претенденты (Contenders)",
+          badge: "bg-blue-100 text-blue-900 border-blue-300",
+          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          teams: [
+            { id: "team-3", name: "Team 3", seed: 3, label: "Seed #3" },
+            { id: "team-4", name: "Team 4", seed: 4, label: "Seed #4" }
+          ]
+        },
+        {
+          id: "pot-3",
+          name: "Корзина 3: Квалификация (Challengers)",
+          badge: "bg-emerald-100 text-emerald-900 border-emerald-300",
+          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          teams: [
+            { id: "team-5", name: "Team 5", seed: 5, label: "Seed #5" },
+            { id: "team-6", name: "Team 6", seed: 6, label: "Seed #6" }
+          ]
+        },
+        {
+          id: "pot-4",
+          name: "Корзина 4: Андердоги (Dark Horses)",
+          badge: "bg-purple-100 text-purple-900 border-purple-300",
+          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          teams: [
+            { id: "team-7", name: "Team 7", seed: 7, label: "Seed #7" },
+            { id: "team-8", name: "Team 8", seed: 8, label: "Seed #8" }
+          ]
+        }
+      ]
+    },
+    teams: [
+      {
+        id: "team-1",
+        name: "Team 1",
+        pot: "Pot 1",
+        group: "Group A",
+        seed: 1,
+        men: ["Man 1", "Man 9"],
+        women: ["Woman 1", "Woman 9"],
+        mix1: "Man 1 & Woman 1",
+        mix2: "Man 9 & Woman 9"
+      },
+      {
+        id: "team-2",
+        name: "Team 2",
+        pot: "Pot 1",
+        group: "Group B",
+        seed: 2,
+        men: ["Man 2", "Man 10"],
+        women: ["Woman 2", "Woman 10"],
+        mix1: "Man 2 & Woman 2",
+        mix2: "Man 10 & Woman 10"
+      },
+      {
+        id: "team-3",
+        name: "Team 3",
+        pot: "Pot 2",
+        group: "Group A",
+        seed: 3,
+        men: ["Man 3", "Man 11"],
+        women: ["Woman 3", "Woman 11"],
+        mix1: "Man 3 & Woman 3",
+        mix2: "Man 11 & Woman 11"
+      },
+      {
+        id: "team-4",
+        name: "Team 4",
+        pot: "Pot 2",
+        group: "Group B",
+        seed: 4,
+        men: ["Man 4", "Man 12"],
+        women: ["Woman 4", "Woman 12"],
+        mix1: "Man 4 & Woman 4",
+        mix2: "Man 12 & Woman 12"
+      },
+      {
+        id: "team-5",
+        name: "Team 5",
+        pot: "Pot 3",
+        group: "Group A",
+        seed: 5,
+        men: ["Man 5", "Man 13"],
+        women: ["Woman 5", "Woman 13"],
+        mix1: "Man 5 & Woman 5",
+        mix2: "Man 13 & Woman 13"
+      },
+      {
+        id: "team-6",
+        name: "Team 6",
+        pot: "Pot 3",
+        group: "Group B",
+        seed: 6,
+        men: ["Man 6", "Man 14"],
+        women: ["Woman 6", "Woman 14"],
+        mix1: "Man 6 & Woman 6",
+        mix2: "Man 14 & Woman 14"
+      },
+      {
+        id: "team-7",
+        name: "Team 7",
+        pot: "Pot 4",
+        group: "Group A",
+        seed: 7,
+        men: ["Man 7", "Man 15"],
+        women: ["Woman 7", "Woman 15"],
+        mix1: "Man 7 & Woman 7",
+        mix2: "Man 15 & Woman 15"
+      },
+      {
+        id: "team-8",
+        name: "Team 8",
+        pot: "Pot 4",
+        group: "Group B",
+        seed: 8,
+        men: ["Man 8", "Man 16"],
+        women: ["Woman 8", "Woman 16"],
+        mix1: "Man 8 & Woman 8",
+        mix2: "Man 16 & Woman 16"
+      }
+    ],
+    groups: [
+      {
+        id: "group-a",
+        name: "Group A",
+        courts: "Courts 1 & 2",
+        court: "Courts 1 & 2",
+        teams: ["Team 1", "Team 3", "Team 5", "Team 7"],
+        standings: [
+          { rank: 1, name: "Team 1", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Semifinal 1 (A1)", qualified: true },
+          { rank: 2, name: "Team 3", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Semifinal 2 (A2)", qualified: true },
+          { rank: 3, name: "Team 5", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Group Stage", qualified: false },
+          { rank: 4, name: "Team 7", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Group Stage", qualified: false }
+        ],
+        encounters: [
+          // Round 1 (19:00 - 19:40)
+          {
+            id: "GA-R1-E1",
+            round: "Round 1",
+            time: "19:00 – 19:40",
+            court: "Court 1",
+            team1: "Team 1",
+            team2: "Team 3",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GA-R1-E1-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 1 Men", pair2: "Team 3 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R1-E1-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 1 Women", pair2: "Team 3 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R1-E1-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 1 Mix 1", pair2: "Team 3 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R1-E1-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 1 Mix 2", pair2: "Team 3 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          {
+            id: "GA-R1-E2",
+            round: "Round 1",
+            time: "19:00 – 19:40",
+            court: "Court 2",
+            team1: "Team 5",
+            team2: "Team 7",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GA-R1-E2-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 5 Men", pair2: "Team 7 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R1-E2-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 5 Women", pair2: "Team 7 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R1-E2-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 5 Mix 1", pair2: "Team 7 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R1-E2-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 5 Mix 2", pair2: "Team 7 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          // Round 2 (19:40 - 20:20)
+          {
+            id: "GA-R2-E3",
+            round: "Round 2",
+            time: "19:40 – 20:20",
+            court: "Court 1",
+            team1: "Team 1",
+            team2: "Team 5",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GA-R2-E3-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 1 Men", pair2: "Team 5 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R2-E3-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 1 Women", pair2: "Team 5 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R2-E3-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 1 Mix 1", pair2: "Team 5 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R2-E3-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 1 Mix 2", pair2: "Team 5 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          {
+            id: "GA-R2-E4",
+            round: "Round 2",
+            time: "19:40 – 20:20",
+            court: "Court 2",
+            team1: "Team 3",
+            team2: "Team 7",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GA-R2-E4-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 3 Men", pair2: "Team 7 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R2-E4-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 3 Women", pair2: "Team 7 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R2-E4-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 3 Mix 1", pair2: "Team 7 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R2-E4-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 3 Mix 2", pair2: "Team 7 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          // Round 3 (20:20 - 21:00)
+          {
+            id: "GA-R3-E5",
+            round: "Round 3",
+            time: "20:20 – 21:00",
+            court: "Court 1",
+            team1: "Team 1",
+            team2: "Team 7",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GA-R3-E5-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 1 Men", pair2: "Team 7 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R3-E5-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 1 Women", pair2: "Team 7 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R3-E5-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 1 Mix 1", pair2: "Team 7 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R3-E5-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 1 Mix 2", pair2: "Team 7 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          {
+            id: "GA-R3-E6",
+            round: "Round 3",
+            time: "20:20 – 21:00",
+            court: "Court 2",
+            team1: "Team 3",
+            team2: "Team 5",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GA-R3-E6-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 3 Men", pair2: "Team 5 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R3-E6-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 3 Women", pair2: "Team 5 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R3-E6-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 3 Mix 1", pair2: "Team 5 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GA-R3-E6-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 3 Mix 2", pair2: "Team 5 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          }
+        ]
+      },
+      {
+        id: "group-b",
+        name: "Group B",
+        courts: "Courts 3 & 4",
+        court: "Courts 3 & 4",
+        teams: ["Team 2", "Team 4", "Team 6", "Team 8"],
+        standings: [
+          { rank: 1, name: "Team 2", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Semifinal 2 (B1)", qualified: true },
+          { rank: 2, name: "Team 4", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Semifinal 1 (B2)", qualified: true },
+          { rank: 3, name: "Team 6", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Group Stage", qualified: false },
+          { rank: 4, name: "Team 8", played: 0, tiesWon: 0, tiesLost: 0, gamesWon: 0, gamesLost: 0, diff: 0, points: 0, advanceTo: "Group Stage", qualified: false }
+        ],
+        encounters: [
+          // Round 1 (19:00 - 19:40)
+          {
+            id: "GB-R1-E1",
+            round: "Round 1",
+            time: "19:00 – 19:40",
+            court: "Court 3",
+            team1: "Team 2",
+            team2: "Team 4",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GB-R1-E1-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 2 Men", pair2: "Team 4 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R1-E1-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 2 Women", pair2: "Team 4 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R1-E1-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 2 Mix 1", pair2: "Team 4 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R1-E1-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 2 Mix 2", pair2: "Team 4 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          {
+            id: "GB-R1-E2",
+            round: "Round 1",
+            time: "19:00 – 19:40",
+            court: "Court 4",
+            team1: "Team 6",
+            team2: "Team 8",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GB-R1-E2-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 6 Men", pair2: "Team 8 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R1-E2-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 6 Women", pair2: "Team 8 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R1-E2-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 6 Mix 1", pair2: "Team 8 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R1-E2-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 6 Mix 2", pair2: "Team 8 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          // Round 2 (19:40 - 20:20)
+          {
+            id: "GB-R2-E3",
+            round: "Round 2",
+            time: "19:40 – 20:20",
+            court: "Court 3",
+            team1: "Team 2",
+            team2: "Team 6",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GB-R2-E3-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 2 Men", pair2: "Team 6 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R2-E3-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 2 Women", pair2: "Team 6 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R2-E3-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 2 Mix 1", pair2: "Team 6 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R2-E3-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 2 Mix 2", pair2: "Team 6 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          {
+            id: "GB-R2-E4",
+            round: "Round 2",
+            time: "19:40 – 20:20",
+            court: "Court 4",
+            team1: "Team 4",
+            team2: "Team 8",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GB-R2-E4-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 4 Men", pair2: "Team 8 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R2-E4-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 4 Women", pair2: "Team 8 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R2-E4-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 4 Mix 1", pair2: "Team 8 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R2-E4-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 4 Mix 2", pair2: "Team 8 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          // Round 3 (20:20 - 21:00)
+          {
+            id: "GB-R3-E5",
+            round: "Round 3",
+            time: "20:20 – 21:00",
+            court: "Court 3",
+            team1: "Team 2",
+            team2: "Team 8",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GB-R3-E5-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 2 Men", pair2: "Team 8 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R3-E5-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 2 Women", pair2: "Team 8 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R3-E5-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 2 Mix 1", pair2: "Team 8 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R3-E5-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 2 Mix 2", pair2: "Team 8 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          },
+          {
+            id: "GB-R3-E6",
+            round: "Round 3",
+            time: "20:20 – 21:00",
+            court: "Court 4",
+            team1: "Team 4",
+            team2: "Team 6",
+            tieScore: "—",
+            winner: null,
+            games: [
+              { id: "GB-R3-E6-G1", type: "MD", label: "1. Парни (Men's Doubles)", pair1: "Team 4 Men", pair2: "Team 6 Men", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R3-E6-G2", type: "WD", label: "2. Девушки (Women's Doubles)", pair1: "Team 4 Women", pair2: "Team 6 Women", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R3-E6-G3", type: "MXD1", label: "3. 1-й Микс (Mix 1)", pair1: "Team 4 Mix 1", pair2: "Team 6 Mix 1", format: "1 Set to 11", score: "—", winner: null },
+              { id: "GB-R3-E6-G4", type: "MXD2", label: "4. 2-й Микс (Mix 2)", pair1: "Team 4 Mix 2", pair2: "Team 6 Mix 2", format: "1 Set to 11", score: "—", winner: null }
+            ]
+          }
+        ]
+      }
+    ],
+    playoffs: {
+      semifinals: [
+        {
+          id: "TG-SF-1",
+          name: "Championship Semifinal 1",
+          time: "21:00 – 21:30",
+          court: "Courts 1 & 2",
+          team1: { name: "Group A Winner (A1)", seed: "1st in Group A" },
+          team2: { name: "Group B Runner-up (B2)", seed: "2nd in Group B" },
+          tieScore: "—",
+          games: [
+            { id: "TG-SF1-G1", type: "MD", label: "1. Парни (Court 1)", pair1: "A1 Men", pair2: "B2 Men", format: "1 Set to 11", score: "—" },
+            { id: "TG-SF1-G2", type: "WD", label: "2. Девушки (Court 2)", pair1: "A1 Women", pair2: "B2 Women", format: "1 Set to 11", score: "—" },
+            { id: "TG-SF1-G3", type: "MXD1", label: "3. 1-й Микс (Court 1)", pair1: "A1 Mix 1", pair2: "B2 Mix 1", format: "1 Set to 11", score: "—" },
+            { id: "TG-SF1-G4", type: "MXD2", label: "4. 2-й Микс (Court 2)", pair1: "A1 Mix 2", pair2: "B2 Mix 2", format: "1 Set to 11", score: "—" }
+          ]
+        },
+        {
+          id: "TG-SF-2",
+          name: "Championship Semifinal 2",
+          time: "21:00 – 21:30",
+          court: "Courts 3 & 4",
+          team1: { name: "Group B Winner (B1)", seed: "1st in Group B" },
+          team2: { name: "Group A Runner-up (A2)", seed: "2nd in Group A" },
+          tieScore: "—",
+          games: [
+            { id: "TG-SF2-G1", type: "MD", label: "1. Парни (Court 3)", pair1: "B1 Men", pair2: "A2 Men", format: "1 Set to 11", score: "—" },
+            { id: "TG-SF2-G2", type: "WD", label: "2. Девушки (Court 4)", pair1: "B1 Women", pair2: "A2 Women", format: "1 Set to 11", score: "—" },
+            { id: "TG-SF2-G3", type: "MXD1", label: "3. 1-й Микс (Court 3)", pair1: "B1 Mix 1", pair2: "A2 Mix 1", format: "1 Set to 11", score: "—" },
+            { id: "TG-SF2-G4", type: "MXD2", label: "4. 2-й Микс (Court 4)", pair1: "B1 Mix 2", pair2: "A2 Mix 2", format: "1 Set to 11", score: "—" }
+          ]
+        }
+      ],
+      grandFinal: {
+        id: "TG-FINAL",
+        title: "🥇 Grand Championship Final",
+        badge: "Team Trophy & Gold Medals",
+        time: "21:30 – 22:00",
+        court: "Courts 1 & 2",
+        team1: { name: "Winner Semifinal 1", seed: "Winner SF1" },
+        team2: { name: "Winner Semifinal 2", seed: "Winner SF2" },
+        tieScore: "—",
+        games: [
+          { id: "TG-F-G1", type: "MD", label: "1. Парни (Court 1)", pair1: "Finalist 1 Men", pair2: "Finalist 2 Men", format: "1 Set to 11", score: "—" },
+          { id: "TG-F-G2", type: "WD", label: "2. Девушки (Court 2)", pair1: "Finalist 1 Women", pair2: "Finalist 2 Women", format: "1 Set to 11", score: "—" },
+          { id: "TG-F-G3", type: "MXD1", label: "3. 1-й Микс (Court 1)", pair1: "Finalist 1 Mix 1", pair2: "Finalist 2 Mix 1", format: "1 Set to 11", score: "—" },
+          { id: "TG-F-G4", type: "MXD2", label: "4. 2-й Микс (Court 2)", pair1: "Finalist 1 Mix 2", pair2: "Finalist 2 Mix 2", format: "1 Set to 11", score: "—" }
+        ]
+      },
+      bronzeMatch: {
+        id: "TG-BRONZE",
+        title: "🥉 Bronze Medal Match",
+        badge: "Bronze Medals",
+        time: "21:30 – 22:00",
+        court: "Courts 3 & 4",
+        team1: { name: "Runner-up Semifinal 1", seed: "Runner-up SF1" },
+        team2: { name: "Runner-up Semifinal 2", seed: "Runner-up SF2" },
+        tieScore: "—",
+        games: [
+          { id: "TG-B-G1", type: "MD", label: "1. Парни (Court 3)", pair1: "SF1 Loser Men", pair2: "SF2 Loser Men", format: "1 Set to 11", score: "—" },
+          { id: "TG-B-G2", type: "WD", label: "2. Девушки (Court 4)", pair1: "SF1 Loser Women", pair2: "SF2 Loser Women", format: "1 Set to 11", score: "—" },
+          { id: "TG-B-G3", type: "MXD1", label: "3. 1-й Микс (Court 3)", pair1: "SF1 Loser Mix 1", pair2: "SF2 Loser Mix 1", format: "1 Set to 11", score: "—" },
+          { id: "TG-B-G4", type: "MXD2", label: "4. 2-й Микс (Court 4)", pair1: "SF1 Loser Mix 2", pair2: "SF2 Loser Mix 2", format: "1 Set to 11", score: "—" }
+        ]
+      },
+      podium: [
+        { place: 1, medal: "🥇 Champions", team: "TBD", subtitle: "Gold Trophy & Medals (4 Players)" },
+        { place: 2, medal: "🥈 Runners-up", team: "TBD", subtitle: "Silver Medals (4 Players)" },
+        { place: 3, medal: "🥉 Bronze Medalists", team: "TBD", subtitle: "Bronze Medals (4 Players)" }
       ]
     }
   }

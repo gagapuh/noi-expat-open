@@ -165,38 +165,44 @@ function renderTimelineMatrix() {
         ? `width: calc(${effectiveSpan * 100}% - 10px); right: auto; z-index: 20;`
         : '';
 
-      // ── Staggered 4-court card: single unified native DOM object ──
+      // ── Staggered / Multi-court 4-court card: single unified native DOM object ──
       if (ev.staggeredCourts && effectiveSpan === 4) {
         const maxDurationMinutes = getDurationMinutes(ev.start, ev.end);
         const cardHeightPx = Math.max(48, maxDurationMinutes * PIXELS_PER_MINUTE - 4);
+        const laneHeights = (ev.staggeredCourts || []).map(sc => {
+          const d = getDurationMinutes(sc.start || ev.start, sc.end || ev.end);
+          return maxDurationMinutes > 0 ? (d / maxDurationMinutes) * 100 : 100;
+        });
+        const isUniform = laneHeights.length === 4 && laneHeights.every(h => Math.abs(h - 100) < 0.1);
+        const minLanePct = laneHeights.length > 0 ? Math.min(...laneHeights) : 100;
 
         bodyHtml += `
           <div class="timeline-event-card staggered-tournament-card"
                style="--event-order: ${topMinutes}; top: ${topPx}px; height: ${cardHeightPx}px; width: calc(400% - 10px); left: 5px; right: auto; z-index: 20; padding: 0; background: transparent; border: none; box-shadow: none; overflow: visible;">
             ${mobileCourtLabel}
             
-            <!-- 4 Court Background & Border Lanes (Guaranteed crisp dashed dividers, zero interior shadows) -->
+            <!-- 4 Court Background & Border Lanes -->
             <div class="staggered-background absolute inset-0 grid grid-cols-4 pointer-events-none">
-              <!-- Court 1 Lane (11:00-17:00, 100%) -->
-              <div class="staggered-lane relative border-t border-b border-l border-r border-dashed border-blue-300/80 rounded-tl-2xl rounded-bl-2xl rounded-br-2xl"
-                   style="height: 100%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 0% 0%; background-repeat: no-repeat;">
+              <!-- Court 1 Lane -->
+              <div class="staggered-lane relative border-t border-b border-l border-r border-dashed border-blue-300/80 ${isUniform ? 'rounded-l-2xl' : 'rounded-tl-2xl rounded-bl-2xl rounded-br-2xl'}"
+                   style="height: ${laneHeights[0] || 100}%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 0% 0%; background-repeat: no-repeat;">
               </div>
-              <!-- Court 2 Lane (11:00-16:00, 5/6 = 83.333%) -->
-              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-b-2xl"
-                   style="height: calc(5 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 33.333% 0%; background-repeat: no-repeat;">
+              <!-- Court 2 Lane -->
+              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 ${isUniform ? '' : 'rounded-b-2xl'}"
+                   style="height: ${laneHeights[1] || 100}%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 33.333% 0%; background-repeat: no-repeat;">
               </div>
-              <!-- Court 3 Lane (11:00-15:00, 4/6 = 66.667%) -->
-              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 rounded-bl-2xl rounded-br-none"
-                   style="height: calc(4 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 66.667% 0%; background-repeat: no-repeat;">
+              <!-- Court 3 Lane -->
+              <div class="staggered-lane relative border-t border-b border-r border-dashed border-blue-300/80 border-l-0 ${isUniform ? '' : 'rounded-bl-2xl rounded-br-none'}"
+                   style="height: ${laneHeights[2] || 100}%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 66.667% 0%; background-repeat: no-repeat;">
               </div>
-              <!-- Court 4 Lane (11:00-15:00, 4/6 = 66.667%) -->
-              <div class="staggered-lane relative border-t border-b border-r border-blue-300/80 border-l-0 rounded-tr-2xl rounded-br-2xl rounded-bl-none"
-                   style="height: calc(4 / 6 * 100%); background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 100% 0%; background-repeat: no-repeat;">
+              <!-- Court 4 Lane -->
+              <div class="staggered-lane relative border-t border-b border-r border-blue-300/80 border-l-0 ${isUniform ? 'rounded-r-2xl' : 'rounded-tr-2xl rounded-br-2xl rounded-bl-none'}"
+                   style="height: ${laneHeights[3] || 100}%; background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 45%, #ffffff 100%); background-size: 400% 650px; background-position: 100% 0%; background-repeat: no-repeat;">
               </div>
             </div>
 
             <!-- Header Content (Logo + Title + Subtitle + Host + Players + Bracket) Centered across all 4 courts -->
-            <div class="event-summary absolute top-0 left-0 right-0 px-4 flex flex-col items-center justify-center text-center z-20 pointer-events-none" style="height: calc(4 / 6 * 100%);">
+            <div class="event-summary absolute top-0 left-0 right-0 px-4 flex flex-col items-center justify-center text-center z-20 pointer-events-none" style="height: ${minLanePct}%;">
               ${ev.logo ? `
                 <div class="p-2 rounded-2xl bg-white border border-stone-200 shadow-2xs flex items-center justify-center mb-2 pointer-events-auto">
                   <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
@@ -254,8 +260,8 @@ function renderTimelineMatrix() {
 
             <!-- 4 Interactive Columns: Times at top, Matches button at bottom -->
             <div class="staggered-court-actions absolute inset-0 grid grid-cols-4 z-10 pointer-events-none">
-              ${(ev.staggeredCourts || []).map(sc => {
-                const laneHeightStyle = sc.courtId === 'c1' ? '100%' : (sc.courtId === 'c2' ? 'calc(5 / 6 * 100%)' : 'calc(4 / 6 * 100%)');
+              ${(ev.staggeredCourts || []).map((sc, scIdx) => {
+                const laneHeightStyle = `${laneHeights[scIdx] || 100}%`;
                 return `
                   <div class="relative flex flex-col justify-between p-3 pointer-events-auto" style="height: ${laneHeightStyle};">
                     <span class="mobile-court-name hidden">${sc.courtName}</span>
@@ -477,7 +483,15 @@ window.closeLocationModal = function() {
 /// ─── Tournament Draw / Bracket Modal Functions ───
 window.openBracketModal = function(bracketId) {
   state.activeBracketId = bracketId;
-  state.bracketActiveTab = 'players';
+  if (bracketId === 'team-games') {
+    state.bracketActiveTab = (state.bracketActiveTab && ['groups', 'playoffs', 'pots', 'pathway'].includes(state.bracketActiveTab))
+      ? state.bracketActiveTab
+      : 'groups';
+  } else {
+    state.bracketActiveTab = (state.bracketActiveTab && ['players', 'pots', 'groups', 'playoffs', 'pathway'].includes(state.bracketActiveTab))
+      ? state.bracketActiveTab
+      : 'players';
+  }
   state.bracketGroupFilter = 'all';
   initBracketRoster();
   renderBracketModal();
@@ -525,6 +539,12 @@ window.setBracketGroupFilter = function(groupId) {
 function initBracketRoster() {
   const bracket = getActiveBracket();
   if (!bracket) return;
+
+  // For team-games tournament, retain its structured team groups and matchups
+  if (bracket.id === 'team-games') {
+    state.isDrawCompleted = bracket.isDrawCompleted || false;
+    return;
+  }
 
   // Try to load saved custom roster and draw status from localStorage
   try {
@@ -727,6 +747,697 @@ window.resetRosterDefault = function() {
   }
 };
 
+function renderTeamGamesBracketModal(bracket, container, activeTab) {
+  const groupsList = bracket.groups || [];
+  const po = bracket.playoffs || {};
+  const pots = bracket.pots || {};
+  const teamsList = bracket.teams || [];
+
+  let html = `
+    <!-- Header -->
+    <div class="modal-heading px-5 sm:px-7 py-4 border-b border-stone-200/80 bg-stone-50/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="px-2.5 py-0.5 rounded-md bg-blue-600 text-white font-bold text-[10px] tracking-wider uppercase">Team Tournament</span>
+          <span class="text-xs text-stone-500 font-mono">19:00 – 22:00 • Courts 1, 2, 3, 4</span>
+        </div>
+        <h2 class="text-lg sm:text-xl font-display font-extrabold text-stone-900 tracking-tight leading-snug">
+          ${bracket.title}
+        </h2>
+      </div>
+
+      <div class="flex items-center gap-2 self-end sm:self-center">
+        <button 
+          onclick="closeBracketModal()" 
+          class="w-9 h-9 rounded-xl bg-white hover:bg-stone-100 border border-stone-200 text-stone-500 hover:text-stone-800 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+          title="Close (Esc)">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <div class="bracket-navigation px-5 sm:px-7 py-2.5 bg-white border-b border-stone-200/70 flex items-center justify-between gap-3 shrink-0 overflow-x-auto">
+      <div class="inline-flex items-center p-1 rounded-xl bg-stone-100 border border-stone-200/60 shrink-0">
+        <button 
+          onclick="setBracketTab('groups')" 
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'groups' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
+          }">
+          Stage 1: Groups (A & B)
+        </button>
+        <button 
+          onclick="setBracketTab('playoffs')" 
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'playoffs' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
+          }">
+          Playoffs Bracket
+        </button>
+        <button 
+          onclick="setBracketTab('pots')" 
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'pots' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
+          }">
+          Команды & корзины (Teams & Pots)
+        </button>
+        <button 
+          onclick="setBracketTab('pathway')" 
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'pathway' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
+          }">
+          Регламент (Format & Rules)
+        </button>
+      </div>
+    </div>
+
+    <!-- Body Content Area (Scrollable) -->
+    <div class="flex-1 overflow-y-auto p-4 sm:p-7 space-y-6 bg-surface-1">
+  `;
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB: GROUPS (Group A & Group B)
+  // ══════════════════════════════════════════════════════════════════════════
+  if (activeTab === 'groups') {
+    html += `
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+    `;
+
+    groupsList.forEach(group => {
+      html += `
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card overflow-hidden flex flex-col">
+          <!-- Group Header -->
+          <div class="px-4 py-3 bg-stone-50 border-b border-stone-200/70 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm sm:text-base text-stone-900 font-display">${group.name}</span>
+              <span class="text-xs text-stone-500 font-mono">(${group.courts})</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider">
+              Top 2 to Semifinals
+            </span>
+          </div>
+
+          <!-- Standings Table -->
+          <div class="standings-scroll p-3 overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
+                  <th class="py-2 px-2.5 w-8 text-center">#</th>
+                  <th class="py-2 px-2.5">Команда</th>
+                  <th class="py-2 px-2 text-center">Игр</th>
+                  <th class="py-2 px-2 text-center">Матчи</th>
+                  <th class="py-2 px-2 text-center">Сеты</th>
+                  <th class="py-2 px-2 text-center font-bold text-stone-700">Дифф</th>
+                  <th class="py-2 px-2.5 text-right">Статус</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-stone-100">
+                ${(group.standings || []).map(row => `
+                  <tr class="hover:bg-stone-50 transition-colors">
+                    <td class="py-2 px-2.5 text-center font-mono font-bold text-stone-400">
+                      ${row.rank}
+                    </td>
+                    <td class="py-2 px-2.5 font-bold text-stone-900">
+                      ${row.name}
+                    </td>
+                    <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.played}</td>
+                    <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.tiesWon}-${row.tiesLost}</td>
+                    <td class="py-2 px-2 text-center tabular-nums text-stone-400">${row.gamesWon}-${row.gamesLost}</td>
+                    <td class="py-2 px-2 text-center font-mono font-bold text-stone-700 tabular-nums">${row.diff > 0 ? '+' + row.diff : row.diff}</td>
+                    <td class="py-2 px-2.5 text-right whitespace-nowrap">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold ${row.qualified ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-stone-100 text-stone-500 border border-stone-200'}">
+                        ${row.advanceTo}
+                      </span>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Group Encounters (3 Rounds × 2 Matches = 6 Ties) -->
+          <div class="px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto space-y-3">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-stone-500 flex items-center justify-between">
+              <span>Состязания в группе (4 обязательных матча):</span>
+              <span class="text-[10px] font-normal text-stone-400 font-mono">Парни → Девушки → 1-й Микс → 2-й Микс</span>
+            </div>
+
+            <div class="space-y-3 text-xs">
+              ${(group.encounters || []).map(enc => `
+                <div class="p-3 rounded-xl bg-white border border-stone-200/80 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between text-xs pb-1.5 border-b border-stone-100">
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono font-bold text-[10px] text-blue-700 uppercase bg-blue-50 px-2 py-0.5 rounded border border-blue-200">${enc.round}</span>
+                      <span class="text-stone-400">•</span>
+                      <span class="font-mono text-stone-500 text-[11px]">${enc.time}</span>
+                      <span class="text-stone-400">•</span>
+                      <span class="px-2 py-0.5 rounded bg-stone-100 font-mono text-[10px] text-stone-700 border border-stone-200">${enc.court}</span>
+                    </div>
+                    <div class="font-mono font-bold text-xs px-2 py-0.5 rounded bg-stone-100 border border-stone-200 text-stone-600">
+                      Счет: ${enc.tieScore}
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between gap-3 text-sm font-bold text-stone-900 px-1">
+                    <span class="text-blue-900">${enc.team1}</span>
+                    <span class="text-xs text-stone-400 font-semibold italic">vs</span>
+                    <span class="text-blue-900">${enc.team2}</span>
+                  </div>
+
+                  <!-- 4 Sub-Games Grid -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-xs">
+                    ${enc.games.map(g => `
+                      <div class="p-2 rounded-lg bg-stone-50 border border-stone-200/70 flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                          <div class="text-[10px] font-bold text-stone-500 uppercase tracking-wider">${g.label}</div>
+                          <div class="text-[11px] font-medium text-stone-800 truncate">${g.pair1} vs ${g.pair2}</div>
+                        </div>
+                        <div class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-white border border-stone-200 text-stone-500 shrink-0">
+                          ${g.score}
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB: PLAYOFFS (Semifinals, Grand Final, Bronze Match)
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'playoffs') {
+    const sf = po.semifinals || [];
+    const gf = po.grandFinal || {};
+    const bm = po.bronzeMatch || {};
+
+    html += `
+      <div class="space-y-6">
+        <!-- 1. Semifinals (2 Ties · Courts 1–4 · 21:00 – 21:30) -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-5">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+              <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
+                Championship Semifinals · 1 Состязание (4 игры)
+              </h4>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-mono font-bold text-stone-500">
+              <span>21:00 – 21:30</span>
+              <span class="px-2 py-0.5 rounded bg-stone-100 border border-stone-200 text-stone-700">Courts 1–4</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            ${sf.map(m => `
+              <div class="rounded-xl border border-stone-200 bg-stone-50/40 p-4 flex flex-col justify-between gap-3 shadow-2xs">
+                <div class="flex items-center justify-between text-[11px] border-b border-stone-200/60 pb-2">
+                  <span class="font-bold text-stone-800">${m.name}</span>
+                  <span class="font-mono text-stone-500 font-semibold">${m.court} • ${m.time}</span>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                  <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-stone-200/70 font-bold text-stone-800">
+                    <div>
+                      <div class="text-sm">${m.team1.name}</div>
+                      <div class="text-[10px] text-stone-400 font-mono">${m.team1.seed}</div>
+                    </div>
+                    <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-stone-100 border border-stone-200 text-stone-600">${m.tieScore}</span>
+                  </div>
+
+                  <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-stone-200/70 font-bold text-stone-800">
+                    <div>
+                      <div class="text-sm">${m.team2.name}</div>
+                      <div class="text-[10px] text-stone-400 font-mono">${m.team2.seed}</div>
+                    </div>
+                    <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-stone-100 border border-stone-200 text-stone-600">${m.tieScore}</span>
+                  </div>
+                </div>
+
+                <!-- 4 Games within Semifinal Tie -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-xs">
+                  ${m.games.map(g => `
+                    <div class="p-2 rounded-lg bg-white border border-stone-200/70 flex items-center justify-between gap-2">
+                      <div class="min-w-0">
+                        <div class="text-[10px] font-bold text-stone-500 uppercase tracking-wider">${g.label}</div>
+                        <div class="text-[11px] font-medium text-stone-800 truncate">${g.pair1} vs ${g.pair2}</div>
+                      </div>
+                      <div class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-stone-50 border border-stone-200 text-stone-500 shrink-0">
+                        ${g.score}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- 2. Finals: Grand Championship Final (Courts 1 & 2) & Bronze Match (Courts 3 & 4) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- 🥇 Grand Championship Final -->
+          <div class="bg-gradient-to-b from-amber-50/70 to-white rounded-2xl border-2 border-amber-300 shadow-md p-5 flex flex-col justify-between gap-4">
+            <div>
+              <div class="flex items-center justify-between border-b border-amber-200/80 pb-3 mb-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="crown" class="w-6 h-6 text-amber-500"></i>
+                  <h4 class="font-display font-black text-lg text-stone-950">${gf.title}</h4>
+                </div>
+                <span class="px-3 py-1 rounded-lg bg-amber-100 text-amber-950 border border-amber-300 text-xs font-black">
+                  1 Состязание (4 игры)
+                </span>
+              </div>
+              <div class="text-xs text-stone-500 font-medium mb-3">
+                ${gf.court} • ${gf.time} • Победитель получает Кубок и Золотые медали!
+              </div>
+
+              <div class="space-y-2 text-xs sm:text-sm">
+                <div class="p-3 rounded-xl bg-white border border-amber-200/80 text-stone-800 font-bold flex items-center justify-between">
+                  <div>
+                    <div class="text-base font-black">${gf.team1.name}</div>
+                    <div class="text-xs text-stone-400 font-mono">${gf.team1.seed}</div>
+                  </div>
+                  <span class="text-xs text-stone-400 font-mono">Финалист 1</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-white border border-amber-200/80 text-stone-800 font-bold flex items-center justify-between">
+                  <div>
+                    <div class="text-base font-black">${gf.team2.name}</div>
+                    <div class="text-xs text-stone-400 font-mono">${gf.team2.seed}</div>
+                  </div>
+                  <span class="text-xs text-stone-400 font-mono">Финалист 2</span>
+                </div>
+              </div>
+
+              <!-- Grand Final 4 Sub-Games -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-3 text-xs">
+                ${(gf.games || []).map(g => `
+                  <div class="p-2 rounded-lg bg-white border border-amber-200 flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                      <div class="text-[10px] font-bold text-amber-900 uppercase tracking-wider">${g.label}</div>
+                      <div class="text-[11px] font-medium text-stone-800 truncate">${g.pair1} vs ${g.pair2}</div>
+                    </div>
+                    <div class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 border border-amber-200 text-stone-600 shrink-0">
+                      ${g.score}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-amber-400 text-stone-950 font-black text-center text-xs tracking-wider uppercase">
+              🥇 TEAM GAMES CHAMPIONS
+            </div>
+          </div>
+
+          <!-- 🥉 Bronze Medal Match -->
+          <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-5 flex flex-col justify-between gap-4">
+            <div>
+              <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="award" class="w-6 h-6 text-amber-700"></i>
+                  <h4 class="font-display font-bold text-lg text-stone-900">${bm.title}</h4>
+                </div>
+                <span class="px-3 py-1 rounded-lg bg-stone-100 text-stone-700 border border-stone-200 text-xs font-bold">
+                  1 Состязание (4 игры)
+                </span>
+              </div>
+              <div class="text-xs text-stone-500 font-medium mb-3">
+                ${bm.court} • ${bm.time} • Матч за 3-е место и Бронзовые медали
+              </div>
+
+              <div class="space-y-2 text-xs sm:text-sm">
+                <div class="p-3 rounded-xl bg-stone-50 border border-stone-200/80 text-stone-800 font-bold flex items-center justify-between">
+                  <div>
+                    <div class="text-base font-bold">${bm.team1.name}</div>
+                    <div class="text-xs text-stone-400 font-mono">${bm.team1.seed}</div>
+                  </div>
+                  <span class="text-xs text-stone-400 font-mono">Полуфиналист 1</span>
+                </div>
+
+                <div class="p-3 rounded-xl bg-stone-50 border border-stone-200/80 text-stone-800 font-bold flex items-center justify-between">
+                  <div>
+                    <div class="text-base font-bold">${bm.team2.name}</div>
+                    <div class="text-xs text-stone-400 font-mono">${bm.team2.seed}</div>
+                  </div>
+                  <span class="text-xs text-stone-400 font-mono">Полуфиналист 2</span>
+                </div>
+              </div>
+
+              <!-- Bronze Match 4 Sub-Games -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-3 text-xs">
+                ${(bm.games || []).map(g => `
+                  <div class="p-2 rounded-lg bg-stone-50 border border-stone-200 flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                      <div class="text-[10px] font-bold text-stone-500 uppercase tracking-wider">${g.label}</div>
+                      <div class="text-[11px] font-medium text-stone-800 truncate">${g.pair1} vs ${g.pair2}</div>
+                    </div>
+                    <div class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-white border border-stone-200 text-stone-500 shrink-0">
+                      ${g.score}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-stone-100 border border-stone-200 text-stone-700 font-bold text-center text-xs tracking-wider uppercase">
+              🥉 BRONZE MEDALISTS
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB: POTS & TEAMS (Корзины жеребьевки и формирования составов)
+  // ══════════════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB: POTS & TEAMS (Команды и корзины посева)
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'pots') {
+    const teamPots = pots.teamPots || [];
+
+    html += `
+      <div class="space-y-6">
+        <!-- Banner: Фиксированные команды -->
+        <div class="bg-gradient-to-r from-blue-50 via-indigo-50 to-white rounded-2xl border border-blue-200/80 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <i data-lucide="users" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-display font-extrabold text-stone-900 text-sm sm:text-base">
+                  Фиксированные команды (8 команд по 4 игрока)
+                </h4>
+                <span class="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider">
+                  Ready Rosters
+                </span>
+              </div>
+              <p class="text-xs text-stone-600 mt-1 leading-relaxed">
+                Команды заявляются готовым фиксированным составом: <strong>2 парня и 2 девушки</strong>. Индивидуальный драфт не проводится. Жеребьевка из <strong>4 корзин посева</strong> определяет распределение команд в Группу A и Группу B.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Block 1: Корзины посева 8 команд для жеребьевки в Группу A и Группу B -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                <i data-lucide="shield" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
+                  Корзины посева команд (Team Seeding Pots)
+                </h4>
+                <p class="text-xs text-stone-500">4 корзины посева по 2 команды: 1 команда слепой жеребьевкой идет в Группу A, 1 команда в Группу B</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">
+              Team Draw Pots
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            ${teamPots.map(tp => `
+              <div class="p-4 rounded-xl bg-stone-50/70 border border-stone-200 flex flex-col justify-between gap-3">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${tp.badge}">
+                      ${tp.id.toUpperCase()}
+                    </span>
+                    <span class="text-[11px] font-mono text-stone-400">2 команды</span>
+                  </div>
+                  <div class="font-bold text-sm text-stone-900 mb-1">${tp.name}</div>
+                  <div class="text-[11px] text-stone-500 leading-snug">${tp.description}</div>
+                </div>
+
+                <div class="space-y-1.5 pt-2 border-t border-stone-200/70 font-mono text-xs">
+                  ${tp.teams.map(t => `
+                    <div class="p-2 rounded-lg bg-white border border-stone-200 flex items-center justify-between">
+                      <span class="font-bold text-stone-800">${t.name}</span>
+                      <span class="text-[10px] text-stone-400">${t.label}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Block 2: Составы 8 фиксированных команд -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-amber-500 text-stone-950 flex items-center justify-center font-bold text-sm shrink-0">
+                <i data-lucide="award" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
+                  Составы 8 команд (8 Fixed Teams: 2 Men + 2 Women)
+                </h4>
+                <p class="text-xs text-stone-500">Каждая команда заявляется готовым составом: 2 парня и 2 девушки</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">
+              8 Fixed Rosters
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            ${teamsList.map(t => `
+              <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200/90 shadow-2xs flex flex-col justify-between gap-2.5">
+                <div class="flex items-center justify-between border-b border-stone-200 pb-2">
+                  <div>
+                    <span class="font-bold text-sm text-stone-900 font-display">${t.name}</span>
+                    <span class="block text-[10px] text-stone-400 font-mono">${t.pot} • Посев #${t.seed}</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                    ${t.group}
+                  </span>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                  <div>
+                    <div class="text-[10px] font-bold text-sky-700 uppercase tracking-wider mb-1">👨‍🦱 Парни (2 игрока):</div>
+                    <div class="p-1.5 rounded-lg bg-white border border-stone-200 font-mono text-[11px] text-stone-800">
+                      ${t.men.join(' & ')}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="text-[10px] font-bold text-rose-700 uppercase tracking-wider mb-1">👩‍🦰 Девушки (2 игрока):</div>
+                    <div class="p-1.5 rounded-lg bg-white border border-stone-200 font-mono text-[11px] text-stone-800">
+                      ${t.women.join(' & ')}
+                    </div>
+                  </div>
+
+                  <div class="pt-1.5 border-t border-stone-200/60">
+                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">🎾 Распределение на миксы:</div>
+                    <div class="space-y-1 font-mono text-[10px] text-stone-600">
+                      <div class="truncate">Mix 1: <span class="font-bold text-stone-800">${t.mix1}</span></div>
+                      <div class="truncate">Mix 2: <span class="font-bold text-stone-800">${t.mix2}</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB: PATHWAY / FORMAT & RULES (Регламент)
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'pathway') {
+    html += `
+      <div class="space-y-6">
+        <!-- Step 1: Формирование команд -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">01</div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 1: 8 фиксированных команд (2 парня, 2 девушки)</h4>
+                <p class="text-xs text-stone-500">Команды заявляются готовыми четвёрками. Индивидуального драфта нет — играют сыгранные составы</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">Фиксированные составы</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-sky-50 border border-sky-200 text-center">
+              <div class="font-bold text-sky-950">👨‍🦱 2 парня в команде</div>
+              <div class="text-[11px] text-sky-700 mt-0.5">Играют мужскую пару (MD) + распределяются по миксам</div>
+            </div>
+            <div class="p-3 rounded-xl bg-rose-50 border border-rose-200 text-center">
+              <div class="font-bold text-rose-950">👩‍🦰 2 девушки в команде</div>
+              <div class="text-[11px] text-rose-700 mt-0.5">Играют женскую пару (WD) + распределяются по миксам</div>
+            </div>
+            <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-center">
+              <div class="font-bold text-indigo-950">👫 1-й Микс (MXD 1)</div>
+              <div class="text-[11px] text-indigo-700 mt-0.5">Парень 1 + Девушка 1 (1 сет до 11 очков)</div>
+            </div>
+            <div class="p-3 rounded-xl bg-purple-50 border border-purple-200 text-center">
+              <div class="font-bold text-purple-950">👫 2-й Микс (MXD 2)</div>
+              <div class="text-[11px] text-purple-700 mt-0.5">Парень 2 + Девушка 2 (1 сет до 11 очков)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Жеребьевка команд по группам -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-xs flex items-center justify-center shrink-0">02</div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 2: Жеребьевка из 4 корзин посева в Группу A и Группу B</h4>
+                <p class="text-xs text-stone-500">В каждую группу попадает ровно по 1 команде из каждой корзины (4 команды в группе)</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">Жеребьевка</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200">
+              <div class="font-bold text-stone-900 text-sm mb-1">Группа A (Courts 1 & 2)</div>
+              <div class="text-stone-500 text-[11px] mb-2">4 команды играют по круговой системе каждый с каждым</div>
+              <div class="space-y-1 font-mono text-[11px]">
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 1 (из Корзины 1)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 3 (из Корзины 2)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 5 (из Корзины 3)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 7 (из Корзины 4)</div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200">
+              <div class="font-bold text-stone-900 text-sm mb-1">Группа B (Courts 3 & 4)</div>
+              <div class="text-stone-500 text-[11px] mb-2">4 команды играют по круговой системе каждый с каждым</div>
+              <div class="space-y-1 font-mono text-[11px]">
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 2 (из Корзины 1)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 4 (из Корзины 2)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 6 (из Корзины 3)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 8 (из Корзины 4)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Формат Состязания (4 игры) -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">03</div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 3: Структура 1 состязания между двумя командами (4 обязательных матча)</h4>
+                <p class="text-xs text-stone-500">В каждой дуэли обязательно играются 4 сета до 11 очков (победа с разницей в 2 очка)</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">19:00 – 21:00</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
+              <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-800 font-bold mx-auto mb-2 flex items-center justify-center">1</div>
+              <div class="font-bold text-stone-900 text-sm">Парни (MD)</div>
+              <div class="text-[11px] text-stone-500 mt-1">2 парня играют против 2 парней команды соперника</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
+              <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-800 font-bold mx-auto mb-2 flex items-center justify-center">2</div>
+              <div class="font-bold text-stone-900 text-sm">Девушки (WD)</div>
+              <div class="text-[11px] text-stone-500 mt-1">2 девушки играют против 2 девушек команды соперника</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
+              <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-800 font-bold mx-auto mb-2 flex items-center justify-center">3</div>
+              <div class="font-bold text-stone-900 text-sm">1-й Микс (MXD 1)</div>
+              <div class="text-[11px] text-stone-500 mt-1">Пара Микс 1 (M1+W1) против Микс 1 соперника</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
+              <div class="w-7 h-7 rounded-full bg-purple-100 text-purple-800 font-bold mx-auto mb-2 flex items-center justify-center">4</div>
+              <div class="font-bold text-stone-900 text-sm">2-й Микс (MXD 2)</div>
+              <div class="text-[11px] text-stone-500 mt-1">Пара Микс 2 (M2+W2) против Микс 2 соперника</div>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between text-xs text-amber-950">
+            <span class="font-bold flex items-center gap-1.5">
+              <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
+              Тай-брейк при счете 2-2:
+            </span>
+            <span class="text-stone-600">Определяется по лучшей суммарной разнице очков во всех 4 матчах состязания или решающему Dreambreaker.</span>
+          </div>
+        </div>
+
+        <!-- Step 4: Плей-офф (Полуфиналы и Финалы) -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">04</div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 4: Плей-офф (Полуфиналы, Финал и Бронза)</h4>
+                <p class="text-xs text-stone-500">Топ-2 из каждой группы выходят в Полуфинал. Каждое противостояние также состоит из 1 состязания (4 игры).</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200 text-xs font-bold">21:00 – 22:00</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+              <div class="font-bold text-stone-900">Полуфиналы (21:00 – 21:30)</div>
+              <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 1–4 · 2 состязания</div>
+              <div class="space-y-1.5 font-mono">
+                <div class="p-2 rounded bg-white border border-stone-200">SF1: 1-е место A vs 2-е место B</div>
+                <div class="p-2 rounded bg-white border border-stone-200">SF2: 1-е место B vs 2-е место A</div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-300">
+              <div class="font-bold text-stone-950 flex items-center gap-1.5">
+                <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
+                Гранд-Финал (21:30 – 22:00)
+              </div>
+              <div class="text-stone-600 text-[11px] mt-1 mb-2">Courts 1 & 2 · 1 состязание</div>
+              <div class="p-2.5 rounded-lg bg-white border border-amber-200 font-mono font-bold text-stone-900 text-center">
+                Winner SF1 vs Winner SF2
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+              <div class="font-bold text-stone-900 flex items-center gap-1.5">
+                <i data-lucide="award" class="w-4 h-4 text-amber-700"></i>
+                Матч за 3-е место (21:30 – 22:00)
+              </div>
+              <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 3 & 4 · 1 состязание</div>
+              <div class="p-2.5 rounded-lg bg-white border border-stone-200 font-mono text-stone-800 text-center">
+                Runner-up SF1 vs Runner-up SF2
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  html += `
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
 function renderBracketModal() {
   const container = document.getElementById('bracketModalContent');
   if (!container || !state.activeBracketId) return;
@@ -737,9 +1448,16 @@ function renderBracketModal() {
     return;
   }
 
+  const activeTab = state.bracketActiveTab || 'groups';
+
+  // Delegate to specialized renderer if Team Games
+  if (bracket.id === 'team-games') {
+    renderTeamGamesBracketModal(bracket, container, activeTab);
+    return;
+  }
+
   const groupsList = bracket.groups || [];
   const po = bracket.playoffs || {};
-  const activeTab = state.bracketActiveTab || 'groups';
   const roster = state.playersRoster || [];
 
   // Modal Header
@@ -773,6 +1491,15 @@ function renderBracketModal() {
               : 'text-stone-500 hover:text-stone-800'
           }">
           Players (32)
+        </button>
+        <button 
+          onclick="setBracketTab('pots')" 
+          class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'pots' 
+              ? 'bg-white text-stone-900 shadow-sm' 
+              : 'text-stone-500 hover:text-stone-800'
+          }">
+          Корзины жеребьевки
         </button>
         <button 
           onclick="setBracketTab('groups')" 
@@ -1299,6 +2026,118 @@ function renderBracketModal() {
       </div>
     `;
   }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TAB 5: DRAW POTS (Picklehead 32 Players & Merit Seeding)
+  // ══════════════════════════════════════════════════════════════════════════
+  else if (activeTab === 'pots') {
+    const drawPots = bracket.pots?.drawPots || [];
+    const meritPots = bracket.pots?.meritPots || [];
+
+    html += `
+      <div class="space-y-6">
+        <!-- Block 1: 4 Draw Pots of 8 Players -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                <i data-lucide="shield" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
+                  Корзины посева для жеребьевки групп (32 игрока в 8 групп A–H)
+                </h4>
+                <p class="text-xs text-stone-500">4 корзины по 8 игроков: в каждую группу (A–H) слепой жеребьевкой вытягивается по 1 игроку из каждой корзины</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">
+              4 Draw Pots
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            ${drawPots.map(dp => `
+              <div class="p-4 rounded-xl bg-stone-50/70 border border-stone-200 flex flex-col justify-between gap-3">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${dp.badge || 'bg-blue-100 text-blue-900 border border-blue-200'}">
+                      ${dp.id.toUpperCase()}
+                    </span>
+                    <span class="text-[11px] font-mono text-stone-400">8 игроков</span>
+                  </div>
+                  <div class="font-bold text-sm text-stone-900 mb-2">${dp.name}</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-1 text-[11px] font-mono font-medium text-stone-700">
+                  ${(dp.players || []).map(pName => `
+                    <div class="p-1.5 rounded bg-white border border-stone-200 text-center truncate shadow-2xs">
+                      ${pName}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Block 2: Merit Seeding Pots for Playoffs -->
+        <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-amber-500 text-stone-950 flex items-center justify-center font-bold text-sm shrink-0">
+                <i data-lucide="award" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
+                  Корзины посева плей-офф (Merit-Based Duo Pairing)
+                </h4>
+                <p class="text-xs text-stone-500">Формула: Победитель #k объединяется в пару со 2-м местом #(9 - k) (1-й с 8-м, 2-й с 7-м...)</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">
+              Playoff Seeding Pots
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-xl bg-amber-50/50 border border-amber-200/80">
+              <div class="font-bold text-xs text-amber-950 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                <span>Корзина W: 8 победителей групп</span>
+                <span class="font-mono text-[10px] text-amber-700">Рейтинг W1 .. W8</span>
+              </div>
+              <div class="grid grid-cols-4 gap-1.5 text-xs text-center font-mono font-bold text-amber-900">
+                <div class="p-2 rounded bg-white border border-amber-200">W1</div>
+                <div class="p-2 rounded bg-white border border-amber-200">W2</div>
+                <div class="p-2 rounded bg-white border border-amber-200">W3</div>
+                <div class="p-2 rounded bg-white border border-amber-200">W4</div>
+                <div class="p-2 rounded bg-white border border-amber-200">W5</div>
+                <div class="p-2 rounded bg-white border border-amber-200">W6</div>
+                <div class="p-2 rounded bg-white border border-amber-200">W7</div>
+                <div class="p-2 rounded bg-white border border-amber-200">W8</div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200/80">
+              <div class="font-bold text-xs text-blue-950 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                <span>Корзина R: 8 вторых мест</span>
+                <span class="font-mono text-[10px] text-blue-700">Рейтинг R1 .. R8</span>
+              </div>
+              <div class="grid grid-cols-4 gap-1.5 text-xs text-center font-mono font-bold text-blue-900">
+                <div class="p-2 rounded bg-white border border-blue-200">R8</div>
+                <div class="p-2 rounded bg-white border border-blue-200">R7</div>
+                <div class="p-2 rounded bg-white border border-blue-200">R6</div>
+                <div class="p-2 rounded bg-white border border-blue-200">R5</div>
+                <div class="p-2 rounded bg-white border border-blue-200">R4</div>
+                <div class="p-2 rounded bg-white border border-blue-200">R3</div>
+                <div class="p-2 rounded bg-white border border-blue-200">R2</div>
+                <div class="p-2 rounded bg-white border border-blue-200">R1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
   html += `
     </div>
   `;
@@ -1464,10 +2303,92 @@ function getCourtMatchesList(ev, overrideCourtName) {
   const courtObj = TOURNAMENT_CONFIG.courts.find(c => c.id === ev.courtId) || { name: ev.courtId };
   const courtName = overrideCourtName || courtObj.name; // e.g. "Court 1", "Court 2", "Court 3", "Court 4"
 
-  // 1. If it links to a bracket (Picklehead Individual Doubles)
+  // 1. If it links to a bracket (Picklehead Individual Doubles or Team Games)
   if (ev.bracketId && TOURNAMENT_BRACKETS[ev.bracketId]) {
     const bracket = TOURNAMENT_BRACKETS[ev.bracketId];
     const courtMatches = [];
+
+    // Team Games tournament (8 teams, 2 groups, 4 games per encounter, SF & Finals)
+    if (ev.bracketId === 'team-games') {
+      // 1. Group Stage Encounters on this court
+      (bracket.groups || []).forEach(group => {
+        (group.encounters || []).forEach(enc => {
+          if (enc.court === courtName || (enc.court && enc.court.includes(courtName))) {
+            (enc.games || []).forEach(g => {
+              courtMatches.push({
+                stage: `${group.name} · ${enc.round}`,
+                title: `${enc.team1} vs ${enc.team2} · ${g.label}`,
+                pair1: g.pair1,
+                pair2: g.pair2,
+                format: g.format || '1 Set to 11',
+                score: g.score || '—',
+                played: g.score && g.score !== '—',
+                badgeClass: 'bg-blue-50 text-blue-900 border border-blue-200'
+              });
+            });
+          }
+        });
+      });
+
+      // 2. Semifinals
+      (bracket.playoffs?.semifinals || []).forEach(sf => {
+        (sf.games || []).forEach(g => {
+          if (g.label.includes(courtName) || (!g.label.includes('Court') && sf.court && sf.court.includes(courtName))) {
+            courtMatches.push({
+              stage: 'Semifinals',
+              title: `${sf.name} · ${g.label}`,
+              pair1: g.pair1,
+              pair2: g.pair2,
+              format: g.format || '1 Set to 11',
+              score: g.score || '—',
+              played: g.score && g.score !== '—',
+              badgeClass: 'bg-indigo-50 text-indigo-900 border border-indigo-200'
+            });
+          }
+        });
+      });
+
+      // 3. Grand Final & Bronze Match
+      if (bracket.playoffs?.grandFinal) {
+        const gf = bracket.playoffs.grandFinal;
+        (gf.games || []).forEach(g => {
+          if (g.label.includes(courtName) || (!g.label.includes('Court') && gf.court && gf.court.includes(courtName))) {
+            courtMatches.push({
+              stage: 'Grand Final',
+              title: `${gf.title} · ${g.label}`,
+              pair1: g.pair1,
+              pair2: g.pair2,
+              format: g.format || '1 Set to 11',
+              score: g.score || '—',
+              played: g.score && g.score !== '—',
+              badgeClass: 'bg-amber-100 text-amber-950 border border-amber-300 font-bold'
+            });
+          }
+        });
+      }
+
+      if (bracket.playoffs?.bronzeMatch) {
+        const bm = bracket.playoffs.bronzeMatch;
+        (bm.games || []).forEach(g => {
+          if (g.label.includes(courtName) || (!g.label.includes('Court') && bm.court && bm.court.includes(courtName))) {
+            courtMatches.push({
+              stage: 'Bronze Match',
+              title: `${bm.title} · ${g.label}`,
+              pair1: g.pair1,
+              pair2: g.pair2,
+              format: g.format || '1 Set to 11',
+              score: g.score || '—',
+              played: g.score && g.score !== '—',
+              badgeClass: 'bg-orange-50 text-orange-950 border border-orange-300 font-medium'
+            });
+          }
+        });
+      }
+
+      if (courtMatches.length > 0) {
+        return courtMatches;
+      }
+    }
 
     // Stage 1 Americano Groups assigned to this court (Interleaved round by round across groups)
     const groupsOnCourt = (bracket.groups || []).filter(g => g.court && g.court.includes(courtName));

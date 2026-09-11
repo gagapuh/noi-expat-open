@@ -80,10 +80,25 @@ Example entry:
   - *No Bronze match and no consolation bracket* — pure high-stakes championship drama!
 
 ### 2. Day 2 Court Allocation & Staggered Schedule
-- **Court 1**: 11:00 – 17:00 (Picklehead: Groups A & E, QF1, SF1, Grand Final) → 19:00 – 22:00 (Kitchen Party)
-- **Court 2**: 11:00 – 16:00 (Picklehead: Groups B & F, QF2, SF2) → 19:00 – 22:00 (Kitchen Party)
-- **Court 3**: 11:00 – 15:00 (Picklehead: Groups C & G, QF3) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (Kitchen Party)
-- **Court 4**: 11:00 – 15:00 (Picklehead: Groups D & H, QF4) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (Kitchen Party)
+- **Court 1**: 11:00 – 17:00 (Picklehead: Groups A & E, QF1, SF1, Grand Final) → 19:00 – 22:00 (**Team Games**: Group A + SF1 + Grand Final)
+- **Court 2**: 11:00 – 16:00 (Picklehead: Groups B & F, QF2, SF2) → 19:00 – 22:00 (**Team Games**: Group A + SF1 + Grand Final)
+- **Court 3**: 11:00 – 15:00 (Picklehead: Groups C & G, QF3) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
+- **Court 4**: 11:00 – 15:00 (Picklehead: Groups D & H, QF4) → 16:00 – 19:00 (DUPR 3.5–4.0) → 19:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
+
+### 3. Team Games (Воскресенье 19:00 – 22:00, Корты 1–4)
+- **Формат командного турнира (MLP / Team Games)**: 8 фиксированных команд (участники заявляются готовым составом: 2 парня, 2 девушки).
+- **Корзины посева команд (Team Seeding Pots)**: 4 корзины посева по 2 команды (Pot 1 Сеяные, Pot 2 Претенденты, Pot 3 Квалификация, Pot 4 Андердоги). Из каждой корзины слепой жеребьевкой 1 команда отправляется в Группу A, 1 команда в Группу B. Индивидуального драфта нет.
+- **Групповой этап (19:00 – 21:00)**: 2 группы по 4 команды (Группа A на кортах 1–2, Группа B на кортах 3–4).
+  - Каждая команда играет со всеми соперниками в своей группе (3 раунда по 40 мин).
+  - Каждое состязание состоит из **4 обязательных матчей**:
+    1. **Мужская пара (MD)**: парни играют между собой (1 сет до 11 очков)
+    2. **Женская пара (WD)**: девушки играют между собой (1 сет до 11 очков)
+    3. **1-й Микс (MXD1)**: парень 1 + девушка 1 (1 сет до 11 очков)
+    4. **2-й Микс (MXD2)**: парень 2 + девушка 2 (1 сет до 11 очков)
+- **Плей-офф (21:00 – 22:00)**:
+  - **Полуфиналы (21:00 – 21:30)**: SF1 (A1 vs B2, Корты 1 & 2) и SF2 (B1 vs A2, Корты 3 & 4) — каждое по 4 матча.
+  - **Финал и матч за 3 место (21:30 – 22:00)**: Grand Championship Final (Корты 1 & 2) и Bronze Match (Корты 3 & 4) — каждое по 4 матча.
+
 
 ---
 
