@@ -285,15 +285,17 @@ function renderTimelineMatrix() {
         return;
       }
 
+      const isClickableCard = Boolean(ev.rulesModal);
       const cardClasses = isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
         : `bg-gradient-to-br ${catConfig.cardBg} border ${catConfig.cardBorder} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
 
       bodyHtml += `
         <div 
-          class="timeline-event-card ${cardClasses}"
+          class="timeline-event-card ${cardClasses} ${isClickableCard ? 'cursor-pointer select-none ring-1 ring-amber-400/50 hover:ring-amber-500/80 transition-all' : ''}"
+          ${ev.rulesModal ? `onclick="window.openRulesModal && window.openRulesModal('${ev.rulesModal}')"` : ''}
           style="--event-order: ${topMinutes}; top: ${topPx}px; height: ${heightPx}px; ${spanStyle}"
-          title="${ev.title}">
+          title="${ev.title}${isClickableCard ? ' — Click to view rules' : ''}">
           ${mobileCourtLabel}
           
           <div class="flex flex-col gap-1">
@@ -301,9 +303,9 @@ function renderTimelineMatrix() {
               <div class="flex flex-col items-start gap-1">
                 <div class="flex items-center gap-1.5 flex-wrap">
                   <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wide leading-none whitespace-nowrap ${
-                    isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : catConfig.badge
+                    isFree ? 'bg-emerald-600 text-white font-black tracking-wider shadow-2xs' : (ev.badgeClass || catConfig.badge)
                   }">
-                    ${isFree ? 'Free Court' : catConfig.short}
+                    ${isFree ? 'Free Court' : (ev.badgeText || catConfig.short)}
                   </span>
                   ${(ev.courtLabel && !ev.isDupr) ? `
                     <span class="inline-flex items-center h-[20px] px-2 rounded-md text-[9px] sm:text-[10px] uppercase font-black tracking-wider bg-stone-900 text-white shadow-2xs leading-none whitespace-nowrap">
@@ -337,7 +339,11 @@ function renderTimelineMatrix() {
               <div class="p-2 rounded-2xl mb-1 bg-white border border-stone-200 shadow-2xs flex items-center justify-center ${isPlanned ? 'opacity-60' : ''}">
                 <img src="${ev.logo}" alt="" class="h-10 sm:h-12 w-auto max-w-full object-contain rounded-lg" onerror="this.parentElement.style.display='none'" />
               </div>
-            ` : ''}
+            ` : (ev.icon ? `
+              <div class="w-10 h-10 rounded-2xl mb-1 bg-gradient-to-br from-amber-200 via-amber-100 to-amber-50 border border-amber-300 shadow-2xs flex items-center justify-center text-amber-700">
+                <i data-lucide="${ev.icon}" class="w-5 h-5 text-amber-600"></i>
+              </div>
+            ` : '')}
             <div class="${effectiveSpan > 1 ? 'text-[14px] sm:text-base font-black' : 'text-[13px] sm:text-[15px] font-black'} ${isPlanned ? 'text-stone-500 italic' : 'text-stone-900'} leading-tight px-1">
               ${ev.title}
             </div>
@@ -360,14 +366,20 @@ function renderTimelineMatrix() {
             ` : ''}
           </div>
 
-          ${(ev.bracketId || (hasReclubUrl && !ev.isDupr)) ? `
+          ${(ev.bracketId || (hasReclubUrl && !ev.isDupr) || ev.rulesModal) ? `
             <div class="pt-2 border-t ${isPlanned ? 'border-stone-200/40' : 'border-stone-200'} flex items-center justify-between gap-1.5">
               ${ev.bracketId ? `
                 <button type="button" onclick="window.openBracketModal && window.openBracketModal('${ev.bracketId}')"
                   class="inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-bold text-stone-800 bg-white hover:bg-stone-50 border border-stone-300 hover:border-stone-400 shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap">
                   <span>Bracket</span>
                 </button>
-              ` : `<div></div>`}
+              ` : (ev.rulesModal ? `
+                <button type="button" onclick="event.stopPropagation(); window.openRulesModal && window.openRulesModal('${ev.rulesModal}')"
+                  class="w-full inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-black text-amber-950 bg-amber-200/90 hover:bg-amber-300 border border-amber-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap">
+                  <i data-lucide="crown" class="w-3.5 h-3.5 mr-1 text-amber-700"></i>
+                  <span>Rules (English)</span>
+                </button>
+              ` : `<div></div>`)}
               ${(hasReclubUrl && !ev.isDupr) ? `
                 <a href="${ev.reclubUrl}" 
                    target="_blank" rel="noopener noreferrer"
@@ -429,11 +441,22 @@ function setupEventListeners() {
     });
   }
 
+  // Event rules modal backdrop click to close
+  const rulesBackdrop = document.getElementById('eventRulesModalBackdrop');
+  if (rulesBackdrop) {
+    rulesBackdrop.addEventListener('click', () => {
+      window.closeRulesModal();
+    });
+  }
+
   // Keyboard Escape key to close modals
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       const locModal = document.getElementById('locationModal');
-      if (locModal && !locModal.classList.contains('hidden')) {
+      const rulesModal = document.getElementById('eventRulesModal');
+      if (rulesModal && !rulesModal.classList.contains('hidden')) {
+        window.closeRulesModal();
+      } else if (locModal && !locModal.classList.contains('hidden')) {
         window.closeLocationModal();
       } else if (state.activeCourtModalId) {
         window.closeCourtMatchesModal();
@@ -479,6 +502,235 @@ window.closeLocationModal = function() {
     document.body.style.overflow = '';
   }
 };
+
+/// ─── Event Rules Modal Functions ───
+window.openRulesModal = function(rulesId) {
+  state.activeRulesId = rulesId || 'king-queen-rules';
+  if (!state.rulesLanguage) {
+    state.rulesLanguage = 'en'; // Default to English rules as requested
+  }
+  renderRulesModal();
+  const modal = document.getElementById('eventRulesModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('active', 'flex');
+    document.body.style.overflow = 'hidden';
+  }
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeRulesModal = function() {
+  state.activeRulesId = null;
+  const modal = document.getElementById('eventRulesModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('active', 'flex');
+    document.body.style.overflow = '';
+  }
+};
+
+window.setRulesLanguage = function(lang) {
+  state.rulesLanguage = lang;
+  renderRulesModal();
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
+function renderRulesModal() {
+  const container = document.getElementById('eventRulesModalContent');
+  if (!container) return;
+
+  const rulesId = state.activeRulesId || 'king-queen-rules';
+  const ruleData = (typeof EVENT_RULES !== 'undefined' && EVENT_RULES[rulesId]) || null;
+  if (!ruleData) {
+    container.innerHTML = `
+      <div class="p-8 text-center text-stone-500">
+        <p>Rules information not found.</p>
+        <button onclick="window.closeRulesModal()" class="mt-4 px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold">Close</button>
+      </div>
+    `;
+    return;
+  }
+
+  const lang = state.rulesLanguage || 'en';
+  const content = ruleData[lang] || ruleData.en;
+  const isEn = lang === 'en';
+
+  let html = `
+    <!-- Modal Header -->
+    <div class="relative px-5 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5 bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-white flex-shrink-0 shadow-md">
+      <button 
+        onclick="window.closeRulesModal()" 
+        class="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/20 hover:bg-black/35 text-white flex items-center justify-center cursor-pointer transition-all shadow-sm active:scale-95 z-20"
+        title="Close (Esc)">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div class="flex items-start gap-3.5 pr-10">
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 shadow-inner flex items-center justify-center flex-shrink-0">
+          <i data-lucide="crown" class="w-6 h-6 sm:w-7 sm:h-7 text-yellow-200 drop-shadow-sm"></i>
+        </div>
+        <div class="flex flex-col min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] uppercase font-black tracking-wider bg-white/20 text-white backdrop-blur-sm border border-white/20">
+              ${ruleData.court} · ${ruleData.time}
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] uppercase font-black tracking-wider bg-stone-900/40 text-amber-200">
+              Fun Event
+            </span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-display font-black tracking-tight leading-tight drop-shadow-xs">
+            ${content.title}
+          </h2>
+          <p class="text-xs sm:text-sm text-amber-100/90 font-medium mt-0.5 leading-snug">
+            ${content.subtitle}
+          </p>
+        </div>
+      </div>
+
+      <!-- Language Toggle Tabs -->
+      <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between gap-3">
+        <span class="text-[11px] font-semibold text-amber-100 uppercase tracking-wider hidden sm:inline">
+          ${isEn ? 'Rules in English' : 'Правила игры'}
+        </span>
+        <div class="inline-flex items-center p-0.5 rounded-xl bg-black/25 backdrop-blur-md border border-white/20 ml-auto">
+          <button 
+            type="button" 
+            onclick="window.setRulesLanguage('en')"
+            class="px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${isEn ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
+            English
+          </button>
+          <button 
+            type="button" 
+            onclick="window.setRulesLanguage('ru')"
+            class="px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${!isEn ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
+            Русский
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Scrollable Content -->
+    <div class="overflow-y-auto p-5 sm:p-6 space-y-6 bg-stone-50/60 flex-1">
+      
+      <!-- Quick Overview -->
+      <div class="p-3.5 sm:p-4 rounded-xl bg-amber-50 border border-amber-200/80 text-xs sm:text-sm text-amber-950 flex items-start gap-3 shadow-2xs">
+        <i data-lucide="sparkles" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
+        <p class="font-medium leading-relaxed">
+          ${content.overview}
+        </p>
+      </div>
+
+      <!-- Section 1: Roles on the Court -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          </div>
+          <h3 class="text-sm sm:text-base font-display font-extrabold text-stone-900 tracking-tight">
+            ${isEn ? '1. Court Roles & Setup' : '1. Роли на корте'}
+          </h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          ${(content.sections[0].items || []).map(item => `
+            <div class="bg-white p-3.5 rounded-xl border border-stone-200/80 shadow-2xs flex flex-col justify-between gap-2">
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1.5">
+                  <span class="text-xs font-black text-stone-900">${item.label}</span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${item.tagColor}">
+                    ${item.tag}
+                  </span>
+                </div>
+                <p class="text-xs text-stone-600 leading-relaxed font-normal">
+                  ${item.text}
+                </p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Section 2: Rally Outcomes & Rotation Scenarios -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          </div>
+          <h3 class="text-sm sm:text-base font-display font-extrabold text-stone-900 tracking-tight">
+            ${isEn ? '2. Rally Outcomes & Rotation Scenarios' : '2. Сценарии розыгрышей'}
+          </h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          ${(content.sections[1].cards || []).map(card => `
+            <div class="bg-white p-4 rounded-xl border ${card.type === 'win' ? 'border-emerald-200 shadow-2xs bg-emerald-50/20' : 'border-rose-200 shadow-2xs bg-rose-50/20'} flex flex-col gap-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wide border ${card.badgeColor}">
+                  ${card.badge}
+                </span>
+              </div>
+              <div class="text-xs sm:text-sm font-black text-stone-900 leading-snug">
+                ${card.title}
+              </div>
+              <ul class="space-y-1.5 text-xs text-stone-700 leading-relaxed">
+                ${card.steps.map(step => `
+                  <li class="flex items-start gap-1.5">
+                    <span class="text-stone-400 font-bold mt-0.5">•</span>
+                    <span>${step}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Section 3: Serving & Court Positioning -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="target" class="w-3.5 h-3.5"></i>
+          </div>
+          <h3 class="text-sm sm:text-base font-display font-extrabold text-stone-900 tracking-tight">
+            ${isEn ? '3. Serving & Court Positioning' : '3. Подача и расстановка на корте'}
+          </h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          ${(content.sections[2].items || []).map(item => `
+            <div class="bg-white p-3.5 rounded-xl border border-stone-200/80 shadow-2xs flex items-start gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-stone-100 text-stone-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i data-lucide="${item.icon || 'check-circle-2'}" class="w-3.5 h-3.5 text-stone-600"></i>
+              </div>
+              <div class="min-w-0">
+                <div class="text-xs font-black text-stone-900 mb-0.5">${item.label}</div>
+                <div class="text-xs text-stone-600 leading-relaxed font-normal">${item.text}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-5 py-3.5 bg-white border-t border-stone-200 flex items-center justify-between flex-shrink-0">
+      <div class="text-[11px] text-stone-400 font-medium flex items-center gap-1.5">
+        <i data-lucide="info" class="w-3.5 h-3.5 text-stone-400"></i>
+        <span>${isEn ? 'Non-stop social rotation · Court 1' : 'Постоянная ротация · 1 корт'}</span>
+      </div>
+      <button 
+        type="button" 
+        onclick="window.closeRulesModal()" 
+        class="h-8 sm:h-9 px-4 rounded-xl text-xs font-bold bg-stone-900 hover:bg-stone-800 text-white transition-all cursor-pointer shadow-xs active:scale-95">
+        ${isEn ? 'Close Rules' : 'Закрыть'}
+      </button>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
 
 /// ─── Tournament Draw / Bracket Modal Functions ───
 window.openBracketModal = function(bracketId) {

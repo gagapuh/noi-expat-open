@@ -171,6 +171,23 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
+        // 16:00 - 18:00 Fun Event "Король и Королева" (Court 1)
+        {
+          id: "d2-c1-king-queen",
+          courtId: "c1",
+          start: "16:00",
+          end: "18:00",
+          title: "Король и Королева",
+          subtitle: "King & Queen · Fun Mixed Event",
+          host: "Open Play",
+          category: "social",
+          badgeText: "Fun Event",
+          badgeClass: "bg-gradient-to-r from-amber-500 to-amber-600 text-white font-black tracking-wider shadow-2xs",
+          status: "occupied",
+          icon: "crown",
+          rulesModal: "king-queen-rules"
+        },
+
         // 18:00 - 22:00 Team Games (Courts 1–4 combined)
         {
           id: "d2-c1c4-team-games",
@@ -202,6 +219,197 @@ const TOURNAMENT_CONFIG = {
       ]
     }
   ]
+};
+
+/**
+ * ==============================================================================
+ * EVENT RULES & INSTRUCTIONS
+ * ==============================================================================
+ */
+const EVENT_RULES = {
+  "king-queen-rules": {
+    id: "king-queen-rules",
+    court: "Court 1",
+    time: "16:00 – 18:00",
+    en: {
+      badge: "Court 1 · 16:00 – 18:00 · Fun Event",
+      title: "King & Queen of the Court",
+      subtitle: "Continuous Mixed Doubles Social Rotation Rules",
+      overview: "A continuous, high-tempo mixed doubles format where pairs of challengers try to conquer the Throne. The reigning King & Queen stay together until a challenger of their respective gender dethrones them.",
+      sections: [
+        {
+          title: "Court Roles & Setup",
+          icon: "users",
+          items: [
+            {
+              label: "The Throne Side",
+              tag: "King (M) + Queen (F)",
+              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
+              text: "The reigning pair on the court. They defend their side of the court together against incoming challengers until defeated."
+            },
+            {
+              label: "The Challenger Side",
+              tag: "Senior + Rookie",
+              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
+              text: "<strong>«Senior» (Старший)</strong> — entered the court 1 rally ago.<br><strong>«Rookie» (Новичок)</strong> — just rotated in from the queue."
+            },
+            {
+              label: "The Queue",
+              tag: "FIFO Queue",
+              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
+              text: "A single line waiting behind the baseline on the Challenger side. Operates on strict <strong>FIFO</strong> (First In, First Out) rotation."
+            }
+          ]
+        },
+        {
+          title: "Rally Outcomes & Rotation",
+          icon: "refresh-cw",
+          cards: [
+            {
+              type: "loss",
+              badge: "Scenario 1: Challengers Lose Rally",
+              badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
+              title: "King & Queen Defend the Throne",
+              steps: [
+                "The King and Queen remain on the Throne side.",
+                "The <strong>«Senior»</strong> challenger exits to the end of the queue (time is up via FIFO).",
+                "The <strong>«Rookie»</strong> challenger is promoted to <strong>«Senior»</strong>.",
+                "The next player in line enters the court to take the <strong>«Rookie»</strong> spot."
+              ]
+            },
+            {
+              type: "win",
+              badge: "Scenario 2: Challengers Win Rally",
+              badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+              title: "Senior Challenger Ascends to the Throne",
+              steps: [
+                "The <strong>«Senior»</strong> challenger earns a place on the Throne (as the player who entered the court earlier):",
+                "• If Senior is a <strong>Guy (Male)</strong> → He replaces the King (the ousted King joins the queue). The Queen remains on the Throne.",
+                "• If Senior is a <strong>Girl (Female)</strong> → She replaces the Queen (the ousted Queen joins the queue). The King remains on the Throne.",
+                "The <strong>«Rookie»</strong> challenger on the challenger side is promoted to <strong>«Senior»</strong>.",
+                "The next player from the queue enters the court as the new <strong>«Rookie»</strong>."
+              ]
+            }
+          ]
+        },
+        {
+          title: "Serving & Court Positioning",
+          icon: "target",
+          items: [
+            {
+              label: "Rookie Entry Position",
+              icon: "log-in",
+              text: "The Rookie always steps into the court position corresponding to an <strong>even score</strong> (Right side / Deuce court)."
+            },
+            {
+              label: "Challengers Score Serve",
+              icon: "zap",
+              text: "When the Challengers win the rally / score a point, the <strong>serve passes to the Senior Challenger</strong>."
+            },
+            {
+              label: "Kings Score Swap",
+              icon: "arrow-left-right",
+              text: "When the King and Queen score a point on their serve, they <strong>swap sides</strong> (standard doubles serving rotation)."
+            },
+            {
+              label: "Court Rebalancing on Exit",
+              icon: "shuffle",
+              text: "If the Senior Challenger exits from the <strong>odd-number court position</strong> (Left side / Ad court), the Rookie shifts into that spot and becomes the Senior."
+            }
+          ]
+        }
+      ]
+    },
+    ru: {
+      badge: "1 корт · 16:00 – 18:00 · Фан-событие",
+      title: "Король и Королева",
+      subtitle: "Правила фан-игры с постоянной ротацией пар",
+      overview: "Динамичный социальный формат игры, где пары претендентов соревнуются за право занять Трон Короля и Королевы.",
+      sections: [
+        {
+          title: "Роли на корте",
+          icon: "users",
+          items: [
+            {
+              label: "Сторона Трона",
+              tag: "Король (М) + Королева (Ж)",
+              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
+              text: "Король (М) + Королева (Ж). Играют в смешанной паре и защищают трон."
+            },
+            {
+              label: "Сторона Претендентов",
+              tag: "Старший + Новичок",
+              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
+              text: "<strong>«Старший»</strong> — зашел на корт 1 розыгрыш назад.<br><strong>«Новичок»</strong> — только что зашел из очереди."
+            },
+            {
+              label: "Очередь",
+              tag: "Одиночная FIFO",
+              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
+              text: "Общая одиночная линия за задней линией претендентов. Работает по строгому правилу FIFO (первый зашел — первый вышел)."
+            }
+          ]
+        },
+        {
+          title: "Сценарии розыгрышей",
+          icon: "refresh-cw",
+          cards: [
+            {
+              type: "loss",
+              badge: "Сценарий 1: Претенденты проиграли розыгрыш",
+              badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
+              title: "Короли защитили трон",
+              steps: [
+                "Король и Королева остаются на месте.",
+                "«Старший» претендент уходит в конец очереди (его время вышло по FIFO).",
+                "«Новичок» становится «Старшим».",
+                "Из очереди заходит следующий человек и встает на позицию «Новичка»."
+              ]
+            },
+            {
+              type: "win",
+              badge: "Сценарий 2: Претенденты выиграли розыгрыш",
+              badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+              title: "Старший претендент переходит на Трон",
+              steps: [
+                "На Трон переходит «Старший» претендент (как зашедший на корт раньше):",
+                "• Если «Старший» — парень → он сменяет Короля (прежний Король идет в очередь). Королева остается.",
+                "• Если «Старший» — девушка → она сменяет Королеву (прежняя Королева идет в очередь). Король остается.",
+                "«Новичок» претендентов повышается до «Старшего».",
+                "Из очереди заходит следующий игрок на позицию «Новичка»."
+              ]
+            }
+          ]
+        },
+        {
+          title: "Подача и расстановка на корте",
+          icon: "target",
+          items: [
+            {
+              label: "Позиция Новичка",
+              icon: "log-in",
+              text: "Новичок всегда встает на место, где подается <strong>четное число</strong> (правый квадрат / Deuce)."
+            },
+            {
+              label: "Подача Претендентов",
+              icon: "zap",
+              text: "Если претенденты забивают (выигрывают розыгрыш), подача переходит к <strong>«Старшему»</strong> претенденту."
+            },
+            {
+              label: "Смена мест Королей",
+              icon: "arrow-left-right",
+              text: "Если забивают Короли, они <strong>меняются местами</strong> на своей стороне."
+            },
+            {
+              label: "Смена при выходе с нечетной позиции",
+              icon: "shuffle",
+              text: "Если уходит старший претендент с <strong>нечетной позиции поля</strong>, то на его место встает младший и становится «Старшим»."
+            }
+          ]
+        }
+      ]
+    }
+  }
 };
 
 /**
