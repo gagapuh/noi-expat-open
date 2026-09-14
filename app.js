@@ -139,7 +139,7 @@ function renderTimelineMatrix() {
     bodyHtml += `</div>`;
 
     // Events
-    const courtEvents = (currentDay.schedule || []).filter(ev => ev.courtId === court.id);
+    const courtEvents = (currentDay.schedule || []).filter(ev => ev.courtId === court.id && !ev.hidden && ev.status !== 'hidden');
 
     courtEvents.forEach(ev => {
       const topMinutes = timeToMinutesFromStart(ev.start, startHour);

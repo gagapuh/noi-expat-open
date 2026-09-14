@@ -171,9 +171,10 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 16:00 - 18:00 Fun Event "King & Queen" (Court 1)
+        // 16:00 - 18:00 Fun Event "King & Queen" (Court 1) — temporarily hidden
         {
           id: "d2-c1-king-queen",
+          hidden: true,
           courtId: "c1",
           start: "16:00",
           end: "18:00",
