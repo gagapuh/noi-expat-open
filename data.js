@@ -237,7 +237,7 @@ const EVENT_RULES = {
       badge: "Court 1 · 16:00 – 18:00 · Fun Event",
       title: "King & Queen of the Court",
       subtitle: "",
-      overview: "A continuous, high-tempo format where pairs of challengers try to conquer the Throne. The reigning King & Queen stay together until a challenger of their respective gender dethrones them.",
+      overview: "A continuous, high-tempo format where challenger pairs battle to dethrone the reigning King & Queen. To conquer the Throne, Challengers must win TWO consecutive serves!",
       sections: [
         {
           title: "Court Roles & Setup",
@@ -249,7 +249,7 @@ const EVENT_RULES = {
             },
             {
               label: "The Challenger Side",
-              text: "<strong>«Senior»</strong> (entered 1 rally ago) + <strong>«Rookie»</strong> (just rotated in from the queue)."
+              text: "<strong>«Senior»</strong> (entered 1 rally ago) + <strong>«Junior»</strong> (just rotated in from the queue)."
             },
             {
               label: "The Queue",
@@ -267,23 +267,23 @@ const EVENT_RULES = {
               badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
               title: "King & Queen Defend the Throne",
               steps: [
-                "The King and Queen remain on the Throne side.",
+                "The King and Queen remain on the Throne side, <strong>but swap sides between themselves</strong>.",
                 "The <strong>«Senior»</strong> challenger exits to the end of the queue (time is up via FIFO).",
-                "The <strong>«Rookie»</strong> challenger is promoted to <strong>«Senior»</strong>.",
-                "The next player in line enters the court to take the <strong>«Rookie»</strong> spot."
+                "The <strong>«Junior»</strong> challenger is promoted to <strong>«Senior»</strong>.",
+                "The next player in line enters the court to take the <strong>«Junior»</strong> spot."
               ]
             },
             {
               type: "win",
-              badge: "Scenario 2: Challengers Win Rally",
+              badge: "Scenario 2: Challengers Win (Two Serves)",
               badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
-              title: "Senior Challenger Ascends to the Throne",
+              title: "Win 2 Serves to Ascend the Throne",
               steps: [
-                "The <strong>«Senior»</strong> challenger earns a place on the Throne (as the player who entered the court earlier):",
-                "• If Senior is a <strong>Guy (Male)</strong> → He replaces the King (the ousted King joins the queue). The Queen remains on the Throne.",
-                "• If Senior is a <strong>Girl (Female)</strong> → She replaces the Queen (the ousted Queen joins the queue). The King remains on the Throne.",
-                "The <strong>«Rookie»</strong> challenger on the challenger side is promoted to <strong>«Senior»</strong>.",
-                "The next player from the queue enters the court as the new <strong>«Rookie»</strong>."
+                "To dethrone a King or Queen, Challengers must win <strong>TWO consecutive serves</strong>:",
+                "1. First serve: Challengers serve from the <strong>Right side (Junior)</strong>.",
+                "2. If scored → Serve passes to the <strong>Senior (Left side)</strong>.",
+                "3. If Challengers win the 2nd serve → <strong>Senior ascends to the Throne</strong> (Male replaces King, Female replaces Queen; ousted player goes to queue, opposite gender remains).",
+                "The <strong>«Junior»</strong> challenger promotes to <strong>«Senior»</strong>; next in queue enters as <strong>«Junior»</strong>."
               ]
             }
           ]
@@ -293,24 +293,24 @@ const EVENT_RULES = {
           icon: "target",
           items: [
             {
-              label: "Rookie Entry Position",
-              icon: "log-in",
-              text: "The Rookie always steps into the court position corresponding to an <strong>even score</strong> (Right side / Deuce court)."
-            },
-            {
-              label: "Challengers Score Serve",
+              label: "Two Serves to Dethrone",
               icon: "zap",
-              text: "When the Challengers win the rally / score a point, the <strong>serve passes to the Senior Challenger</strong>."
+              text: "Challengers must win 2 consecutive serves to take the Throne: 1st serve from the Right (Junior), 2nd serve from the Left (Senior)."
             },
             {
-              label: "Kings Score Swap",
+              label: "Junior Entry Position",
+              icon: "log-in",
+              text: "The Junior always steps into the court position corresponding to an <strong>even score</strong> (Right side / Deuce court)."
+            },
+            {
+              label: "Kings Defense Swap",
               icon: "arrow-left-right",
-              text: "When the King and Queen score a point on their serve, they <strong>swap sides</strong> (standard doubles serving rotation)."
+              text: "When the King and Queen defend or score, they <strong>remain on the Throne and swap sides</strong> between themselves."
             },
             {
               label: "Court Rebalancing on Exit",
               icon: "shuffle",
-              text: "If the Senior Challenger exits from the <strong>odd-number court position</strong> (Left side / Ad court), the Rookie shifts into that spot and becomes the Senior."
+              text: "If the Senior Challenger exits from the <strong>odd-number court position</strong> (Left side / Ad court), the Junior shifts into that spot and becomes the Senior."
             }
           ]
         }
@@ -321,7 +321,7 @@ const EVENT_RULES = {
       badge: "Sân 1 · 16:00 – 18:00 · Giao lưu vui vẻ",
       title: "Vua & Nữ Hoàng (King & Queen)",
       subtitle: "",
-      overview: "Thể thức đánh đôi tốc độ cao và giao lưu hấp dẫn. Các cặp thách đấu liên tục vào sân để chinh phục Ngai Vàng. Vua và Nữ Hoàng đương nhiệm bảo vệ sân cho đến khi bị thách đấu cùng giới tính soán ngôi.",
+      overview: "Thể thức đánh đôi tốc độ cao và giao lưu hấp dẫn. Các cặp thách đấu liên tục vào sân để chinh phục Ngai Vàng. Để soán ngôi, bên Thách Đấu phải thắng HAI lượt giao bóng liên tiếp!",
       sections: [
         {
           title: "Vai trò trên sân & Sắp xếp",
@@ -333,7 +333,7 @@ const EVENT_RULES = {
             },
             {
               label: "Bên Thách Đấu",
-              text: "<strong>«Người Cũ» (Senior)</strong> (đã vào sân từ 1 pha bóng trước) + <strong>«Người Mới» (Rookie)</strong> (vừa từ hàng chờ bước vào sân)."
+              text: "<strong>«Người Cũ» (Senior)</strong> (đã vào sân 1 pha bóng trước) + <strong>«Người Mới» (Junior)</strong> (vừa từ hàng chờ bước vào sân)."
             },
             {
               label: "Hàng Chờ (Queue)",
@@ -351,23 +351,23 @@ const EVENT_RULES = {
               badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
               title: "Vua & Nữ Hoàng bảo vệ thành công Ngai Vàng",
               steps: [
-                "Vua và Nữ Hoàng giữ nguyên vị trí trên Ngai Vàng.",
+                "Vua và Nữ Hoàng tiếp tục giữ Ngai Vàng, <strong>nhưng đổi bên sân cho nhau</strong>.",
                 "Người <strong>«Cũ» (Senior)</strong> rời sân về cuối hàng chờ (hết lượt theo nguyên tắc FIFO).",
-                "Người <strong>«Mới» (Rookie)</strong> được thăng cấp thành <strong>«Người Cũ» (Senior)</strong>.",
-                "Người tiếp theo trong hàng chờ bước vào sân ở vị trí <strong>«Người Mới» (Rookie)</strong>."
+                "Người <strong>«Mới» (Junior)</strong> được thăng cấp thành <strong>«Người Cũ» (Senior)</strong>.",
+                "Người tiếp theo trong hàng chờ bước vào sân ở vị trí <strong>«Người Mới» (Junior)</strong>."
               ]
             },
             {
               type: "win",
-              badge: "Kịch bản 2: Bên Thách Đấu thắng pha bóng",
+              badge: "Kịch bản 2: Bên Thách Đấu thắng (Hai lượt giao bóng)",
               badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
-              title: "Người Cũ thăng cấp lên chiếm Ngai Vàng",
+              title: "Thắng 2 lượt giao bóng để chiếm Ngai Vàng",
               steps: [
-                "Người <strong>«Cũ» (Senior)</strong> bước lên Ngai Vàng (ưu tiên người vào sân sớm hơn):",
-                "• Nếu Người Cũ là <strong>Nam</strong> → Thay thế Vua (Vua cũ rời sân về hàng chờ). Nữ Hoàng tiếp tục giữ ngôi.",
-                "• Nếu Người Cũ là <strong>Nữ</strong> → Thay thế Nữ Hoàng (Nữ Hoàng cũ rời sân về hàng chờ). Vua tiếp tục giữ ngôi.",
-                "Người <strong>«Mới» (Rookie)</strong> bên Thách Đấu thăng cấp thành <strong>«Người Cũ» (Senior)</strong>.",
-                "Người tiếp theo trong hàng chờ bước vào sân với tư cách <strong>«Người Mới» (Rookie)</strong>."
+                "Để soán ngôi Vua hoặc Nữ Hoàng, bên Thách Đấu cần thắng <strong>HAI lượt giao bóng</strong> liên tiếp:",
+                "1. Lượt 1: Thách Đấu giao bóng từ <strong>bên Phải (Junior)</strong>.",
+                "2. Nếu ghi điểm → Quyền giao bóng chuyển cho <strong>Người Cũ (Senior) ở bên Trái</strong>.",
+                "3. Nếu thắng lượt 2 → <strong>Người Cũ chiếm Ngai Vàng</strong> (Nam thay Vua, Nữ thay Nữ Hoàng; người bị soán ngôi về hàng chờ, người khác giới tính giữ nguyên).",
+                "Người <strong>«Mới» (Junior)</strong> thăng cấp thành <strong>«Người Cũ» (Senior)</strong>; người tiếp theo vào vị trí <strong>«Junior»</strong>."
               ]
             }
           ]
@@ -377,24 +377,24 @@ const EVENT_RULES = {
           icon: "target",
           items: [
             {
-              label: "Vị trí Người Mới vào sân",
-              icon: "log-in",
-              text: "Người Mới luôn vào sân ở vị trí giao bóng với <strong>điểm số chẵn</strong> (Bên phải / Ô Deuce court)."
-            },
-            {
-              label: "Giao bóng khi Thách Đấu ghi điểm",
+              label: "Hai lượt giao bóng soán ngôi",
               icon: "zap",
-              text: "Khi bên Thách Đấu thắng pha bóng/ghi điểm, quyền giao bóng được trao cho <strong>Người Cũ (Senior)</strong>."
+              text: "Thách Đấu phải thắng 2 lượt giao bóng liên tiếp: Lượt 1 bên Phải (Junior), lượt 2 bên Trái (Senior)."
             },
             {
-              label: "Đổi sân khi bên Ngai Vàng ghi điểm",
+              label: "Vị trí Junior vào sân",
+              icon: "log-in",
+              text: "Junior luôn vào sân ở vị trí giao bóng với <strong>điểm số chẵn</strong> (Bên phải / Ô Deuce court)."
+            },
+            {
+              label: "Bên Ngai Vàng đổi vị trí",
               icon: "arrow-left-right",
-              text: "Khi Vua và Nữ Hoàng ghi điểm trong lượt giao bóng của mình, họ <strong>đổi vị trí trái/phải</strong> (luật giao bóng đôi tiêu chuẩn)."
+              text: "Khi Vua và Nữ Hoàng phòng thủ thành công hoặc ghi điểm, họ <strong>giữ Ngai Vàng và đổi bên sân cho nhau</strong>."
             },
             {
               label: "Điều chỉnh vị trí khi rời sân",
               icon: "shuffle",
-              text: "Nếu Người Cũ rời sân từ <strong>vị trí điểm lẻ</strong> (Bên trái / Ô Ad court), Người Mới sẽ bước sang vị trí đó và trở thành Người Cũ."
+              text: "Nếu Người Cũ rời sân từ <strong>vị trí điểm lẻ</strong> (Bên trái / Ô Ad court), Junior sẽ bước sang vị trí đó và trở thành Senior."
             }
           ]
         }
@@ -405,7 +405,7 @@ const EVENT_RULES = {
       badge: "Pista 1 · 16:00 – 18:00 · Evento Social",
       title: "Rey y Reina de la Pista (King & Queen)",
       subtitle: "",
-      overview: "Formato dinámico y continuo donde las parejas aspirantes compiten por conquistar el Trono. El Rey y la Reina reinantes defienden su lado hasta que un aspirante de su mismo género los destrona.",
+      overview: "Formato dinámico y continuo donde las parejas aspirantes compiten por conquistar el Trono. ¡Para destronar al Rey o la Reina, los Aspirantes deben ganar DOS saques consecutivos!",
       sections: [
         {
           title: "Roles en la Pista y Disposición",
@@ -417,7 +417,7 @@ const EVENT_RULES = {
             },
             {
               label: "Lado de los Aspirantes",
-              text: "<strong>«Veterano» (Senior)</strong> (entró hace 1 punto) + <strong>«Novato» (Rookie)</strong> (acaba de entrar desde la fila)."
+              text: "<strong>«Veterano» (Senior)</strong> (entró hace 1 punto) + <strong>«Júnior» (Junior)</strong> (acaba de entrar desde la fila)."
             },
             {
               label: "La Fila de Espera",
@@ -435,23 +435,23 @@ const EVENT_RULES = {
               badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
               title: "El Rey y la Reina Defienden el Trono",
               steps: [
-                "El Rey y la Reina permanecen en el lado del Trono.",
+                "El Rey y la Reina permanecen en el Trono, <strong>pero cambian de lado entre sí</strong>.",
                 "El aspirante <strong>«Veterano» (Senior)</strong> va al final de la fila (su turno concluye por FIFO).",
-                "El aspirante <strong>«Novato» (Rookie)</strong> es promovido a <strong>«Veterano» (Senior)</strong>.",
-                "La siguiente persona de la fila entra a la pista para ocupar el puesto de <strong>«Novato» (Rookie)</strong>."
+                "El aspirante <strong>«Júnior» (Junior)</strong> es promovido a <strong>«Veterano» (Senior)</strong>.",
+                "La siguiente persona de la fila entra a la pista para ocupar el puesto de <strong>«Júnior» (Junior)</strong>."
               ]
             },
             {
               type: "win",
-              badge: "Escenario 2: Los Aspirantes Ganan el Punto",
+              badge: "Escenario 2: Los Aspirantes Ganan (Dos Saques)",
               badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
-              title: "El Veterano Asciende al Trono",
+              title: "Ganar 2 Saques para Ascender al Trono",
               steps: [
-                "El aspirante <strong>«Veterano» (Senior)</strong> asciende al Trono (por haber llegado antes a la pista):",
-                "• Si el Veterano es <strong>Hombre</strong> → Reemplaza al Rey (el Rey depuesto va a la fila). La Reina permanece en el Trono.",
-                "• Si la Veterana es <strong>Mujer</strong> → Reemplaza a la Reina (la Reina depuesta va a la fila). El Rey permanece en el Trono.",
-                "El aspirante <strong>«Novato» (Rookie)</strong> es promovido a <strong>«Veterano» (Senior)</strong>.",
-                "El siguiente jugador de la fila entra como nuevo <strong>«Novato» (Rookie)</strong>."
+                "Para destronar a uno de los Reyes, los Aspirantes deben ganar <strong>DOS saques consecutivos</strong>:",
+                "1. Primer saque: los Aspirantes sacan desde el <strong>lado derecho (Junior)</strong>.",
+                "2. Si anotan → El saque pasa al <strong>Veterano/Senior (lado izquierdo)</strong>.",
+                "3. Si ganan el segundo saque → <strong>El Veterano asciende al Trono</strong> (Hombre sustituye al Rey, Mujer sustituye a la Reina; quien sale va a la fila, el otro Rey permanece).",
+                "El aspirante <strong>«Júnior» (Junior)</strong> es promovido a <strong>«Veterano» (Senior)</strong>; el siguiente jugador entra como <strong>«Júnior»</strong>."
               ]
             }
           ]
@@ -461,24 +461,24 @@ const EVENT_RULES = {
           icon: "target",
           items: [
             {
-              label: "Posición de Entrada del Novato",
-              icon: "log-in",
-              text: "El Novato siempre entra en la posición de pista correspondiente a un <strong>tanteo par</strong> (Lado derecho / Deuce court)."
-            },
-            {
-              label: "Saque al Anotar los Aspirantes",
+              label: "Dos Saques para Destronar",
               icon: "zap",
-              text: "Cuando los aspirantes ganan el punto/anotan, el <strong>saque pasa al aspirante «Veterano» (Senior)</strong>."
+              text: "Los Aspirantes deben ganar 2 saques consecutivos: 1.º saque por la derecha (Junior), 2.º saque por la izquierda (Senior)."
             },
             {
-              label: "Cambio de Lado en el Trono",
+              label: "Posición de Entrada del Júnior",
+              icon: "log-in",
+              text: "El Júnior siempre entra en la posición de pista correspondiente a un <strong>tanteo par</strong> (Lado derecho / Deuce court)."
+            },
+            {
+              label: "Reyes Defienden y Cambian",
               icon: "arrow-left-right",
-              text: "Cuando el Rey y la Reina anotan punto con su saque, <strong>cambian de lado</strong> (rotación estándar de dobles)."
+              text: "Cuando el Rey y la Reina defienden o anotan, <strong>permanecen en el Trono y cambian de lado entre sí</strong>."
             },
             {
               label: "Ajuste al Salir de Posición Impar",
               icon: "shuffle",
-              text: "Si el Veterano sale desde la <strong>posición de pista impar</strong> (Lado izquierdo / Ad court), el Novato ocupa ese lugar y pasa a ser Veterano."
+              text: "Si el Veterano sale desde la <strong>posición impar</strong> (Lado izquierdo / Ad court), el Júnior ocupa ese lugar y pasa a ser Veterano."
             }
           ]
         }
@@ -489,7 +489,7 @@ const EVENT_RULES = {
       badge: "1 корт · 16:00 – 18:00 · Фан-событие",
       title: "Король и Королева",
       subtitle: "",
-      overview: "Динамичный социальный формат игры, где пары претендентов соревнуются за право занять Трон Короля и Королевы.",
+      overview: "Динамичный социальный формат игры, где пары претендентов соревнуются за право занять Трон Короля и Королевы. Чтобы сместить одного из королей, претендентам нужно выиграть ДВЕ подачи подряд!",
       sections: [
         {
           title: "Роли на корте",
@@ -501,7 +501,7 @@ const EVENT_RULES = {
             },
             {
               label: "Сторона Претендентов",
-              text: "<strong>«Старший»</strong> (зашел на корт 1 розыгрыш назад) + <strong>«Новичок»</strong> (только что зашел из очереди)."
+              text: "<strong>«Старший» (Senior)</strong> (зашел на корт 1 розыгрыш назад) + <strong>«Младший» (Junior)</strong> (только что зашел из очереди)."
             },
             {
               label: "Очередь",
@@ -519,23 +519,23 @@ const EVENT_RULES = {
               badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
               title: "Короли защитили трон",
               steps: [
-                "Король и Королева остаются на месте.",
+                "Король и Королева остаются на Троне, <strong>но меняются сторонами между собой</strong>.",
                 "«Старший» претендент уходит в конец очереди (его время вышло по FIFO).",
-                "«Новичок» становится «Старшим».",
-                "Из очереди заходит следующий человек и встает на позицию «Новичка»."
+                "«Младший» становится «Старшим».",
+                "Из очереди заходит следующий человек и встает на позицию «Младшего»."
               ]
             },
             {
               type: "win",
-              badge: "Сценарий 2: Претенденты выиграли розыгрыш",
+              badge: "Сценарий 2: Претенденты выигрывают (Две подачи)",
               badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
-              title: "Старший претендент переходит на Трон",
+              title: "Для смещения Короля нужно выиграть ДВЕ подачи",
               steps: [
-                "На Трон переходит «Старший» претендент (как зашедший на корт раньше):",
-                "• Если «Старший» — парень → он сменяет Короля (прежний Король идет в очередь). Королева остается.",
-                "• Если «Старший» — девушка → она сменяет Королеву (прежняя Королева идет в очередь). Король остается.",
-                "«Новичок» претендентов повышается до «Старшего».",
-                "Из очереди заходит следующий игрок на позицию «Новичка»."
+                "Чтобы сместить одного из королей, претенденты должны выиграть <strong>ДВЕ подачи подряд</strong>:",
+                "1. Сначала Претенденты подают с <strong>правой стороны (Младший)</strong>.",
+                "2. Если забили → Подача переходит к <strong>Старшему претенденту (левая сторона)</strong>.",
+                "3. Если забили и вторую подачу → <strong>Старший переходит на Трон</strong> (парень сменяет Короля, девушка сменяет Королеву; прежний монарх идет в очередь, представитель другого пола остается).",
+                "«Младший» претендент повышается до «Старшего»; из очереди заходит следующий игрок на позицию «Младшего»."
               ]
             }
           ]
@@ -545,19 +545,19 @@ const EVENT_RULES = {
           icon: "target",
           items: [
             {
-              label: "Позиция Новичка",
-              icon: "log-in",
-              text: "Новичок всегда встает на место, где подается <strong>четное число</strong> (правый квадрат / Deuce)."
+              label: "Две подачи для Трона",
+              icon: "zap",
+              text: "Для смещения Королей нужно выиграть 2 подачи подряд: 1-я подача справа (Младший), 2-я подача слева (Старший)."
             },
             {
-              label: "Подача Претендентов",
-              icon: "zap",
-              text: "Если претенденты забивают (выигрывают розыгрыш), подача переходит к <strong>«Старшему»</strong> претенденту."
+              label: "Позиция Младшего",
+              icon: "log-in",
+              text: "Младший всегда встает на место, где подается <strong>четное число</strong> (правый квадрат / Deuce)."
             },
             {
               label: "Смена мест Королей",
               icon: "arrow-left-right",
-              text: "Если забивают Короли, они <strong>меняются местами</strong> на своей стороне."
+              text: "Когда Короли защищают трон или забивают, они <strong>остаются на Троне и меняются сторонами между собой</strong>."
             },
             {
               label: "Смена при выходе с нечетной позиции",
