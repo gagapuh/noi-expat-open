@@ -178,7 +178,7 @@ const TOURNAMENT_CONFIG = {
           start: "16:00",
           end: "18:00",
           title: "King & Queen",
-          subtitle: "Mixed Doubles · Social Play",
+          subtitle: "",
           host: "Open Play",
           category: "social",
           badgeText: "Fun Event",
@@ -236,8 +236,8 @@ const EVENT_RULES = {
       langName: "English",
       badge: "Court 1 · 16:00 – 18:00 · Fun Event",
       title: "King & Queen of the Court",
-      subtitle: "Continuous Mixed Doubles Social Rotation Rules",
-      overview: "A continuous, high-tempo mixed doubles format where pairs of challengers try to conquer the Throne. The reigning King & Queen stay together until a challenger of their respective gender dethrones them.",
+      subtitle: "",
+      overview: "A continuous, high-tempo format where pairs of challengers try to conquer the Throne. The reigning King & Queen stay together until a challenger of their respective gender dethrones them.",
       sections: [
         {
           title: "Court Roles & Setup",
@@ -245,21 +245,15 @@ const EVENT_RULES = {
           items: [
             {
               label: "The Throne Side",
-              tag: "King (M) + Queen (F)",
-              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
-              text: "The reigning pair on the court. They defend their side of the court together against incoming challengers until defeated."
+              text: "King (M) + Queen (F). The reigning pair defending the court together against incoming challengers until defeated."
             },
             {
               label: "The Challenger Side",
-              tag: "Senior + Rookie",
-              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
-              text: "<strong>«Senior»</strong> — entered the court 1 rally ago.<br><strong>«Rookie»</strong> — just rotated in from the queue."
+              text: "<strong>«Senior»</strong> (entered 1 rally ago) + <strong>«Rookie»</strong> (just rotated in from the queue)."
             },
             {
               label: "The Queue",
-              tag: "FIFO Queue",
-              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
-              text: "A single line waiting behind the baseline on the Challenger side. Operates on strict <strong>FIFO</strong> (First In, First Out) rotation."
+              text: "Single FIFO line waiting behind the Challenger side baseline (first in, first out)."
             }
           ]
         },
@@ -326,8 +320,8 @@ const EVENT_RULES = {
       langName: "Tiếng Việt",
       badge: "Sân 1 · 16:00 – 18:00 · Giao lưu vui vẻ",
       title: "Vua & Nữ Hoàng (King & Queen)",
-      subtitle: "Luật chơi đánh đôi nam nữ luân chuyển liên tục",
-      overview: "Thể thức đánh đôi nam nữ tốc độ cao và giao lưu hấp dẫn. Các cặp thách đấu liên tục vào sân để chinh phục Ngai Vàng. Vua và Nữ Hoàng đương nhiệm bảo vệ sân cho đến khi bị thách đấu cùng giới tính soán ngôi.",
+      subtitle: "",
+      overview: "Thể thức đánh đôi tốc độ cao và giao lưu hấp dẫn. Các cặp thách đấu liên tục vào sân để chinh phục Ngai Vàng. Vua và Nữ Hoàng đương nhiệm bảo vệ sân cho đến khi bị thách đấu cùng giới tính soán ngôi.",
       sections: [
         {
           title: "Vai trò trên sân & Sắp xếp",
@@ -335,21 +329,15 @@ const EVENT_RULES = {
           items: [
             {
               label: "Bên Ngai Vàng",
-              tag: "Vua (Nam) + Nữ Hoàng (Nữ)",
-              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
-              text: "Cặp đôi đương nhiệm trên sân. Cùng nhau phòng thủ và bảo vệ Ngai Vàng trước các cặp thách đấu liên tục bước vào."
+              text: "Vua (Nam) + Nữ Hoàng (Nữ). Cặp đôi đương nhiệm cùng nhau phòng thủ và bảo vệ Ngai Vàng trước các cặp thách đấu."
             },
             {
               label: "Bên Thách Đấu",
-              tag: "Người Cũ + Người Mới",
-              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
-              text: "<strong>«Người Cũ» (Senior)</strong> — đã vào sân từ 1 pha bóng trước.<br><strong>«Người Mới» (Rookie)</strong> — vừa từ hàng chờ bước vào sân."
+              text: "<strong>«Người Cũ» (Senior)</strong> (đã vào sân từ 1 pha bóng trước) + <strong>«Người Mới» (Rookie)</strong> (vừa từ hàng chờ bước vào sân)."
             },
             {
               label: "Hàng Chờ (Queue)",
-              tag: "Hàng đợi FIFO",
-              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
-              text: "Một hàng đơn duy nhất xếp sau vạch cuối sân bên Thách Đấu. Hoạt động theo nguyên tắc <strong>FIFO</strong> (vào trước — ra trước)."
+              text: "Một hàng đơn duy nhất xếp sau vạch cuối sân bên Thách Đấu theo luật FIFO (vào trước — ra trước)."
             }
           ]
         },
@@ -416,8 +404,8 @@ const EVENT_RULES = {
       langName: "Español",
       badge: "Pista 1 · 16:00 – 18:00 · Evento Social",
       title: "Rey y Reina de la Pista (King & Queen)",
-      subtitle: "Reglas de rotación continua para dobles mixtos",
-      overview: "Formato dinámico y continuo de dobles mixtos donde las parejas aspirantes compiten por conquistar el Trono. El Rey y la Reina reinantes defienden su lado hasta que un aspirante de su mismo género los destrona.",
+      subtitle: "",
+      overview: "Formato dinámico y continuo donde las parejas aspirantes compiten por conquistar el Trono. El Rey y la Reina reinantes defienden su lado hasta que un aspirante de su mismo género los destrona.",
       sections: [
         {
           title: "Roles en la Pista y Disposición",
@@ -425,21 +413,15 @@ const EVENT_RULES = {
           items: [
             {
               label: "Lado del Trono",
-              tag: "Rey (M) + Reina (F)",
-              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
-              text: "La pareja reinante en la pista. Defienden su lado juntos frente a las continuas parejas retadoras hasta ser derrotados."
+              text: "Rey (M) + Reina (F). Pareja campeona reinante que defiende la pista junta frente a las parejas retadoras."
             },
             {
               label: "Lado de los Aspirantes",
-              tag: "Veterano + Novato",
-              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
-              text: "<strong>«Veterano» (Senior)</strong> — entró a la pista hace 1 punto.<br><strong>«Novato» (Rookie)</strong> — acaba de entrar desde la fila."
+              text: "<strong>«Veterano» (Senior)</strong> (entró hace 1 punto) + <strong>«Novato» (Rookie)</strong> (acaba de entrar desde la fila)."
             },
             {
               label: "La Fila de Espera",
-              tag: "Fila FIFO",
-              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
-              text: "Una única fila detrás de la línea de fondo en el lado de los aspirantes. Funciona bajo estricto orden <strong>FIFO</strong> (primero en entrar, primero en salir)."
+              text: "Una única fila detrás de la línea de fondo en el lado de los aspirantes bajo orden FIFO (primero en entrar, primero en salir)."
             }
           ]
         },
@@ -506,7 +488,7 @@ const EVENT_RULES = {
       langName: "Русский",
       badge: "1 корт · 16:00 – 18:00 · Фан-событие",
       title: "Король и Королева",
-      subtitle: "Правила фан-игры с постоянной ротацией пар",
+      subtitle: "",
       overview: "Динамичный социальный формат игры, где пары претендентов соревнуются за право занять Трон Короля и Королевы.",
       sections: [
         {
@@ -515,21 +497,15 @@ const EVENT_RULES = {
           items: [
             {
               label: "Сторона Трона",
-              tag: "Король (М) + Королева (Ж)",
-              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
               text: "Король (М) + Королева (Ж). Играют в смешанной паре и защищают трон."
             },
             {
               label: "Сторона Претендентов",
-              tag: "Старший + Новичок",
-              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
-              text: "<strong>«Старший»</strong> — зашел на корт 1 розыгрыш назад.<br><strong>«Новичок»</strong> — только что зашел из очереди."
+              text: "<strong>«Старший»</strong> (зашел на корт 1 розыгрыш назад) + <strong>«Новичок»</strong> (только что зашел из очереди)."
             },
             {
               label: "Очередь",
-              tag: "Одиночная FIFO",
-              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
-              text: "Общая одиночная линия за задней линией претендентов. Работает по строгому правилу FIFO (первый зашел — первый вышел)."
+              text: "Общая одиночная линия за задней линией претендентов по правилу FIFO (первый зашел — первый вышел)."
             }
           ]
         },

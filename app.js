@@ -586,9 +586,11 @@ function renderRulesModal() {
           <h2 class="text-xl sm:text-2xl font-display font-black tracking-tight leading-tight drop-shadow-xs">
             ${content.title}
           </h2>
-          <p class="text-xs sm:text-sm text-amber-100/90 font-medium mt-0.5 leading-snug">
-            ${content.subtitle}
-          </p>
+          ${content.subtitle ? `
+            <p class="text-xs sm:text-sm text-amber-100/90 font-medium mt-0.5 leading-snug">
+              ${content.subtitle}
+            </p>
+          ` : ''}
         </div>
       </div>
 
@@ -647,20 +649,14 @@ function renderRulesModal() {
             ${content.sections[0].title}
           </h3>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          ${(content.sections[0].items || []).map(item => `
-            <div class="bg-white p-3.5 rounded-xl border border-stone-200/80 shadow-2xs flex flex-col justify-between gap-2">
-              <div>
-                <div class="flex items-center justify-between gap-1 mb-1.5">
-                  <span class="text-xs font-black text-stone-900">${item.label}</span>
-                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border ${item.tagColor}">
-                    ${item.tag}
-                  </span>
-                </div>
-                <p class="text-xs text-stone-600 leading-relaxed font-normal">
-                  ${item.text}
-                </p>
-              </div>
+        <div class="bg-white p-4 rounded-xl border border-stone-200/80 shadow-2xs divide-y divide-stone-100 space-y-2.5">
+          ${(content.sections[0].items || []).map((item, idx) => `
+            <div class="${idx > 0 ? 'pt-2.5' : ''} flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-3 text-xs">
+              <span class="font-extrabold text-stone-900 sm:w-44 flex-shrink-0 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                ${item.label}
+              </span>
+              <span class="text-stone-600 leading-relaxed">${item.text}</span>
             </div>
           `).join('')}
         </div>
