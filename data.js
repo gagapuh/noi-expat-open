@@ -171,7 +171,7 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 18:00 - 21:00 Team Games (Courts 1–4 combined)
+        // 18:00 - 22:00 Team Games (Courts 1–4 combined)
         {
           id: "d2-c1c4-team-games",
           courtId: "c1",
@@ -179,7 +179,7 @@ const TOURNAMENT_CONFIG = {
           courtSpan: 4,
           courtLabel: "Courts 1–4",
           start: "18:00",
-          end: "21:00",
+          end: "22:00",
           title: "Team Games",
           subtitle: "8 Teams · 2 Groups · MLP Format (2M + 2W)",
           host: "Ho & Eugen",
@@ -192,10 +192,10 @@ const TOURNAMENT_CONFIG = {
           category: "tournament",
           status: "occupied",
           staggeredCourts: [
-            { courtId: "c1", courtName: "Court 1", start: "18:00", end: "21:00" },
-            { courtId: "c2", courtName: "Court 2", start: "18:00", end: "21:00" },
-            { courtId: "c3", courtName: "Court 3", start: "18:00", end: "21:00" },
-            { courtId: "c4", courtName: "Court 4", start: "18:00", end: "21:00" }
+            { courtId: "c1", courtName: "Court 1", start: "18:00", end: "22:00" },
+            { courtId: "c2", courtName: "Court 2", start: "18:00", end: "22:00" },
+            { courtId: "c3", courtName: "Court 3", start: "18:00", end: "22:00" },
+            { courtId: "c4", courtName: "Court 4", start: "18:00", end: "22:00" }
           ]
         }
       ]
@@ -1414,7 +1414,7 @@ const TOURNAMENT_BRACKETS = {
     shortTitle: "Team Games",
     host: "Ho & Eugen",
     day: "Sunday, Oct 4",
-    time: "18:00 – 21:00",
+    time: "18:00 – 22:00",
     courts: "Courts 1, 2, 3, 4",
     format: "MLP Format: 2 Groups (Round-Robin) → Semifinals → Grand Final",
     playersCount: 32,
@@ -1792,7 +1792,7 @@ const TOURNAMENT_BRACKETS = {
         {
           id: "TG-SF-1",
           name: "Championship Semifinal 1",
-          time: "20:00 – 20:30",
+          time: "20:00 – 21:00",
           court: "Courts 1 & 2",
           team1: { name: "Group A Winner (A1)", seed: "1st in Group A" },
           team2: { name: "Group B Runner-up (B2)", seed: "2nd in Group B" },
@@ -1807,7 +1807,7 @@ const TOURNAMENT_BRACKETS = {
         {
           id: "TG-SF-2",
           name: "Championship Semifinal 2",
-          time: "20:00 – 20:30",
+          time: "20:00 – 21:00",
           court: "Courts 3 & 4",
           team1: { name: "Group B Winner (B1)", seed: "1st in Group B" },
           team2: { name: "Group A Runner-up (A2)", seed: "2nd in Group A" },
@@ -1824,7 +1824,7 @@ const TOURNAMENT_BRACKETS = {
         id: "TG-FINAL",
         title: "🥇 Grand Championship Final",
         badge: "Team Trophy & Gold Medals",
-        time: "20:30 – 21:00",
+        time: "21:00 – 22:00",
         court: "Courts 1 & 2",
         team1: { name: "Winner Semifinal 1", seed: "Winner SF1" },
         team2: { name: "Winner Semifinal 2", seed: "Winner SF2" },
@@ -1840,7 +1840,7 @@ const TOURNAMENT_BRACKETS = {
         id: "TG-BRONZE",
         title: "🥉 Bronze Medal Match",
         badge: "Bronze Medals",
-        time: "20:30 – 21:00",
+        time: "21:00 – 22:00",
         court: "Courts 3 & 4",
         team1: { name: "Runner-up Semifinal 1", seed: "Runner-up SF1" },
         team2: { name: "Runner-up Semifinal 2", seed: "Runner-up SF2" },

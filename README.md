@@ -51,11 +51,11 @@ Example entry:
 
 ## 🏆 Tournament Architecture: Picklehead Individual Doubles (32 Players)
 
-**Day 2 (Sunday, Oct 4) • 11:00 – 17:00 • Courts 1, 2, 3, 4 (Host: Ho)**
+**Day 2 (Sunday, Oct 4) • 10:00 – 16:00 • Courts 1, 2, 3, 4 (Host: Ho)**
 
 ### 1. Format Overview
 - **32 Individual Players** start in 8 groups of 4 players (**Group A** to **Group H**).
-- **Stage 1 (11:00 – 14:00) — Double Americano Groups (6 Matches per Player)**:
+- **Stage 1 (10:00 – 13:00) — Double Americano Groups (6 Matches per Player)**:
   - In each 4-player group, every player plays 6 matches rotating partners ("each with each" in 2 full rounds).
   - Every participant is guaranteed at least 6 matches!
   - Matches are played to 11 points. Individual points and score differentials are accumulated across all 6 matches.
@@ -80,12 +80,12 @@ Example entry:
   - *No Bronze match and no consolation bracket* — pure high-stakes championship drama!
 
 ### 2. Day 2 Court Allocation & Staggered Schedule
-- **Court 1**: 10:00 – 16:00 (Picklehead: Groups A & E, QF1, SF1, Grand Final) → 18:00 – 21:00 (**Team Games**: Group A + SF1 + Grand Final)
-- **Court 2**: 10:00 – 15:00 (Picklehead: Groups B & F, QF2, SF2) → 18:00 – 21:00 (**Team Games**: Group A + SF1 + Grand Final)
-- **Court 3**: 10:00 – 14:00 (Picklehead: Groups C & G, QF3) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 21:00 (**Team Games**: Group B + SF2 + Bronze Match)
-- **Court 4**: 10:00 – 14:00 (Picklehead: Groups D & H, QF4) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 21:00 (**Team Games**: Group B + SF2 + Bronze Match)
+- **Court 1**: 10:00 – 16:00 (Picklehead: Groups A & E, QF1, SF1, Grand Final) → 18:00 – 22:00 (**Team Games**: Group A + SF1 + Grand Final)
+- **Court 2**: 10:00 – 15:00 (Picklehead: Groups B & F, QF2, SF2) → 18:00 – 22:00 (**Team Games**: Group A + SF1 + Grand Final)
+- **Court 3**: 10:00 – 14:00 (Picklehead: Groups C & G, QF3) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
+- **Court 4**: 10:00 – 14:00 (Picklehead: Groups D & H, QF4) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
 
-### 3. Team Games (Воскресенье 18:00 – 21:00, Корты 1–4)
+### 3. Team Games (Воскресенье 18:00 – 22:00, Корты 1–4)
 - **Формат командного турнира (MLP / Team Games)**: 8 фиксированных команд (участники заявляются готовым составом: 2 парня, 2 девушки).
 - **Корзины посева команд (Team Seeding Pots)**: 4 корзины посева по 2 команды (Pot 1 Сеяные, Pot 2 Претенденты, Pot 3 Квалификация, Pot 4 Андердоги). Из каждой корзины слепой жеребьевкой 1 команда отправляется в Группу A, 1 команда в Группу B. Индивидуального драфта нет.
 - **Групповой этап (18:00 – 20:00)**: 2 группы по 4 команды (Группа A на кортах 1–2, Группа B на кортах 3–4).
@@ -95,9 +95,9 @@ Example entry:
     2. **Женская пара (WD)**: девушки играют между собой (1 сет до 11 очков)
     3. **1-й Микс (MXD1)**: парень 1 + девушка 1 (1 сет до 11 очков)
     4. **2-й Микс (MXD2)**: парень 2 + девушка 2 (1 сет до 11 очков)
-- **Плей-офф (20:00 – 21:00)**:
-  - **Полуфиналы (20:00 – 20:30)**: SF1 (A1 vs B2, Корты 1 & 2) и SF2 (B1 vs A2, Корты 3 & 4) — каждое по 4 матча.
-  - **Финал и матч за 3 место (20:30 – 21:00)**: Grand Championship Final (Корты 1 & 2) и Bronze Match (Корты 3 & 4) — каждое по 4 матча.
+- **Плей-офф (20:00 – 22:00)**:
+  - **Полуфиналы (20:00 – 21:00)**: SF1 (A1 vs B2, Корты 1 & 2) и SF2 (B1 vs A2, Корты 3 & 4) — каждое по 4 матча.
+  - **Финал и матч за 3 место (21:00 – 22:00)**: Grand Championship Final (Корты 1 & 2) и Bronze Match (Корты 3 & 4) — каждое по 4 матча.
 
 
 ---
