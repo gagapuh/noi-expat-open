@@ -286,13 +286,14 @@ function renderTimelineMatrix() {
       }
 
       const isClickableCard = Boolean(ev.rulesModal);
+      const cardBorderClass = ev.borderClass || (ev.noBorder ? 'border-transparent' : catConfig.cardBorder);
       const cardClasses = isPlanned
         ? `bg-gradient-to-br ${catConfig.cardBg} border-2 border-dashed ${catConfig.cardBorderDashed} opacity-[0.65] hover:opacity-100`
-        : `bg-gradient-to-br ${catConfig.cardBg} border ${catConfig.cardBorder} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
+        : `bg-gradient-to-br ${catConfig.cardBg} border ${cardBorderClass} ${isFinals ? 'ring-2 ring-amber-300/40' : ''} shadow-card hover:shadow-card-hover`;
 
       bodyHtml += `
         <div 
-          class="timeline-event-card ${cardClasses} ${isClickableCard ? 'cursor-pointer select-none ring-1 ring-amber-400/50 hover:ring-amber-500/80 transition-all' : ''}"
+          class="timeline-event-card ${cardClasses} ${isClickableCard ? 'cursor-pointer select-none transition-all' : ''}"
           ${ev.rulesModal ? `onclick="window.openRulesModal && window.openRulesModal('${ev.rulesModal}')"` : ''}
           style="--event-order: ${topMinutes}; top: ${topPx}px; height: ${heightPx}px; ${spanStyle}"
           title="${ev.title}${isClickableCard ? ' — Click to view rules' : ''}">
@@ -377,7 +378,7 @@ function renderTimelineMatrix() {
                 <button type="button" onclick="event.stopPropagation(); window.openRulesModal && window.openRulesModal('${ev.rulesModal}')"
                   class="w-full inline-flex items-center justify-center h-7 px-2 sm:px-2.5 rounded-lg text-[10px] sm:text-[11px] font-black text-amber-950 bg-amber-200/90 hover:bg-amber-300 border border-amber-300 shadow-2xs hover:shadow-xs transition-all cursor-pointer whitespace-nowrap">
                   <i data-lucide="crown" class="w-3.5 h-3.5 mr-1 text-amber-700"></i>
-                  <span>Rules (English)</span>
+                  <span>Rules</span>
                 </button>
               ` : `<div></div>`)}
               ${(hasReclubUrl && !ev.isDupr) ? `
@@ -591,22 +592,34 @@ function renderRulesModal() {
         </div>
       </div>
 
-      <!-- Language Toggle Tabs -->
-      <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between gap-3">
+      <!-- Language Selector Tabs (EN, VI, ES, RU) -->
+      <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between gap-2 flex-wrap">
         <span class="text-[11px] font-semibold text-amber-100 uppercase tracking-wider hidden sm:inline">
-          ${isEn ? 'Rules in English' : 'Правила игры'}
+          Language / Ngôn ngữ / Idioma / Язык
         </span>
-        <div class="inline-flex items-center p-0.5 rounded-xl bg-black/25 backdrop-blur-md border border-white/20 ml-auto">
+        <div class="inline-flex items-center p-0.5 rounded-xl bg-black/25 backdrop-blur-md border border-white/20 ml-auto flex-wrap gap-1">
           <button 
             type="button" 
             onclick="window.setRulesLanguage('en')"
-            class="px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${isEn ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
+            class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${lang === 'en' ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
             English
           </button>
           <button 
             type="button" 
+            onclick="window.setRulesLanguage('vi')"
+            class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${lang === 'vi' ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
+            Tiếng Việt
+          </button>
+          <button 
+            type="button" 
+            onclick="window.setRulesLanguage('es')"
+            class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${lang === 'es' ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
+            Español
+          </button>
+          <button 
+            type="button" 
             onclick="window.setRulesLanguage('ru')"
-            class="px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${!isEn ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
+            class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${lang === 'ru' ? 'bg-white text-stone-900 shadow-sm' : 'text-amber-100 hover:text-white'}">
             Русский
           </button>
         </div>
@@ -631,7 +644,7 @@ function renderRulesModal() {
             <i data-lucide="users" class="w-3.5 h-3.5"></i>
           </div>
           <h3 class="text-sm sm:text-base font-display font-extrabold text-stone-900 tracking-tight">
-            ${isEn ? '1. Court Roles & Setup' : '1. Роли на корте'}
+            ${content.sections[0].title}
           </h3>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -660,7 +673,7 @@ function renderRulesModal() {
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
           </div>
           <h3 class="text-sm sm:text-base font-display font-extrabold text-stone-900 tracking-tight">
-            ${isEn ? '2. Rally Outcomes & Rotation Scenarios' : '2. Сценарии розыгрышей'}
+            ${content.sections[1].title}
           </h3>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -694,7 +707,7 @@ function renderRulesModal() {
             <i data-lucide="target" class="w-3.5 h-3.5"></i>
           </div>
           <h3 class="text-sm sm:text-base font-display font-extrabold text-stone-900 tracking-tight">
-            ${isEn ? '3. Serving & Court Positioning' : '3. Подача и расстановка на корте'}
+            ${content.sections[2].title}
           </h3>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -718,13 +731,23 @@ function renderRulesModal() {
     <div class="px-5 py-3.5 bg-white border-t border-stone-200 flex items-center justify-between flex-shrink-0">
       <div class="text-[11px] text-stone-400 font-medium flex items-center gap-1.5">
         <i data-lucide="info" class="w-3.5 h-3.5 text-stone-400"></i>
-        <span>${isEn ? 'Non-stop social rotation · Court 1' : 'Постоянная ротация · 1 корт'}</span>
+        <span>${
+          lang === 'ru' ? 'Постоянная ротация · 1 корт' :
+          lang === 'vi' ? 'Luân chuyển liên tục · Sân 1' :
+          lang === 'es' ? 'Rotación continua · Pista 1' :
+          'Non-stop social rotation · Court 1'
+        }</span>
       </div>
       <button 
         type="button" 
         onclick="window.closeRulesModal()" 
         class="h-8 sm:h-9 px-4 rounded-xl text-xs font-bold bg-stone-900 hover:bg-stone-800 text-white transition-all cursor-pointer shadow-xs active:scale-95">
-        ${isEn ? 'Close Rules' : 'Закрыть'}
+        ${
+          lang === 'ru' ? 'Закрыть' :
+          lang === 'vi' ? 'Đóng' :
+          lang === 'es' ? 'Cerrar' :
+          'Close'
+        }
       </button>
     </div>
   `;

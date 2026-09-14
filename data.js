@@ -171,18 +171,19 @@ const TOURNAMENT_CONFIG = {
           status: "occupied"
         },
 
-        // 16:00 - 18:00 Fun Event "Король и Королева" (Court 1)
+        // 16:00 - 18:00 Fun Event "King & Queen" (Court 1)
         {
           id: "d2-c1-king-queen",
           courtId: "c1",
           start: "16:00",
           end: "18:00",
-          title: "Король и Королева",
-          subtitle: "King & Queen · Fun Mixed Event",
+          title: "King & Queen",
+          subtitle: "Mixed Doubles · Social Play",
           host: "Open Play",
           category: "social",
           badgeText: "Fun Event",
           badgeClass: "bg-gradient-to-r from-amber-500 to-amber-600 text-white font-black tracking-wider shadow-2xs",
+          borderClass: "border-transparent",
           status: "occupied",
           icon: "crown",
           rulesModal: "king-queen-rules"
@@ -223,7 +224,7 @@ const TOURNAMENT_CONFIG = {
 
 /**
  * ==============================================================================
- * EVENT RULES & INSTRUCTIONS
+ * EVENT RULES & INSTRUCTIONS (EN · VI · ES · RU)
  * ==============================================================================
  */
 const EVENT_RULES = {
@@ -232,6 +233,7 @@ const EVENT_RULES = {
     court: "Court 1",
     time: "16:00 – 18:00",
     en: {
+      langName: "English",
       badge: "Court 1 · 16:00 – 18:00 · Fun Event",
       title: "King & Queen of the Court",
       subtitle: "Continuous Mixed Doubles Social Rotation Rules",
@@ -251,7 +253,7 @@ const EVENT_RULES = {
               label: "The Challenger Side",
               tag: "Senior + Rookie",
               tagColor: "bg-blue-100 text-blue-900 border-blue-300",
-              text: "<strong>«Senior» (Старший)</strong> — entered the court 1 rally ago.<br><strong>«Rookie» (Новичок)</strong> — just rotated in from the queue."
+              text: "<strong>«Senior»</strong> — entered the court 1 rally ago.<br><strong>«Rookie»</strong> — just rotated in from the queue."
             },
             {
               label: "The Queue",
@@ -320,7 +322,188 @@ const EVENT_RULES = {
         }
       ]
     },
+    vi: {
+      langName: "Tiếng Việt",
+      badge: "Sân 1 · 16:00 – 18:00 · Giao lưu vui vẻ",
+      title: "Vua & Nữ Hoàng (King & Queen)",
+      subtitle: "Luật chơi đánh đôi nam nữ luân chuyển liên tục",
+      overview: "Thể thức đánh đôi nam nữ tốc độ cao và giao lưu hấp dẫn. Các cặp thách đấu liên tục vào sân để chinh phục Ngai Vàng. Vua và Nữ Hoàng đương nhiệm bảo vệ sân cho đến khi bị thách đấu cùng giới tính soán ngôi.",
+      sections: [
+        {
+          title: "Vai trò trên sân & Sắp xếp",
+          icon: "users",
+          items: [
+            {
+              label: "Bên Ngai Vàng",
+              tag: "Vua (Nam) + Nữ Hoàng (Nữ)",
+              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
+              text: "Cặp đôi đương nhiệm trên sân. Cùng nhau phòng thủ và bảo vệ Ngai Vàng trước các cặp thách đấu liên tục bước vào."
+            },
+            {
+              label: "Bên Thách Đấu",
+              tag: "Người Cũ + Người Mới",
+              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
+              text: "<strong>«Người Cũ» (Senior)</strong> — đã vào sân từ 1 pha bóng trước.<br><strong>«Người Mới» (Rookie)</strong> — vừa từ hàng chờ bước vào sân."
+            },
+            {
+              label: "Hàng Chờ (Queue)",
+              tag: "Hàng đợi FIFO",
+              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
+              text: "Một hàng đơn duy nhất xếp sau vạch cuối sân bên Thách Đấu. Hoạt động theo nguyên tắc <strong>FIFO</strong> (vào trước — ra trước)."
+            }
+          ]
+        },
+        {
+          title: "Kết quả pha bóng & Luân chuyển",
+          icon: "refresh-cw",
+          cards: [
+            {
+              type: "loss",
+              badge: "Kịch bản 1: Bên Thách Đấu thua pha bóng",
+              badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
+              title: "Vua & Nữ Hoàng bảo vệ thành công Ngai Vàng",
+              steps: [
+                "Vua và Nữ Hoàng giữ nguyên vị trí trên Ngai Vàng.",
+                "Người <strong>«Cũ» (Senior)</strong> rời sân về cuối hàng chờ (hết lượt theo nguyên tắc FIFO).",
+                "Người <strong>«Mới» (Rookie)</strong> được thăng cấp thành <strong>«Người Cũ» (Senior)</strong>.",
+                "Người tiếp theo trong hàng chờ bước vào sân ở vị trí <strong>«Người Mới» (Rookie)</strong>."
+              ]
+            },
+            {
+              type: "win",
+              badge: "Kịch bản 2: Bên Thách Đấu thắng pha bóng",
+              badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+              title: "Người Cũ thăng cấp lên chiếm Ngai Vàng",
+              steps: [
+                "Người <strong>«Cũ» (Senior)</strong> bước lên Ngai Vàng (ưu tiên người vào sân sớm hơn):",
+                "• Nếu Người Cũ là <strong>Nam</strong> → Thay thế Vua (Vua cũ rời sân về hàng chờ). Nữ Hoàng tiếp tục giữ ngôi.",
+                "• Nếu Người Cũ là <strong>Nữ</strong> → Thay thế Nữ Hoàng (Nữ Hoàng cũ rời sân về hàng chờ). Vua tiếp tục giữ ngôi.",
+                "Người <strong>«Mới» (Rookie)</strong> bên Thách Đấu thăng cấp thành <strong>«Người Cũ» (Senior)</strong>.",
+                "Người tiếp theo trong hàng chờ bước vào sân với tư cách <strong>«Người Mới» (Rookie)</strong>."
+              ]
+            }
+          ]
+        },
+        {
+          title: "Giao bóng & Định vị trên sân",
+          icon: "target",
+          items: [
+            {
+              label: "Vị trí Người Mới vào sân",
+              icon: "log-in",
+              text: "Người Mới luôn vào sân ở vị trí giao bóng với <strong>điểm số chẵn</strong> (Bên phải / Ô Deuce court)."
+            },
+            {
+              label: "Giao bóng khi Thách Đấu ghi điểm",
+              icon: "zap",
+              text: "Khi bên Thách Đấu thắng pha bóng/ghi điểm, quyền giao bóng được trao cho <strong>Người Cũ (Senior)</strong>."
+            },
+            {
+              label: "Đổi sân khi bên Ngai Vàng ghi điểm",
+              icon: "arrow-left-right",
+              text: "Khi Vua và Nữ Hoàng ghi điểm trong lượt giao bóng của mình, họ <strong>đổi vị trí trái/phải</strong> (luật giao bóng đôi tiêu chuẩn)."
+            },
+            {
+              label: "Điều chỉnh vị trí khi rời sân",
+              icon: "shuffle",
+              text: "Nếu Người Cũ rời sân từ <strong>vị trí điểm lẻ</strong> (Bên trái / Ô Ad court), Người Mới sẽ bước sang vị trí đó và trở thành Người Cũ."
+            }
+          ]
+        }
+      ]
+    },
+    es: {
+      langName: "Español",
+      badge: "Pista 1 · 16:00 – 18:00 · Evento Social",
+      title: "Rey y Reina de la Pista (King & Queen)",
+      subtitle: "Reglas de rotación continua para dobles mixtos",
+      overview: "Formato dinámico y continuo de dobles mixtos donde las parejas aspirantes compiten por conquistar el Trono. El Rey y la Reina reinantes defienden su lado hasta que un aspirante de su mismo género los destrona.",
+      sections: [
+        {
+          title: "Roles en la Pista y Disposición",
+          icon: "users",
+          items: [
+            {
+              label: "Lado del Trono",
+              tag: "Rey (M) + Reina (F)",
+              tagColor: "bg-amber-100 text-amber-900 border-amber-300",
+              text: "La pareja reinante en la pista. Defienden su lado juntos frente a las continuas parejas retadoras hasta ser derrotados."
+            },
+            {
+              label: "Lado de los Aspirantes",
+              tag: "Veterano + Novato",
+              tagColor: "bg-blue-100 text-blue-900 border-blue-300",
+              text: "<strong>«Veterano» (Senior)</strong> — entró a la pista hace 1 punto.<br><strong>«Novato» (Rookie)</strong> — acaba de entrar desde la fila."
+            },
+            {
+              label: "La Fila de Espera",
+              tag: "Fila FIFO",
+              tagColor: "bg-stone-100 text-stone-800 border-stone-300",
+              text: "Una única fila detrás de la línea de fondo en el lado de los aspirantes. Funciona bajo estricto orden <strong>FIFO</strong> (primero en entrar, primero en salir)."
+            }
+          ]
+        },
+        {
+          title: "Desenlace de Puntos y Rotación",
+          icon: "refresh-cw",
+          cards: [
+            {
+              type: "loss",
+              badge: "Escenario 1: Los Aspirantes Pierden el Punto",
+              badgeColor: "bg-rose-100 text-rose-800 border-rose-200",
+              title: "El Rey y la Reina Defienden el Trono",
+              steps: [
+                "El Rey y la Reina permanecen en el lado del Trono.",
+                "El aspirante <strong>«Veterano» (Senior)</strong> va al final de la fila (su turno concluye por FIFO).",
+                "El aspirante <strong>«Novato» (Rookie)</strong> es promovido a <strong>«Veterano» (Senior)</strong>.",
+                "La siguiente persona de la fila entra a la pista para ocupar el puesto de <strong>«Novato» (Rookie)</strong>."
+              ]
+            },
+            {
+              type: "win",
+              badge: "Escenario 2: Los Aspirantes Ganan el Punto",
+              badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+              title: "El Veterano Asciende al Trono",
+              steps: [
+                "El aspirante <strong>«Veterano» (Senior)</strong> asciende al Trono (por haber llegado antes a la pista):",
+                "• Si el Veterano es <strong>Hombre</strong> → Reemplaza al Rey (el Rey depuesto va a la fila). La Reina permanece en el Trono.",
+                "• Si la Veterana es <strong>Mujer</strong> → Reemplaza a la Reina (la Reina depuesta va a la fila). El Rey permanece en el Trono.",
+                "El aspirante <strong>«Novato» (Rookie)</strong> es promovido a <strong>«Veterano» (Senior)</strong>.",
+                "El siguiente jugador de la fila entra como nuevo <strong>«Novato» (Rookie)</strong>."
+              ]
+            }
+          ]
+        },
+        {
+          title: "Saque y Colocación en la Pista",
+          icon: "target",
+          items: [
+            {
+              label: "Posición de Entrada del Novato",
+              icon: "log-in",
+              text: "El Novato siempre entra en la posición de pista correspondiente a un <strong>tanteo par</strong> (Lado derecho / Deuce court)."
+            },
+            {
+              label: "Saque al Anotar los Aspirantes",
+              icon: "zap",
+              text: "Cuando los aspirantes ganan el punto/anotan, el <strong>saque pasa al aspirante «Veterano» (Senior)</strong>."
+            },
+            {
+              label: "Cambio de Lado en el Trono",
+              icon: "arrow-left-right",
+              text: "Cuando el Rey y la Reina anotan punto con su saque, <strong>cambian de lado</strong> (rotación estándar de dobles)."
+            },
+            {
+              label: "Ajuste al Salir de Posición Impar",
+              icon: "shuffle",
+              text: "Si el Veterano sale desde la <strong>posición de pista impar</strong> (Lado izquierdo / Ad court), el Novato ocupa ese lugar y pasa a ser Veterano."
+            }
+          ]
+        }
+      ]
+    },
     ru: {
+      langName: "Русский",
       badge: "1 корт · 16:00 – 18:00 · Фан-событие",
       title: "Король и Королева",
       subtitle: "Правила фан-игры с постоянной ротацией пар",
