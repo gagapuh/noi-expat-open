@@ -182,13 +182,13 @@ const TOURNAMENT_CONFIG = {
           end: "22:00",
           title: "Team Games",
           subtitle: "Multi-Discipline Team Matches (MD · WD · MXD) · Max 10.5 Combined Rating",
-          host: "Ho & Eugen",
+          host: "Artem",
           playersLabel: "Teams",
           playersCount: "0/8",
           isDupr: true,
           duprStatus: "To Be Confirmed",
           bracketId: "team-games",
-          logo: "picklehead.webp",
+          logo: "002.svg",
           reclubUrl: "",
           category: "tournament",
           status: "occupied",
@@ -1413,7 +1413,7 @@ const TOURNAMENT_BRACKETS = {
     id: "team-games",
     title: "Team Games: 8 Teams (2 Men + 2 Women)",
     shortTitle: "Team Games",
-    host: "Ho & Eugen",
+    host: "Artem",
     day: "Sunday, Oct 4",
     time: "18:00 – 22:00",
     courts: "Courts 1, 2, 3, 4",
@@ -1423,14 +1423,14 @@ const TOURNAMENT_BRACKETS = {
     groupsCount: 2,
     advanceCount: 2,
     isDrawCompleted: false,
-    description: "8 фиксированных команд: участники заявляются готовыми командами по 4 человека (2 парня и 2 девушки). Общий рейтинг команды максимум 10.5 (Max 10.5 Combined Team Rating). 2 группы по 4 команды. Корзины посева команд (Pots 1–4) используются исключительно для равномерной жеребьевки команд по Группам A и B (из каждой корзины 1 команда в Группу A, 1 в Группу B). Каждая команда проводит состязание со всеми соперниками в своей группе. Каждое состязание состоит из 4 обязательных матчей: 1) Мужская пара (парни играют между собой), 2) Женская пара (девушки играют между собой), 3) 1-й микс, 4) 2-й микс. Топ-2 команды из каждой группы выходят в Полуфинал (SF1 и SF2). Полуфинал и Финал — также по 1 состязанию (4 матча).",
+    description: "8 fixed teams: participants enter as pre-formed rosters of 4 players (2 men and 2 women). Max 10.5 Combined Team Rating. 2 groups of 4 teams. Team Seeding Pots (Pots 1–4) are used exclusively for a balanced draw into Group A and Group B (from each pot, 1 team goes to Group A, 1 to Group B). Each team plays a tie against all opponents in its group. Each tie consists of 4 mandatory matches: 1) Men's Doubles (MD), 2) Women's Doubles (WD), 3) Mix 1 (MXD1), 4) Mix 2 (MXD2). Top 2 teams from each group advance to the Playoffs (SF1 and SF2). Semifinals and Finals also consist of 1 tie (4 matches) each.",
     pots: {
       teamPots: [
         {
           id: "pot-1",
-          name: "Корзина 1: Сеяные лидеры (Top Seeds)",
+          name: "Pot 1: Top Seeds",
           badge: "bg-amber-100 text-amber-900 border-amber-300",
-          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          description: "1 team drawn into Group A, 1 team into Group B",
           teams: [
             { id: "team-1", name: "Team 1", seed: 1, label: "Top Seed #1" },
             { id: "team-2", name: "Team 2", seed: 2, label: "Top Seed #2" }
@@ -1438,9 +1438,9 @@ const TOURNAMENT_BRACKETS = {
         },
         {
           id: "pot-2",
-          name: "Корзина 2: Претенденты (Contenders)",
+          name: "Pot 2: Contenders",
           badge: "bg-blue-100 text-blue-900 border-blue-300",
-          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          description: "1 team drawn into Group A, 1 team into Group B",
           teams: [
             { id: "team-3", name: "Team 3", seed: 3, label: "Seed #3" },
             { id: "team-4", name: "Team 4", seed: 4, label: "Seed #4" }
@@ -1448,9 +1448,9 @@ const TOURNAMENT_BRACKETS = {
         },
         {
           id: "pot-3",
-          name: "Корзина 3: Квалификация (Challengers)",
+          name: "Pot 3: Challengers",
           badge: "bg-emerald-100 text-emerald-900 border-emerald-300",
-          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          description: "1 team drawn into Group A, 1 team into Group B",
           teams: [
             { id: "team-5", name: "Team 5", seed: 5, label: "Seed #5" },
             { id: "team-6", name: "Team 6", seed: 6, label: "Seed #6" }
@@ -1458,9 +1458,9 @@ const TOURNAMENT_BRACKETS = {
         },
         {
           id: "pot-4",
-          name: "Корзина 4: Андердоги (Dark Horses)",
+          name: "Pot 4: Dark Horses",
           badge: "bg-purple-100 text-purple-900 border-purple-300",
-          description: "1 команда жеребится в Группу A, 1 команда в Группу B",
+          description: "1 team drawn into Group A, 1 team into Group B",
           teams: [
             { id: "team-7", name: "Team 7", seed: 7, label: "Seed #7" },
             { id: "team-8", name: "Team 8", seed: 8, label: "Seed #8" }

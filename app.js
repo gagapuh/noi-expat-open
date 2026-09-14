@@ -798,7 +798,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
           class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'pots' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
           }">
-          Команды & корзины (Teams & Pots)
+          Teams & Pots
         </button>
         <button 
           onclick="setBracketTab('pathway')" 
@@ -1115,17 +1115,17 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB: POTS & TEAMS (Корзины жеребьевки и формирования составов)
+  // TAB: POTS & TEAMS (Teams & Seeding Pots)
   // ══════════════════════════════════════════════════════════════════════════
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB: POTS & TEAMS (Команды и корзины посева)
+  // TAB: POTS & TEAMS (Teams & Seeding Pots)
   // ══════════════════════════════════════════════════════════════════════════
   else if (activeTab === 'pots') {
     const teamPots = pots.teamPots || [];
 
     html += `
       <div class="space-y-6">
-        <!-- Banner: Фиксированные команды -->
+        <!-- Banner: Fixed Teams -->
         <div class="bg-gradient-to-r from-blue-50 via-indigo-50 to-white rounded-2xl border border-blue-200/80 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div class="flex items-start gap-3">
             <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
@@ -1134,20 +1134,20 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
             <div>
               <div class="flex items-center gap-2">
                 <h4 class="font-display font-extrabold text-stone-900 text-sm sm:text-base">
-                  Фиксированные команды (8 команд по 4 игрока)
+                  Fixed Rosters (8 Teams · 4 Players Each)
                 </h4>
                 <span class="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider">
                   Ready Rosters
                 </span>
               </div>
               <p class="text-xs text-stone-600 mt-1 leading-relaxed">
-                Команды заявляются готовым фиксированным составом: <strong>2 парня и 2 девушки</strong>. Индивидуальный драфт не проводится. Жеребьевка из <strong>4 корзин посева</strong> определяет распределение команд в Группу A и Группу B.
+                Teams enter as fixed 4-player rosters: <strong>2 men and 2 women</strong> (Max 10.5 Combined Team Rating). No individual draft is conducted. A blind draw across <strong>4 seeding pots</strong> allocates teams into Group A and Group B.
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Block 1: Корзины посева 8 команд для жеребьевки в Группу A и Группу B -->
+        <!-- Block 1: Team Seeding Pots -->
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
             <div class="flex items-center gap-2.5">
@@ -1156,9 +1156,9 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
               </div>
               <div>
                 <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-                  Корзины посева команд (Team Seeding Pots)
+                  Team Seeding Pots
                 </h4>
-                <p class="text-xs text-stone-500">4 корзины посева по 2 команды: 1 команда слепой жеребьевкой идет в Группу A, 1 команда в Группу B</p>
+                <p class="text-xs text-stone-500">4 seeding pots with 2 teams each: 1 team drawn into Group A, 1 team into Group B</p>
               </div>
             </div>
             <span class="px-3 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">
@@ -1174,7 +1174,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${tp.badge}">
                       ${tp.id.toUpperCase()}
                     </span>
-                    <span class="text-[11px] font-mono text-stone-400">2 команды</span>
+                    <span class="text-[11px] font-mono text-stone-400">2 Teams</span>
                   </div>
                   <div class="font-bold text-sm text-stone-900 mb-1">${tp.name}</div>
                   <div class="text-[11px] text-stone-500 leading-snug">${tp.description}</div>
@@ -1193,7 +1193,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
           </div>
         </div>
 
-        <!-- Block 2: Составы 8 фиксированных команд -->
+        <!-- Block 2: 8 Fixed Team Rosters -->
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
             <div class="flex items-center gap-2.5">
@@ -1202,9 +1202,9 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
               </div>
               <div>
                 <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-                  Составы 8 команд (8 Fixed Teams: 2 Men + 2 Women)
+                  Team Rosters (8 Fixed Teams: 2 Men + 2 Women)
                 </h4>
-                <p class="text-xs text-stone-500">Каждая команда заявляется готовым составом: 2 парня и 2 девушки</p>
+                <p class="text-xs text-stone-500">Each team consists of 4 registered players: 2 men and 2 women</p>
               </div>
             </div>
             <span class="px-3 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">
@@ -1218,7 +1218,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                 <div class="flex items-center justify-between border-b border-stone-200 pb-2">
                   <div>
                     <span class="font-bold text-sm text-stone-900 font-display">${t.name}</span>
-                    <span class="block text-[10px] text-stone-400 font-mono">${t.pot} • Посев #${t.seed}</span>
+                    <span class="block text-[10px] text-stone-400 font-mono">${t.pot} • Seed #${t.seed}</span>
                   </div>
                   <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
                     ${t.group}
@@ -1227,21 +1227,21 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
 
                 <div class="space-y-2 text-xs">
                   <div>
-                    <div class="text-[10px] font-bold text-sky-700 uppercase tracking-wider mb-1">👨‍🦱 Парни (2 игрока):</div>
+                    <div class="text-[10px] font-bold text-sky-700 uppercase tracking-wider mb-1">Men (2 players):</div>
                     <div class="p-1.5 rounded-lg bg-white border border-stone-200 font-mono text-[11px] text-stone-800">
                       ${t.men.join(' & ')}
                     </div>
                   </div>
 
                   <div>
-                    <div class="text-[10px] font-bold text-rose-700 uppercase tracking-wider mb-1">👩‍🦰 Девушки (2 игрока):</div>
+                    <div class="text-[10px] font-bold text-rose-700 uppercase tracking-wider mb-1">Women (2 players):</div>
                     <div class="p-1.5 rounded-lg bg-white border border-stone-200 font-mono text-[11px] text-stone-800">
                       ${t.women.join(' & ')}
                     </div>
                   </div>
 
                   <div class="pt-1.5 border-t border-stone-200/60">
-                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">🎾 Распределение на миксы:</div>
+                    <div class="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">Mixed Doubles Pairs:</div>
                     <div class="space-y-1 font-mono text-[10px] text-stone-600">
                       <div class="truncate">Mix 1: <span class="font-bold text-stone-800">${t.mix1}</span></div>
                       <div class="truncate">Mix 2: <span class="font-bold text-stone-800">${t.mix2}</span></div>
@@ -1301,11 +1301,11 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-xs flex items-center justify-center shrink-0">02</div>
               <div>
-                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 2: Жеребьевка из 4 корзин посева в Группу A и Группу B</h4>
-                <p class="text-xs text-stone-500">В каждую группу попадает ровно по 1 команде из каждой корзины (4 команды в группе)</p>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 2: Жеребьевка из 4 корзин посева (Seeding Pots Draw)</h4>
+                <p class="text-xs text-stone-500">В каждую группу попадает ровно по 1 команде из каждого Pot (4 команды в группе)</p>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">Жеребьевка</span>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">Pot Draw</span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -1313,10 +1313,10 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
               <div class="font-bold text-stone-900 text-sm mb-1">Группа A (Courts 1 & 2)</div>
               <div class="text-stone-500 text-[11px] mb-2">4 команды играют по круговой системе каждый с каждым</div>
               <div class="space-y-1 font-mono text-[11px]">
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 1 (из Корзины 1)</div>
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 3 (из Корзины 2)</div>
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 5 (из Корзины 3)</div>
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 7 (из Корзины 4)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 1 (Pot 1)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 3 (Pot 2)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 5 (Pot 3)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 7 (Pot 4)</div>
               </div>
             </div>
 
@@ -1324,10 +1324,10 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
               <div class="font-bold text-stone-900 text-sm mb-1">Группа B (Courts 3 & 4)</div>
               <div class="text-stone-500 text-[11px] mb-2">4 команды играют по круговой системе каждый с каждым</div>
               <div class="space-y-1 font-mono text-[11px]">
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 2 (из Корзины 1)</div>
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 4 (из Корзины 2)</div>
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 6 (из Корзины 3)</div>
-                <div class="p-1.5 rounded bg-white border border-stone-200">Команда 8 (из Корзины 4)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 2 (Pot 1)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 4 (Pot 2)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 6 (Pot 3)</div>
+                <div class="p-1.5 rounded bg-white border border-stone-200">Team 8 (Pot 4)</div>
               </div>
             </div>
           </div>
@@ -1499,7 +1499,7 @@ function renderBracketModal() {
               ? 'bg-white text-stone-900 shadow-sm' 
               : 'text-stone-500 hover:text-stone-800'
           }">
-          Корзины жеребьевки
+          Draw Pots
         </button>
         <button 
           onclick="setBracketTab('groups')" 
@@ -2045,9 +2045,9 @@ function renderBracketModal() {
               </div>
               <div>
                 <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-                  Корзины посева для жеребьевки групп (32 игрока в 8 групп A–H)
+                  Group Draw Pots (32 Players in 8 Groups A–H)
                 </h4>
-                <p class="text-xs text-stone-500">4 корзины по 8 игроков: в каждую группу (A–H) слепой жеребьевкой вытягивается по 1 игроку из каждой корзины</p>
+                <p class="text-xs text-stone-500">4 pots of 8 players: each group (A–H) draws 1 player from each pot via blind draw</p>
               </div>
             </div>
             <span class="px-3 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">
@@ -2063,7 +2063,7 @@ function renderBracketModal() {
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${dp.badge || 'bg-blue-100 text-blue-900 border border-blue-200'}">
                       ${dp.id.toUpperCase()}
                     </span>
-                    <span class="text-[11px] font-mono text-stone-400">8 игроков</span>
+                    <span class="text-[11px] font-mono text-stone-400">8 Players</span>
                   </div>
                   <div class="font-bold text-sm text-stone-900 mb-2">${dp.name}</div>
                 </div>
@@ -2089,9 +2089,9 @@ function renderBracketModal() {
               </div>
               <div>
                 <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-                  Корзины посева плей-офф (Merit-Based Duo Pairing)
+                  Playoff Seeding Pots (Merit-Based Duo Pairing)
                 </h4>
-                <p class="text-xs text-stone-500">Формула: Победитель #k объединяется в пару со 2-м местом #(9 - k) (1-й с 8-м, 2-й с 7-м...)</p>
+                <p class="text-xs text-stone-500">Formula: Winner #k pairs with Runner-up #(9 - k) (1st with 8th, 2nd with 7th...)</p>
               </div>
             </div>
             <span class="px-3 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">
@@ -2102,8 +2102,8 @@ function renderBracketModal() {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-4 rounded-xl bg-amber-50/50 border border-amber-200/80">
               <div class="font-bold text-xs text-amber-950 uppercase tracking-wider mb-2.5 flex items-center justify-between">
-                <span>Корзина W: 8 победителей групп</span>
-                <span class="font-mono text-[10px] text-amber-700">Рейтинг W1 .. W8</span>
+                <span>Pot W: 8 Group Winners</span>
+                <span class="font-mono text-[10px] text-amber-700">Ranking W1 .. W8</span>
               </div>
               <div class="grid grid-cols-4 gap-1.5 text-xs text-center font-mono font-bold text-amber-900">
                 <div class="p-2 rounded bg-white border border-amber-200">W1</div>
@@ -2119,8 +2119,8 @@ function renderBracketModal() {
 
             <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200/80">
               <div class="font-bold text-xs text-blue-950 uppercase tracking-wider mb-2.5 flex items-center justify-between">
-                <span>Корзина R: 8 вторых мест</span>
-                <span class="font-mono text-[10px] text-blue-700">Рейтинг R1 .. R8</span>
+                <span>Pot R: 8 Group Runners-Up</span>
+                <span class="font-mono text-[10px] text-blue-700">Ranking R1 .. R8</span>
               </div>
               <div class="grid grid-cols-4 gap-1.5 text-xs text-center font-mono font-bold text-blue-900">
                 <div class="p-2 rounded bg-white border border-blue-200">R8</div>
