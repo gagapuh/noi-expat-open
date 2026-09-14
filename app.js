@@ -223,7 +223,7 @@ function renderTimelineMatrix() {
               ` : ''}
               ${ev.playersCount ? `
                 <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-stone-200 shadow-2xs text-stone-800 text-[10px] sm:text-[11px] leading-none mt-2 select-text pointer-events-auto">
-                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px] sm:text-[9px]">Players</span>
+                  <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px] sm:text-[9px]">${ev.playersLabel || 'Players'}</span>
                   <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
                   <span class="font-black text-blue-700">${ev.playersCount}</span>
                 </div>
@@ -353,7 +353,7 @@ function renderTimelineMatrix() {
             ` : ''}
             ${ev.playersCount ? `
               <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-stone-200 shadow-2xs text-stone-800 text-[10px] sm:text-[11px] leading-none mt-1">
-                <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px] sm:text-[9px]">Players</span>
+                <span class="text-stone-400 font-bold uppercase tracking-wider text-[8px] sm:text-[9px]">${ev.playersLabel || 'Players'}</span>
                 <span class="w-px h-2.5 rounded-full bg-stone-300"></span>
                 <span class="font-black text-violet-700">${ev.playersCount}</span>
               </div>
