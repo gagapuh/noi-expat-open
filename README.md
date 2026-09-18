@@ -85,19 +85,19 @@ Example entry:
 - **Court 3**: 10:00 – 14:00 (Picklehead: Groups C & G, QF3) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
 - **Court 4**: 10:00 – 14:00 (Picklehead: Groups D & H, QF4) → 14:00 – 18:00 (**Prime Division 4.0+**) → 18:00 – 22:00 (**Team Games**: Group B + SF2 + Bronze Match)
 
-### 3. Team Games (Воскресенье 18:00 – 22:00, Корты 1–4)
-- **Формат командного турнира (Multi-Discipline Team Matches / MLP Format)**: 8 фиксированных команд (участники заявляются готовым составом: 2 парня, 2 девушки, суммарный командный рейтинг максимум 10.5 / Max 10.5 Combined Rating). Команда играет своими игроками в разных дисциплинах (MD, WD, MXD).
-- **Корзины посева команд (Team Seeding Pots)**: 4 корзины посева по 2 команды (Pot 1 Сеяные, Pot 2 Претенденты, Pot 3 Квалификация, Pot 4 Андердоги). Из каждой корзины слепой жеребьевкой 1 команда отправляется в Группу A, 1 команда в Группу B. Индивидуального драфта нет.
-- **Групповой этап (18:00 – 20:00)**: 2 группы по 4 команды (Группа A на кортах 1–2, Группа B на кортах 3–4).
-  - Каждая команда играет со всеми соперниками в своей группе (3 раунда по 40 мин: 18:00–18:40, 18:40–19:20, 19:20–20:00).
-  - Каждое состязание состоит из **4 обязательных матчей**:
-    1. **Мужская пара (MD)**: парни играют между собой (1 сет до 11 очков)
-    2. **Женская пара (WD)**: девушки играют между собой (1 сет до 11 очков)
-    3. **1-й Микс (MXD1)**: парень 1 + девушка 1 (1 сет до 11 очков)
-    4. **2-й Микс (MXD2)**: парень 2 + девушка 2 (1 сет до 11 очков)
-- **Плей-офф (20:00 – 22:00)**:
-  - **Полуфиналы (20:00 – 21:00)**: SF1 (A1 vs B2, Корты 1 & 2) и SF2 (B1 vs A2, Корты 3 & 4) — каждое по 4 матча.
-  - **Финал и матч за 3 место (21:00 – 22:00)**: Grand Championship Final (Корты 1 & 2) и Bronze Match (Корты 3 & 4) — каждое по 4 матча.
+### 3. Team Games (Sunday 18:00 – 22:00, Courts 1–4)
+- **Tournament Format (Multi-Discipline Team Matches / MLP Format)**: 8 fixed teams (participants enter with pre-formed rosters of 4 players: 2 men, 2 women, Max 10.5 Combined Team Rating). Each team plays with its own roster across multiple disciplines (MD, WD, MXD).
+- **Team Seeding Pots**: 4 seeding pots with 2 teams each (Pot 1 Top Seeds, Pot 2 Contenders, Pot 3 Challengers, Pot 4 Dark Horses). From each pot, a blind draw places 1 team into Group A and 1 team into Group B. No individual draft is held.
+- **Group Stage (18:00 – 20:00)**: 2 groups of 4 teams (Group A on Courts 1–2, Group B on Courts 3–4).
+  - Each team plays a round-robin against all opponents in its group (3 rounds of 40 mins: 18:00–18:40, 18:40–19:20, 19:20–20:00).
+  - Each tie consists of **4 mandatory games**:
+    1. **Men's Doubles (MD)**: 2 men compete head-to-head (1 set to 11 points)
+    2. **Women's Doubles (WD)**: 2 women compete head-to-head (1 set to 11 points)
+    3. **Mixed Doubles 1 (MXD 1)**: Man 1 + Woman 1 (1 set to 11 points)
+    4. **Mixed Doubles 2 (MXD 2)**: Man 2 + Woman 2 (1 set to 11 points)
+- **Playoffs (20:00 – 22:00)**:
+  - **Semifinals (20:00 – 21:00)**: SF1 (A1 vs B2, Courts 1 & 2) and SF2 (B1 vs A2, Courts 3 & 4) — 4 games per tie.
+  - **Grand Final & Bronze Match (21:00 – 22:00)**: Grand Championship Final (Courts 1 & 2) and Bronze Medal Match (Courts 3 & 4) — 4 games per tie.
 
 
 ---

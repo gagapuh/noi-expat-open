@@ -1076,7 +1076,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
           class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'pathway' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
           }">
-          Регламент (Format & Rules)
+          Format & Rules
         </button>
       </div>
     </div>
@@ -1113,12 +1113,12 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
               <thead>
                 <tr class="border-b border-stone-200 text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50/50">
                   <th class="py-2 px-2.5 w-8 text-center">#</th>
-                  <th class="py-2 px-2.5">Команда</th>
-                  <th class="py-2 px-2 text-center">Игр</th>
-                  <th class="py-2 px-2 text-center">Матчи</th>
-                  <th class="py-2 px-2 text-center">Сеты</th>
-                  <th class="py-2 px-2 text-center font-bold text-stone-700">Дифф</th>
-                  <th class="py-2 px-2.5 text-right">Статус</th>
+                  <th class="py-2 px-2.5">Team</th>
+                  <th class="py-2 px-2 text-center">Played</th>
+                  <th class="py-2 px-2 text-center">Ties</th>
+                  <th class="py-2 px-2 text-center">Games</th>
+                  <th class="py-2 px-2 text-center font-bold text-stone-700">Diff</th>
+                  <th class="py-2 px-2.5 text-right">Status</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-stone-100">
@@ -1148,8 +1148,8 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
           <!-- Group Encounters (3 Rounds × 2 Matches = 6 Ties) -->
           <div class="px-4 py-3 bg-stone-50/50 border-t border-stone-200/60 mt-auto space-y-3">
             <div class="text-[11px] font-bold uppercase tracking-wider text-stone-500 flex items-center justify-between">
-              <span>Состязания в группе (4 обязательных матча):</span>
-              <span class="text-[10px] font-normal text-stone-400 font-mono">Парни → Девушки → 1-й Микс → 2-й Микс</span>
+              <span>Group Encounters (4 mandatory games):</span>
+              <span class="text-[10px] font-normal text-stone-400 font-mono">Men's Doubles → Women's Doubles → Mixed 1 → Mixed 2</span>
             </div>
 
             <div class="space-y-3 text-xs">
@@ -1164,7 +1164,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                       <span class="px-2 py-0.5 rounded bg-stone-100 font-mono text-[10px] text-stone-700 border border-stone-200">${enc.court}</span>
                     </div>
                     <div class="font-mono font-bold text-xs px-2 py-0.5 rounded bg-stone-100 border border-stone-200 text-stone-600">
-                      Счет: ${enc.tieScore}
+                      Tie Score: ${enc.tieScore}
                     </div>
                   </div>
 
@@ -1215,7 +1215,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
               <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">
-                Championship Semifinals · 1 Состязание (4 игры)
+                Championship Semifinals · 1 Tie (4 Games)
               </h4>
             </div>
             <div class="flex items-center gap-2 text-xs font-mono font-bold text-stone-500">
@@ -1280,11 +1280,11 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                   <h4 class="font-display font-black text-lg text-stone-950">${gf.title}</h4>
                 </div>
                 <span class="px-3 py-1 rounded-lg bg-amber-100 text-amber-950 border border-amber-300 text-xs font-black">
-                  1 Состязание (4 игры)
+                  1 Tie (4 Games)
                 </span>
               </div>
               <div class="text-xs text-stone-500 font-medium mb-3">
-                ${gf.court} • ${gf.time} • Победитель получает Кубок и Золотые медали!
+                ${gf.court} • ${gf.time} • Winner awarded Championship Trophy & Gold Medals!
               </div>
 
               <div class="space-y-2 text-xs sm:text-sm">
@@ -1293,7 +1293,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                     <div class="text-base font-black">${gf.team1.name}</div>
                     <div class="text-xs text-stone-400 font-mono">${gf.team1.seed}</div>
                   </div>
-                  <span class="text-xs text-stone-400 font-mono">Финалист 1</span>
+                  <span class="text-xs text-stone-400 font-mono">Finalist 1</span>
                 </div>
 
                 <div class="p-3 rounded-xl bg-white border border-amber-200/80 text-stone-800 font-bold flex items-center justify-between">
@@ -1301,7 +1301,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                     <div class="text-base font-black">${gf.team2.name}</div>
                     <div class="text-xs text-stone-400 font-mono">${gf.team2.seed}</div>
                   </div>
-                  <span class="text-xs text-stone-400 font-mono">Финалист 2</span>
+                  <span class="text-xs text-stone-400 font-mono">Finalist 2</span>
                 </div>
               </div>
 
@@ -1335,11 +1335,11 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                   <h4 class="font-display font-bold text-lg text-stone-900">${bm.title}</h4>
                 </div>
                 <span class="px-3 py-1 rounded-lg bg-stone-100 text-stone-700 border border-stone-200 text-xs font-bold">
-                  1 Состязание (4 игры)
+                  1 Tie (4 Games)
                 </span>
               </div>
               <div class="text-xs text-stone-500 font-medium mb-3">
-                ${bm.court} • ${bm.time} • Матч за 3-е место и Бронзовые медали
+                ${bm.court} • ${bm.time} • 3rd Place Match & Bronze Medals
               </div>
 
               <div class="space-y-2 text-xs sm:text-sm">
@@ -1348,7 +1348,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                     <div class="text-base font-bold">${bm.team1.name}</div>
                     <div class="text-xs text-stone-400 font-mono">${bm.team1.seed}</div>
                   </div>
-                  <span class="text-xs text-stone-400 font-mono">Полуфиналист 1</span>
+                  <span class="text-xs text-stone-400 font-mono">Semifinalist 1</span>
                 </div>
 
                 <div class="p-3 rounded-xl bg-stone-50 border border-stone-200/80 text-stone-800 font-bold flex items-center justify-between">
@@ -1356,7 +1356,7 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
                     <div class="text-base font-bold">${bm.team2.name}</div>
                     <div class="text-xs text-stone-400 font-mono">${bm.team2.seed}</div>
                   </div>
-                  <span class="text-xs text-stone-400 font-mono">Полуфиналист 2</span>
+                  <span class="text-xs text-stone-400 font-mono">Semifinalist 2</span>
                 </div>
               </div>
 
@@ -1528,52 +1528,52 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // TAB: PATHWAY / FORMAT & RULES (Регламент)
+  // TAB: PATHWAY / FORMAT & RULES
   // ══════════════════════════════════════════════════════════════════════════
   else if (activeTab === 'pathway') {
     html += `
       <div class="space-y-6">
-        <!-- Step 1: Формирование команд -->
+        <!-- Step 1: Team Formation -->
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-blue-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">01</div>
               <div>
-                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 1: 8 фиксированных команд (2 парня, 2 девушки)</h4>
-                <p class="text-xs text-stone-500">Команды заявляются готовыми четвёрками. Индивидуального драфта нет — играют сыгранные составы</p>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 1: 8 Fixed Teams (2 Men, 2 Women)</h4>
+                <p class="text-xs text-stone-500">Teams enter as pre-formed rosters of 4 players. No individual draft — ready rosters compete</p>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">Фиксированные составы</span>
+            <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold">Fixed Rosters</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
             <div class="p-3 rounded-xl bg-sky-50 border border-sky-200 text-center">
-              <div class="font-bold text-sky-950">👨‍🦱 2 парня в команде</div>
-              <div class="text-[11px] text-sky-700 mt-0.5">Играют мужскую пару (MD) + распределяются по миксам</div>
+              <div class="font-bold text-sky-950">👨‍🦱 2 Men per Team</div>
+              <div class="text-[11px] text-sky-700 mt-0.5">Play Men's Doubles (MD) + split into mixed pairs</div>
             </div>
             <div class="p-3 rounded-xl bg-rose-50 border border-rose-200 text-center">
-              <div class="font-bold text-rose-950">👩‍🦰 2 девушки в команде</div>
-              <div class="text-[11px] text-rose-700 mt-0.5">Играют женскую пару (WD) + распределяются по миксам</div>
+              <div class="font-bold text-rose-950">👩‍🦰 2 Women per Team</div>
+              <div class="text-[11px] text-rose-700 mt-0.5">Play Women's Doubles (WD) + split into mixed pairs</div>
             </div>
             <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-center">
-              <div class="font-bold text-indigo-950">👫 1-й Микс (MXD 1)</div>
-              <div class="text-[11px] text-indigo-700 mt-0.5">Парень 1 + Девушка 1 (1 сет до 11 очков)</div>
+              <div class="font-bold text-indigo-950">👫 Mixed Doubles 1 (MXD 1)</div>
+              <div class="text-[11px] text-indigo-700 mt-0.5">Man 1 + Woman 1 (1 set to 11 points)</div>
             </div>
             <div class="p-3 rounded-xl bg-purple-50 border border-purple-200 text-center">
-              <div class="font-bold text-purple-950">👫 2-й Микс (MXD 2)</div>
-              <div class="text-[11px] text-purple-700 mt-0.5">Парень 2 + Девушка 2 (1 сет до 11 очков)</div>
+              <div class="font-bold text-purple-950">👫 Mixed Doubles 2 (MXD 2)</div>
+              <div class="text-[11px] text-purple-700 mt-0.5">Man 2 + Woman 2 (1 set to 11 points)</div>
             </div>
           </div>
         </div>
 
-        <!-- Step 2: Жеребьевка команд по группам -->
+        <!-- Step 2: Seeding Pots Draw -->
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-xs flex items-center justify-center shrink-0">02</div>
               <div>
-                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 2: Жеребьевка из 4 корзин посева (Seeding Pots Draw)</h4>
-                <p class="text-xs text-stone-500">В каждую группу попадает ровно по 1 команде из каждого Pot (4 команды в группе)</p>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 2: 4 Seeding Pots Draw</h4>
+                <p class="text-xs text-stone-500">Each group receives exactly 1 team from each Pot (4 teams per group)</p>
               </div>
             </div>
             <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-xs font-bold">Pot Draw</span>
@@ -1581,8 +1581,8 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200">
-              <div class="font-bold text-stone-900 text-sm mb-1">Группа A (Courts 1 & 2)</div>
-              <div class="text-stone-500 text-[11px] mb-2">4 команды играют по круговой системе каждый с каждым</div>
+              <div class="font-bold text-stone-900 text-sm mb-1">Group A (Courts 1 & 2)</div>
+              <div class="text-stone-500 text-[11px] mb-2">4 teams play a round-robin format (each against each)</div>
               <div class="space-y-1 font-mono text-[11px]">
                 <div class="p-1.5 rounded bg-white border border-stone-200">Team 1 (Pot 1)</div>
                 <div class="p-1.5 rounded bg-white border border-stone-200">Team 3 (Pot 2)</div>
@@ -1592,8 +1592,8 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
             </div>
 
             <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200">
-              <div class="font-bold text-stone-900 text-sm mb-1">Группа B (Courts 3 & 4)</div>
-              <div class="text-stone-500 text-[11px] mb-2">4 команды играют по круговой системе каждый с каждым</div>
+              <div class="font-bold text-stone-900 text-sm mb-1">Group B (Courts 3 & 4)</div>
+              <div class="text-stone-500 text-[11px] mb-2">4 teams play a round-robin format (each against each)</div>
               <div class="space-y-1 font-mono text-[11px]">
                 <div class="p-1.5 rounded bg-white border border-stone-200">Team 2 (Pot 1)</div>
                 <div class="p-1.5 rounded bg-white border border-stone-200">Team 4 (Pot 2)</div>
@@ -1604,14 +1604,14 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
           </div>
         </div>
 
-        <!-- Step 3: Формат Состязания (4 игры) -->
+        <!-- Step 3: Encounter Format (4 Games) -->
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">03</div>
               <div>
-                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 3: Структура 1 состязания между двумя командами (4 обязательных матча)</h4>
-                <p class="text-xs text-stone-500">В каждой дуэли обязательно играются 4 сета до 11 очков (победа с разницей в 2 очка)</p>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 3: 1 Team Encounter Structure (4 Mandatory Games)</h4>
+                <p class="text-xs text-stone-500">Every encounter features 4 games played to 11 points (win by 2)</p>
               </div>
             </div>
             <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">18:00 – 20:00</span>
@@ -1620,46 +1620,46 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
             <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
               <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-800 font-bold mx-auto mb-2 flex items-center justify-center">1</div>
-              <div class="font-bold text-stone-900 text-sm">Парни (MD)</div>
-              <div class="text-[11px] text-stone-500 mt-1">2 парня играют против 2 парней команды соперника</div>
+              <div class="font-bold text-stone-900 text-sm">Men's Doubles (MD)</div>
+              <div class="text-[11px] text-stone-500 mt-1">2 men compete against 2 men from opposing team</div>
             </div>
 
             <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
               <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-800 font-bold mx-auto mb-2 flex items-center justify-center">2</div>
-              <div class="font-bold text-stone-900 text-sm">Девушки (WD)</div>
-              <div class="text-[11px] text-stone-500 mt-1">2 девушки играют против 2 девушек команды соперника</div>
+              <div class="font-bold text-stone-900 text-sm">Women's Doubles (WD)</div>
+              <div class="text-[11px] text-stone-500 mt-1">2 women compete against 2 women from opposing team</div>
             </div>
 
             <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
               <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-800 font-bold mx-auto mb-2 flex items-center justify-center">3</div>
-              <div class="font-bold text-stone-900 text-sm">1-й Микс (MXD 1)</div>
-              <div class="text-[11px] text-stone-500 mt-1">Пара Микс 1 (M1+W1) против Микс 1 соперника</div>
+              <div class="font-bold text-stone-900 text-sm">Mixed Doubles 1 (MXD 1)</div>
+              <div class="text-[11px] text-stone-500 mt-1">Mixed pair 1 (M1+W1) vs opposing Mixed 1</div>
             </div>
 
             <div class="p-3.5 rounded-xl bg-surface-1 border border-stone-200 text-center">
               <div class="w-7 h-7 rounded-full bg-purple-100 text-purple-800 font-bold mx-auto mb-2 flex items-center justify-center">4</div>
-              <div class="font-bold text-stone-900 text-sm">2-й Микс (MXD 2)</div>
-              <div class="text-[11px] text-stone-500 mt-1">Пара Микс 2 (M2+W2) против Микс 2 соперника</div>
+              <div class="font-bold text-stone-900 text-sm">Mixed Doubles 2 (MXD 2)</div>
+              <div class="text-[11px] text-stone-500 mt-1">Mixed pair 2 (M2+W2) vs opposing Mixed 2</div>
             </div>
           </div>
 
           <div class="mt-4 p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between text-xs text-amber-950">
             <span class="font-bold flex items-center gap-1.5">
               <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
-              Тай-брейк при счете 2-2:
+              Tie-break if tied 2-2:
             </span>
-            <span class="text-stone-600">Определяется по лучшей суммарной разнице очков во всех 4 матчах состязания или решающему Dreambreaker.</span>
+            <span class="text-stone-600">Decided by total point differential across all 4 games, or a decisive Dreambreaker.</span>
           </div>
         </div>
 
-        <!-- Step 4: Плей-офф (Полуфиналы и Финалы) -->
+        <!-- Step 4: Playoffs (Semifinals & Finals) -->
         <div class="bg-white rounded-2xl border border-stone-200/80 shadow-card p-4 sm:p-6">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-stone-200">
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-indigo-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0">04</div>
               <div>
-                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Шаг 4: Плей-офф (Полуфиналы, Финал и Бронза)</h4>
-                <p class="text-xs text-stone-500">Топ-2 из каждой группы выходят в Полуфинал. Каждое противостояние также состоит из 1 состязания (4 игры).</p>
+                <h4 class="font-display font-bold text-sm sm:text-base text-stone-900">Step 4: Playoffs (Semifinals, Final & Bronze)</h4>
+                <p class="text-xs text-stone-500">Top 2 teams from each group advance to Semifinals. Each tie consists of 1 encounter (4 games).</p>
               </div>
             </div>
             <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200 text-xs font-bold">20:00 – 22:00</span>
@@ -1667,20 +1667,20 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
             <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
-              <div class="font-bold text-stone-900">Полуфиналы (20:00 – 21:00)</div>
-              <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 1–4 · 2 состязания</div>
+              <div class="font-bold text-stone-900">Semifinals (20:00 – 21:00)</div>
+              <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 1–4 · 2 encounters</div>
               <div class="space-y-1.5 font-mono">
-                <div class="p-2 rounded bg-white border border-stone-200">SF1: 1-е место A vs 2-е место B</div>
-                <div class="p-2 rounded bg-white border border-stone-200">SF2: 1-е место B vs 2-е место A</div>
+                <div class="p-2 rounded bg-white border border-stone-200">SF1: 1st Group A vs 2nd Group B</div>
+                <div class="p-2 rounded bg-white border border-stone-200">SF2: 1st Group B vs 2nd Group A</div>
               </div>
             </div>
 
             <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-300">
               <div class="font-bold text-stone-950 flex items-center gap-1.5">
                 <i data-lucide="crown" class="w-4 h-4 text-amber-500"></i>
-                Гранд-Финал (21:00 – 22:00)
+                Grand Championship Final (21:00 – 22:00)
               </div>
-              <div class="text-stone-600 text-[11px] mt-1 mb-2">Courts 1 & 2 · 1 состязание</div>
+              <div class="text-stone-600 text-[11px] mt-1 mb-2">Courts 1 & 2 · 1 encounter</div>
               <div class="p-2.5 rounded-lg bg-white border border-amber-200 font-mono font-bold text-stone-900 text-center">
                 Winner SF1 vs Winner SF2
               </div>
@@ -1689,9 +1689,9 @@ function renderTeamGamesBracketModal(bracket, container, activeTab) {
             <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
               <div class="font-bold text-stone-900 flex items-center gap-1.5">
                 <i data-lucide="award" class="w-4 h-4 text-amber-700"></i>
-                Матч за 3-е место (21:00 – 22:00)
+                Bronze Medal Match (21:00 – 22:00)
               </div>
-              <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 3 & 4 · 1 состязание</div>
+              <div class="text-stone-500 text-[11px] mt-1 mb-2">Courts 3 & 4 · 1 encounter</div>
               <div class="p-2.5 rounded-lg bg-white border border-stone-200 font-mono text-stone-800 text-center">
                 Runner-up SF1 vs Runner-up SF2
               </div>
